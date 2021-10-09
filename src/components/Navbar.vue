@@ -23,9 +23,9 @@
       <div class="navbar-end">
         <div class="navbar-item">
           <div class="buttons">
-            <a class="button is-link">
+            <router-link class="button is-link" to="/login">
               <strong>Log In</strong>
-            </a>
+            </router-link>
           </div>
         </div>
       </div>
