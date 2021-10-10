@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import Login from "../views/Login.vue"
 import Register from "../views/Register.vue"
 import UserMainPage from "../views/UserMainPage.vue"
+import CourseList from "../views/CourseList.vue"
 
 
 const routes = [
@@ -30,6 +31,10 @@ const routes = [
   {
     path: "/user/:id",
     component: UserMainPage,
+  },
+  {
+    path: "/courses",
+    component: CourseList,
   }
 
 ]
