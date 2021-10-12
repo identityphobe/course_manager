@@ -5,6 +5,8 @@ import Register from "../views/Register.vue"
 import UserMainPage from "../views/UserMainPage.vue"
 import CourseList from "../views/CourseList.vue"
 import CreateShortCourse from "../views/CreateShortCourse.vue"
+import ViewShortCourse from "../views/ViewShortCourse.vue"
+import Search from "../views/Search.vue"
 
 
 const routes = [
@@ -40,6 +42,14 @@ const routes = [
   {
     path: "/courses/new",
     component: CreateShortCourse,
+  },
+  {
+    // change 
+    path: "/courses/:id",
+    component: ViewShortCourse,
+  },
+  {
+    path: "/courses/search", component: Search,
   }
 
 
