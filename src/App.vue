@@ -6,8 +6,8 @@
 </template>
 
 <script>
-// import HelloWorld from "./components/HelloWorld.vue";
 import Navbar from "./components/Navbar.vue";
+// Import the functions you need from the SDKs you need
 
 export default {
   name: "App",

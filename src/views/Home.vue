@@ -1,4 +1,5 @@
 <template>
+  {{ message }}
   <Page title="Short Courses" />
   <div class="section">
     <div class="content">

@@ -72,6 +72,7 @@
           <div class="box has-text-centered">Programme</div>
         </div>
       </div>
+      <button class="button is-link">Submit</button>
     </div>
   </div>
 </template>

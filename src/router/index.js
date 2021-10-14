@@ -9,6 +9,7 @@ import ViewShortCourse from "../views/ViewShortCourse.vue"
 import Search from "../views/Search.vue"
 import Participants from "../views/Participants.vue"
 import EvaluateShortCourse from "../views/EvaluateShortCourse.vue"
+import EvaluationReport from "../views/EvaluationReport.vue"
 
 
 const routes = [
@@ -61,6 +62,10 @@ const routes = [
   {
     path: "/courses/:id/evaluate",
     component: EvaluateShortCourse,
+  },
+  {
+    path: "/courses/:id/report",
+    component: EvaluationReport,
   }
 
 ]
