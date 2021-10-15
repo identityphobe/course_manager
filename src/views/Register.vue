@@ -36,30 +36,12 @@
           </p>
         </div>
 
-        <!-- <div class="field">
-          <label class="label">Subject</label>
-          <div class="control">
-            <div class="select">
-              <select>
-                <option>Computing</option>
-                <option>Informatics</option>
-                <option>Foundation and Diploma Studies</option>
-              </select>
-            </div>
-          </div>
-        </div> -->
-
         <div class="field is-grouped is-grouped-centered">
           <div class="control">
             <button @click="writeUserData" class="button is-link">
               Submit
             </button>
           </div>
-          <!-- <div class="control">
-            <button @click="writeUserData" class="button is-link is-light">
-              Cancel
-            </button>
-          </div> -->
         </div>
       </div>
 
@@ -72,13 +54,7 @@
 <script>
 import database from "../database";
 import { ref, set } from "firebase/database";
-// function writeUserData(userId, name, email) {
-//   set(ref(database, "users/" + userId), {
-//     username: name,
-//     email: email,
-//   });
-// }
-
+import router from "../router/index.js";
 import Page from "../components/Page.vue";
 export default {
   name: "Register",
@@ -90,14 +66,19 @@ export default {
       ID: "",
       password: "",
       isSubmitted: false,
+      //TODO: Check if username is available
+      //TODO: Check password length and complexity
     };
   },
   methods: {
     writeUserData() {
       this.isSubmitted = true;
-      set(ref(database, "users/" + this.ID), {
-        password: this.password,
-      });
+      if (this.ID && this.password) {
+        set(ref(database, "users/" + this.ID), {
+          password: this.password,
+        });
+        router.push("/users/" + this.ID + "?registerSuccess=true");
+      }
     },
   },
 };

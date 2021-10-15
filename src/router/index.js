@@ -35,7 +35,7 @@ const routes = [
     component: Register,
   },
   {
-    path: "/user/:id",
+    path: "/users/:id",
     component: UserMainPage,
   },
   {
