@@ -2,7 +2,7 @@
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a class="navbar-item has-text-weight-bold" href="/">
-        UNITEN Teaching and Learning Center
+        UNITEN Teaching and Learning Center {{ ID }}
       </a>
       <a
         role="button"
@@ -23,8 +23,11 @@
       <div class="navbar-end">
         <div class="navbar-item">
           <div class="buttons">
-            <router-link class="button is-link" to="/login">
+            <router-link v-if="!ID" class="button is-link" to="/login">
               <strong>Log In</strong>
+            </router-link>
+            <router-link v-else class="button is-link" to="/logout">
+              <strong>Log Out</strong>
             </router-link>
           </div>
         </div>
@@ -34,9 +37,16 @@
 </template>
 
 <script>
+const ID = localStorage.getItem("ID") || null;
+
 export default {
   name: "Navbar",
   props: {},
+  data() {
+    return {
+      ID: ID,
+    };
+  },
 };
 document.addEventListener("DOMContentLoaded", () => {
   // Get all "navbar-burger" elements

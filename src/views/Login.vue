@@ -1,31 +1,42 @@
 <template>
-  {{ message }}
-  <Page title="Log In" />
+  <h1 class="title is-3 has-text-centered">Log In</h1>
   <div class="columns">
     <div class="column"></div>
     <div class="column mx-6">
       <div class="field">
         <label class="label">ID</label>
         <div class="control">
-          <input class="input" type="text" placeholder="ID" />
+          <input v-model="ID" class="input" type="text" placeholder="ID" />
         </div>
+        <p class="help is-danger" v-if="isSubmitted && !ID">
+          Username is required
+        </p>
       </div>
 
       <div class="field">
         <label class="label">Password</label>
         <div class="control">
-          <input class="input is-success" type="text" placeholder="Password" />
+          <input
+            v-model="password"
+            class="input is-success"
+            type="text"
+            placeholder="Password"
+          />
         </div>
-        <p class="help is-success">This username is available</p>
-        <p class="help is-danger">This username is unavailable</p>
+        <p class="help is-danger" v-if="isSubmitted && !password">
+          Password is required
+        </p>
+        <p
+          v-else-if="isSubmitted && doesIDExists && !doesCombinationExists"
+          class="help is-danger"
+        >
+          ID/Password combination is either unavailable or wrong
+        </p>
       </div>
 
       <div class="field is-grouped is-grouped-centered">
         <div class="control">
-          <button class="button is-link">Submit</button>
-        </div>
-        <div class="control">
-          <button class="button is-link is-light">Cancel</button>
+          <button @click="authenticate" class="button is-link">Submit</button>
         </div>
       </div>
     </div>
@@ -35,38 +46,50 @@
 </template>
 
 <script>
-// import { initializeApp } from "firebase/app";
-// import { getDatabase } from "firebase/database";
-
-//TODO: Add SDKs for Firebase products that you want to use
-
-//https://firebase.google.com/docs/web/setup#available-libraries
-
-//Your web app's Firebase configuration
-
-// const firebaseConfig = {
-//   apiKey: "AIzaSyAHboKLVVQClua9tbn-pZP56G8-WbCT0wk",
-
-//   authDomain: "short-course-c76bc.firebaseapp.com",
-
-//   projectId: "short-course-c76bc",
-
-//   storageBucket: "short-course-c76bc.appspot.com",
-
-//   messagingSenderId: "681386967584",
-
-//   appId: "1:681386967584:web:fb269b8c2762199a627245",
-// };
-
-//Initialize Firebase
-
-//const firebase_app = initializeApp(firebaseConfig);
+import database from "../database";
+import { ref, child, get } from "firebase/database";
+import router from "../router/index.js";
+// import { ref, set } from "firebase/database";
+// import router from "../router/index.js";
+// import Page from "../components/Page.vue";
 export default {
   name: "Login",
+
   data() {
     return {
-      message: "Hello",
+      ID: "",
+      password: "",
+      storedPassword: "",
+      doesCombinationExists: false,
+      doesIDExists: false,
+      isSubmitted: false,
     };
+  },
+  methods: {
+    authenticate() {
+      this.isSubmitted = true;
+      const dbRef = ref(database);
+      get(child(dbRef, `users/${this.ID}`))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            this.doesIDExists = true;
+            console.log(snapshot.val());
+            const userInfo = snapshot.val();
+            this.storedPassword = userInfo.password;
+            this.doesCombinationExists = this.password == this.storedPassword;
+            // console.log("Combination:" + this.doesCombinationExists);
+            // console.log(`Stored Password: ${this.storedPassword}`);
+            if (this.doesCombinationExists) {
+              router.push("/users/" + this.ID + "?loggedIn=true");
+            }
+          } else {
+            console.log("Unavailable or mismatch");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
   },
 };
 </script>

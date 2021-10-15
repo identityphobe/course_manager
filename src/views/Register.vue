@@ -77,7 +77,8 @@ export default {
         set(ref(database, "users/" + this.ID), {
           password: this.password,
         });
-        router.push("/users/" + this.ID + "?registerSuccess=true");
+        localStorage.setItem("ID", this.ID);
+        router.push("/users/" + this.ID + "?registered=true");
       }
     },
   },
