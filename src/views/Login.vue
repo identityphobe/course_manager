@@ -80,6 +80,7 @@ export default {
             // console.log("Combination:" + this.doesCombinationExists);
             // console.log(`Stored Password: ${this.storedPassword}`);
             if (this.doesCombinationExists) {
+              localStorage.setItem("ID", this.ID);
               router.push("/users/" + this.ID + "?loggedIn=true");
             }
           } else {

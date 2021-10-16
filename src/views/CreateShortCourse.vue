@@ -8,14 +8,14 @@
           <div class="field">
             <label class="label">Name</label>
             <div class="control">
-              <input class="input" type="text" />
+              <input v-model="course.name" class="input" type="text" />
             </div>
           </div>
 
           <div class="field">
             <label class="label">Objective</label>
             <div class="control">
-              <input class="input" type="text" />
+              <input v-model="course.objective" class="input" type="text" />
             </div>
           </div>
           <label class="label">Certificate</label>
@@ -23,9 +23,9 @@
             <div class="column">
               <div class="control">
                 <div class="select">
-                  <select>
-                    <option>Certificate</option>
-                    <option>PEP3</option>
+                  <select v-model="course.certificate">
+                    <option disabled value="">Certificate</option>
+                    <option value="PEP3">PEP3</option>
                   </select>
                 </div>
               </div>
@@ -34,11 +34,11 @@
             <div class="column">
               <div class="control">
                 <div class="select">
-                  <select>
-                    <option>Module</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
+                  <select v-model="course.certificateModule">
+                    <option disabled value="">Module</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
                   </select>
                 </div>
               </div>
@@ -51,20 +51,32 @@
           <div class="columns is-multiline">
             <div class="column is-half">
               <label class="checkbox">
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  v-model="course.targetAudience"
+                  value="Academic"
+                />
                 Academic
               </label>
             </div>
 
             <div class="column is-half">
               <label class="checkbox">
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  v-model="course.targetAudience"
+                  value="Non-Academic"
+                />
                 Non-Academic
               </label>
             </div>
             <div class="column is-half">
               <label class="checkbox">
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  v-model="course.targetAudience"
+                  value="External"
+                />
                 External
               </label>
             </div>
@@ -75,6 +87,7 @@
             </p>
             <div class="control">
               <input
+                v-model="course.externalCost"
                 class="input"
                 type="text"
                 placeholder="Cost per person
@@ -88,11 +101,11 @@
               <label class="label">Venue</label>
               <div class="control">
                 <div class="select">
-                  <select>
-                    <option>Venue</option>
-                    <option>Meeting room A</option>
-                    <option>Auditorium</option>
-                    <option>Hall</option>
+                  <select v-model="course.venue">
+                    <option value="" disabled>Venue</option>
+                    <option value="meetingRoomA">Meeting room A</option>
+                    <option value="Auditorium">Auditorium</option>
+                    <option value="Hall">Hall</option>
                   </select>
                 </div>
               </div>
@@ -103,7 +116,11 @@
                 <div class="control">
                   <div class="columns">
                     <div class="column">
-                      <input class="input" type="text" />
+                      <input
+                        v-model="course.capacity"
+                        class="input"
+                        type="text"
+                      />
                     </div>
                   </div>
                 </div>
@@ -116,7 +133,7 @@
               <div class="field">
                 <label class="label">Date Start</label>
                 <div class="control">
-                  <input class="input" type="date" />
+                  <input v-model="course.dateStart" class="input" type="date" />
                 </div>
               </div>
             </div>
@@ -125,7 +142,7 @@
               <div class="field">
                 <label class="label">Date End</label>
                 <div class="control">
-                  <input class="input" type="date" />
+                  <input v-model="course.dateEnd" class="input" type="date" />
                 </div>
               </div>
             </div>
@@ -134,11 +151,13 @@
           <label class="label">Venue</label>
           <div class="control">
             <div class="select">
-              <select>
-                <option>Speaker</option>
-                <option>Mr. Ahmad Bin Dollah</option>
-                <option>Mr. Zikry Bin Hamid</option>
-                <option>Ertugrul Bey</option>
+              <select v-model="course.speaker">
+                <option disabled value="">Speaker</option>
+                <option value="Mr. Ahmad Bin Dollah">
+                  Mr. Ahmad Bin Dollah
+                </option>
+                <option value="Mr. Zikry Bin Hamid">Mr. Zikry Bin Hamid</option>
+                <option value="Ertugrul Bey">Ertugrul Bey</option>
               </select>
             </div>
           </div>
@@ -183,7 +202,12 @@
                   <a class="button is-static">RM</a>
                 </p>
                 <div class="control">
-                  <input class="input" type="text" placeholder="-" />
+                  <input
+                    v-model="course.costs.fb"
+                    class="input"
+                    type="text"
+                    placeholder="-"
+                  />
                 </div>
               </div>
             </div>
@@ -197,7 +221,12 @@
                   <a class="button is-static">RM</a>
                 </p>
                 <div class="control">
-                  <input class="input" type="text" placeholder="-" />
+                  <input
+                    v-model="course.costs.instructor"
+                    class="input"
+                    type="text"
+                    placeholder="-"
+                  />
                 </div>
               </div>
             </div>
@@ -211,7 +240,12 @@
                   <a class="button is-static">RM</a>
                 </p>
                 <div class="control">
-                  <input class="input" type="text" placeholder="-" />
+                  <input
+                    v-model="course.costs.module"
+                    class="input"
+                    type="text"
+                    placeholder="-"
+                  />
                 </div>
               </div>
             </div>
@@ -225,7 +259,12 @@
                   <a class="button is-static">RM</a>
                 </p>
                 <div class="control">
-                  <input class="input" type="text" placeholder="-" />
+                  <input
+                    v-model="course.costs.others"
+                    class="input"
+                    type="text"
+                    placeholder="-"
+                  />
                 </div>
               </div>
             </div>
@@ -239,7 +278,12 @@
                   <a class="button is-static">RM</a>
                 </p>
                 <div class="control">
-                  <input class="input" type="text" placeholder="-" />
+                  <input
+                    v-model="course.costs.total"
+                    class="input"
+                    type="text"
+                    placeholder="-"
+                  />
                 </div>
               </div>
             </div>
@@ -279,7 +323,13 @@
           </div>
           <div class="field">
             <div class="control">
-              <button type="submit" class="button is-link">Submit</button>
+              <button
+                @click="createCourse"
+                type="submit"
+                class="button is-link"
+              >
+                Submit
+              </button>
             </div>
           </div>
         </div>
@@ -290,7 +340,55 @@
 </template>
 
 <script>
+import database from "../database";
+import { ref, push } from "firebase/database";
+//import router from "../router/index.js";
+
 export default {
   name: "CreateShortCourse",
+  data() {
+    return {
+      course: {
+        name: "",
+        objective: "",
+        certificate: "",
+        certificateModule: "",
+        targetAudience: [],
+        externalCost: "",
+        venue: "",
+        capacity: "",
+        dateStart: "",
+        dateEnd: "",
+        speaker: "",
+        costs: {
+          fb: "",
+          instructor: "",
+          module: "",
+          others: "",
+          total: "",
+        },
+        //TODO: Files
+        // for files, no need for bindings
+        // just store in firebase storage
+      },
+    };
+  },
+  methods: {
+    //TODO: field validation
+    createCourse() {
+      console.log(this.course);
+      // this.isSubmitted = true;
+
+      const courseRef = ref(database, "courses/");
+      push(courseRef, this.course);
+
+      //newCourseRef.set(this.course);
+      // set(ref(database, "courses/" + this.ID), {
+      //   password: this.password,
+      // });
+      // localStorage.setItem("ID", this.ID);
+      // router.push("/users/" + this.ID + "?registered=true");
+    },
+  },
 };
 </script>
