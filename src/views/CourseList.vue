@@ -1,15 +1,12 @@
 <template>
   <div class="section">
     <CourseCardAdmin
-      v-for="course in courses"
+      v-for="(course, key) in courses"
       :key="course.name"
       :name="course.name"
+      :course_id="key"
       class="mt-3"
     />
-    <p v-for="course in courses" :key="course.name">
-      {{ course }}
-    </p>
-    <CourseCardAdmin class="mt-3" />
   </div>
 </template>
 
@@ -37,6 +34,7 @@ export default {
           if (snapshot.exists()) {
             this.courses = snapshot.val();
             console.log(this.courses);
+            console.log(Object.keys(this.courses));
           } else {
             console.log("No data available");
           }

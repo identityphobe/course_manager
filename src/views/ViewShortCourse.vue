@@ -1,7 +1,5 @@
 <template>
-  <h1 class="title is-3 has-text-centered">
-    Short Course {{ $route.params.id }}
-  </h1>
+  <h1 class="title is-3 has-text-centered">Short Course</h1>
 
   <div class="columns">
     <div class="column"></div>
@@ -9,7 +7,7 @@
       <div class="container">
         <div class="box">
           <label class="label">Name</label>
-          <p>Short Course {{ $route.params.id }}</p>
+          <p>Short Course</p>
           <label class="label">Objective</label>
           <p>To be better</p>
           <label class="label">Certificate</label>

@@ -35,9 +35,7 @@ import router from './router'
 // const store = Vue.observable({ database: database });
 
 // Vue.prototype.$store = store;
-//const sourceOfTruth = reactive({
-// message: 'Hello'
-// })
+
 
 createApp(App).use(router).mount('#app')
 
