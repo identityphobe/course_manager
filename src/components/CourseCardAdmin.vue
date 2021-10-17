@@ -3,7 +3,7 @@
     <div class="box mx-6">
       <div class="columns">
         <div class="column is-four-fifths">
-          <span>Course</span>
+          <span>{{ name }}</span>
         </div>
         <div class="column">
           <router-link to="/edit">
@@ -40,5 +40,6 @@
 <script>
 export default {
   name: "CourseCardAdmin",
+  props: { name: String },
 };
 </script>
