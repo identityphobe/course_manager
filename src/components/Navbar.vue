@@ -2,7 +2,7 @@
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
       <a class="navbar-item has-text-weight-bold" href="/">
-        UNITEN Teaching and Learning Center {{ ID }}
+        UNITEN Teaching and Learning Center
       </a>
       <a
         role="button"
@@ -23,11 +23,11 @@
       <div class="navbar-end">
         <div class="navbar-item">
           <div class="buttons">
-            <router-link v-if="!ID" class="button is-link" to="/login">
-              <strong>Log In</strong>
-            </router-link>
-            <router-link v-else class="button is-link" to="/logout">
+            <button v-if="ID" class="button is-link" @click="logout">
               <strong>Log Out</strong>
+            </button>
+            <router-link v-else class="button is-link" to="/login">
+              <strong>Log In</strong>
             </router-link>
           </div>
         </div>
@@ -37,15 +37,24 @@
 </template>
 
 <script>
-const ID = localStorage.getItem("ID") || null;
+import router from "../router/index.js";
 
 export default {
   name: "Navbar",
   props: {},
   data() {
     return {
-      ID: ID,
+      ID: localStorage.getItem("ID") | null,
     };
+  },
+  methods: {
+    logout() {
+      if (localStorage.getItem("ID")) {
+        localStorage.setItem("ID", null);
+        this.ID = null;
+        router.push("/" + "?loggedOut=true");
+      }
+    },
   },
 };
 document.addEventListener("DOMContentLoaded", () => {

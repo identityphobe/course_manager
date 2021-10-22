@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO: Add logout notification -->
   <div v-if="registered" class="section">
     <div class="notification is-success">
       <button class="delete"></button>
@@ -11,6 +12,7 @@
       Login successful
     </div>
   </div>
+
   <h1 class="title is-4 has-text-centered">Your Upcoming courses</h1>
   <div class="section">
     <div class="content">

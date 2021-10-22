@@ -18,7 +18,18 @@
               <input v-model="course.objective" class="input" type="text" />
             </div>
           </div>
-          <label class="label">Certificate</label>
+
+          <label class="label">Department</label>
+          <div class="control">
+            <div class="select">
+              <select v-model="course.department">
+                <option disabled value="">Department</option>
+                <option value="CCI">CCI</option>
+                <option value="COE">COE</option>
+              </select>
+            </div>
+          </div>
+          <label class="label mt-3">Certificate</label>
           <div class="columns">
             <div class="column">
               <div class="control">
@@ -26,6 +37,7 @@
                   <select v-model="course.certificate">
                     <option disabled value="">Certificate</option>
                     <option value="PEP3">PEP3</option>
+                    <option value="None">None</option>
                   </select>
                 </div>
               </div>
@@ -39,6 +51,7 @@
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
+                    <option value="None">None</option>
                   </select>
                 </div>
               </div>
@@ -351,6 +364,7 @@ export default {
       course: {
         name: "",
         objective: "",
+        department: "",
         certificate: "",
         certificateModule: "",
         targetAudience: [],
