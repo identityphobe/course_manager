@@ -3,7 +3,7 @@ import Home from '../views/Home.vue'
 import Login from "../views/Login.vue"
 import Register from "../views/Register.vue"
 import UserMainPage from "../views/UserMainPage.vue"
-import CourseList from "../views/CourseList.vue"
+import CourseList from "../components/CourseList.vue"
 import CreateShortCourse from "../views/CreateShortCourse.vue"
 import ViewShortCourse from "../views/ViewShortCourse.vue"
 import Search from "../views/Search.vue"

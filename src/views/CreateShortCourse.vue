@@ -389,19 +389,12 @@ export default {
   },
   methods: {
     //TODO: field validation
+    //TODO: total costs calculation
     createCourse() {
       console.log(this.course);
-      // this.isSubmitted = true;
 
       const courseRef = ref(database, "courses/");
       push(courseRef, this.course);
-
-      //newCourseRef.set(this.course);
-      // set(ref(database, "courses/" + this.ID), {
-      //   password: this.password,
-      // });
-      // localStorage.setItem("ID", this.ID);
-      // router.push("/users/" + this.ID + "?registered=true");
     },
   },
 };
