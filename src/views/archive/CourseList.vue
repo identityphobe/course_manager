@@ -11,9 +11,9 @@
 </template>
 
 <script>
-import database from "../database";
+import database from "../../database";
 import { ref, child, get } from "firebase/database";
-import CourseCardAdmin from "../components/CourseCardAdmin.vue";
+import CourseCardAdmin from "../../components/CourseCardAdmin.vue";
 //let courses = {};
 
 export default {

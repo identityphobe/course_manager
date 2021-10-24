@@ -7,7 +7,7 @@
       <div class="container">
         <div class="box">
           <label class="label">Name</label>
-          <p>Short Course</p>
+          <p>{{ course.name }}</p>
           <label class="label">Objective</label>
           <p>To be better</p>
           <label class="label">Certificate</label>
@@ -119,7 +119,38 @@
 </template>
 
 <script>
+// import route from "../router/index";
+import database from "../database";
+import { child, get, ref } from "firebase/database";
 export default {
   name: "ViewShortCourse",
+  data() {
+    return {
+      course: "",
+    };
+  },
+  created() {
+    const courseID = this.$route.params.id;
+    console.log(courseID);
+    const dbRef = ref(database);
+    console.log(dbRef);
+    const fetchCourse = async () => {
+      get(child(dbRef, `courses/${courseID}`))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            console.log(snapshot.val());
+            this.course = snapshot.val();
+            console.log(this.course);
+          } else {
+            console.log("No data available");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+
+    fetchCourse();
+  },
 };
 </script>

@@ -13,39 +13,16 @@
     </div>
   </div>
 
-  <h1 class="title is-4 has-text-centered">Your Upcoming courses</h1>
+  <h1 class="title is-4 has-text-centered">Your Upcoming Courses</h1>
   <div class="section">
-    <div class="content">
-      <div class="columns">
-        <div class="column">
-          <CourseCard />
-        </div>
-        <div class="column"><CourseCard /></div>
-        <div class="column"><CourseCard /></div>
-        <div class="column"><CourseCard /></div>
-      </div>
-    </div>
-  </div>
-
-  <h1 class="title is-4 has-text-centered">
-    Courses You Might Be Interested In
-  </h1>
-  <div class="section">
-    <div class="content">
-      <div class="columns">
-        <div class="column">
-          <CourseCard />
-        </div>
-        <div class="column"><CourseCard /></div>
-        <div class="column"><CourseCard /></div>
-        <div class="column"><CourseCard /></div>
-      </div>
-    </div>
+    <p class="has-text-centered">
+      Nothing for now. <router-link to="/courses">Join a course.</router-link>
+    </p>
   </div>
 </template>
 
 <script>
-import CourseCard from "../components/CourseCard.vue";
+// import CourseCard from "../components/CourseCard.vue";
 document.addEventListener("DOMContentLoaded", () => {
   (document.querySelectorAll(".notification .delete") || []).forEach(
     ($delete) => {
@@ -60,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // console.log(this.$route.query.register);
 export default {
   name: "UserMainPage",
-  components: { CourseCard },
+  // components: { CourseCard },
   data() {
     return {
       registered: this.$route.query.registered === "true",

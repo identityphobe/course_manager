@@ -49,7 +49,7 @@ export default {
   props: {},
   data() {
     return {
-      ID: localStorage.getItem("ID") | null,
+      ID: localStorage.getItem("ID"),
     };
   },
   methods: {
