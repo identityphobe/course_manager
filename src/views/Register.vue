@@ -15,9 +15,7 @@
               required
             />
           </div>
-          <p class="help is-danger" v-if="isSubmitted && !ID">
-            Username is required
-          </p>
+          <p class="help is-danger" v-if="isSubmitted && !ID">Required</p>
         </div>
 
         <div class="field">
@@ -31,8 +29,25 @@
               placeholder="Password"
             />
           </div>
-          <p class="help is-danger" v-if="isSubmitted && !password">
-            Password is required
+          <p class="help is-danger" v-if="isSubmitted && !password">Required</p>
+        </div>
+
+        <div class="field">
+          <label class="label">Confirm Password</label>
+          <div class="control">
+            <input
+              class="input"
+              type="password"
+              v-model="confirmPassword"
+              required
+              placeholder="Password"
+            />
+          </div>
+          <p class="help is-danger" v-if="isSubmitted && !confirmPassword">
+            Required
+          </p>
+          <p class="help is-danger" v-if="password != confirmPassword">
+            Both passwords do not match
           </p>
         </div>
 
@@ -65,6 +80,7 @@ export default {
     return {
       ID: "",
       password: "",
+      confirmPassword: "",
       isSubmitted: false,
       //TODO: Check if username is available
       //TODO: Check password length and complexity
@@ -73,11 +89,13 @@ export default {
   methods: {
     writeUserData() {
       this.isSubmitted = true;
-      if (this.ID && this.password) {
+      if (this.ID && this.password && this.password == this.confirmPassword) {
         set(ref(database, "users/" + this.ID), {
           password: this.password,
+          role: "User",
         });
         localStorage.setItem("ID", this.ID);
+        localStorage.setItem("role", "User");
         router.push("/users/" + this.ID + "?registered=true");
       }
     },

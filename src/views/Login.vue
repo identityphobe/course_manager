@@ -19,7 +19,7 @@
           <input
             v-model="password"
             class="input is-success"
-            type="text"
+            type="password"
             placeholder="Password"
           />
         </div>

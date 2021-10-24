@@ -26,9 +26,14 @@
             <button v-if="ID" class="button is-link" @click="logout">
               <strong>Log Out</strong>
             </button>
-            <router-link v-else class="button is-link" to="/login">
-              <strong>Log In</strong>
-            </router-link>
+            <span v-else class="" to="/login">
+              <router-link class="button is-link" to="/register">
+                <strong>Register</strong>
+              </router-link>
+              <router-link class="button is-link" to="/login">
+                <strong>Log In</strong>
+              </router-link>
+            </span>
           </div>
         </div>
       </div>

@@ -6,6 +6,17 @@
 </template>
 
 <script>
+document.addEventListener("DOMContentLoaded", () => {
+  (document.querySelectorAll(".notification .delete") || []).forEach(
+    ($delete) => {
+      const $notification = $delete.parentNode;
+
+      $delete.addEventListener("click", () => {
+        $notification.parentNode.removeChild($notification);
+      });
+    }
+  );
+});
 import Navbar from "./components/Navbar.vue";
 // Import the functions you need from the SDKs you need
 
