@@ -9,19 +9,21 @@
           <label class="label">Name</label>
           <p>{{ course.name }}</p>
           <label class="label">Objective</label>
-          <p>To be better</p>
+          <p>{{ course.objective }}</p>
           <label class="label">Certificate</label>
-          <p>SPM: Module 1</p>
+          <p>{{ course.certificate }}: {{ course.certificateModule }}</p>
           <label class="label">Target Audience</label>
-          <p>Academic</p>
+          <ul v-for="audience in course.targetAudience" :key="audience">
+            <li>{{ audience }}</li>
+          </ul>
           <label class="label">Venue</label>
-          <p>Hallway</p>
+          <p>{{ course.venue }}</p>
           <label class="label">Capacity</label>
-          <p>30</p>
+          <p>{{ course.capacity }}</p>
           <label class="label">Start Date</label>
-          <p>12/10/2021</p>
+          <p>{{ course.startDate }}</p>
           <label class="label">End Date</label>
-          <p>14/10/2021</p>
+          <p>{{ course.endDate }}</p>
           <label class="label">Agenda</label>
           <a>View Agenda</a>
           <label class="label mt-4">Costs</label>
@@ -33,7 +35,12 @@
                   <a class="button is-static">RM</a>
                 </p>
                 <div class="control">
-                  <input class="input" type="text" disabled placeholder="-" />
+                  <input
+                    class="input"
+                    type="text"
+                    disabled
+                    :value="course.costFB"
+                  />
                 </div>
               </div>
             </div>
@@ -47,7 +54,13 @@
                   <a class="button is-static">RM</a>
                 </p>
                 <div class="control">
-                  <input class="input" type="text" disabled placeholder="-" />
+                  <input
+                    class="input"
+                    type="text"
+                    disabled
+                    placeholder="-"
+                    :value="course.costInstructor"
+                  />
                 </div>
               </div>
             </div>
@@ -61,7 +74,13 @@
                   <a class="button is-static">RM</a>
                 </p>
                 <div class="control">
-                  <input class="input" type="text" disabled placeholder="-" />
+                  <input
+                    class="input"
+                    type="text"
+                    disabled
+                    placeholder="-"
+                    :value="course.costModule"
+                  />
                 </div>
               </div>
             </div>
@@ -75,7 +94,13 @@
                   <a class="button is-static">RM</a>
                 </p>
                 <div class="control">
-                  <input class="input" type="text" disabled placeholder="-" />
+                  <input
+                    class="input"
+                    type="text"
+                    disabled
+                    placeholder="-"
+                    :value="course.costOthers"
+                  />
                 </div>
               </div>
             </div>
@@ -89,7 +114,13 @@
                   <a class="button is-static">RM</a>
                 </p>
                 <div class="control">
-                  <input class="input" type="text" disabled placeholder="-" />
+                  <input
+                    class="input"
+                    type="text"
+                    disabled
+                    placeholder="-"
+                    :value="course.costTotal"
+                  />
                 </div>
               </div>
             </div>
@@ -122,6 +153,7 @@
 // import route from "../router/index";
 import database from "../database";
 import { child, get, ref } from "firebase/database";
+import { cloneDeep } from "lodash";
 export default {
   name: "ViewShortCourse",
   data() {
@@ -139,7 +171,7 @@ export default {
         .then((snapshot) => {
           if (snapshot.exists()) {
             console.log(snapshot.val());
-            this.course = snapshot.val();
+            this.course = cloneDeep(cloneDeep(snapshot.val()));
             console.log(this.course);
           } else {
             console.log("No data available");
@@ -154,3 +186,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+:disabled {
+  background-color: white;
+  /* font: black; */
+}
+</style>

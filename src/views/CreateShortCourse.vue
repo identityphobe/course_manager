@@ -116,7 +116,7 @@
                 <div class="select">
                   <select v-model="course.venue">
                     <option value="" disabled>Venue</option>
-                    <option value="meetingRoomA">Meeting room A</option>
+                    <option value="Meeting Room A">Meeting room A</option>
                     <option value="Auditorium">Auditorium</option>
                     <option value="Hall">Hall</option>
                   </select>
@@ -216,7 +216,7 @@
                 </p>
                 <div class="control">
                   <input
-                    v-model="course.costs.fb"
+                    v-model="course.costFB"
                     class="input"
                     type="text"
                     placeholder="-"
@@ -235,7 +235,7 @@
                 </p>
                 <div class="control">
                   <input
-                    v-model="course.costs.instructor"
+                    v-model="course.costInstructor"
                     class="input"
                     type="text"
                     placeholder="-"
@@ -254,7 +254,7 @@
                 </p>
                 <div class="control">
                   <input
-                    v-model="course.costs.module"
+                    v-model="course.costModule"
                     class="input"
                     type="text"
                     placeholder="-"
@@ -273,7 +273,7 @@
                 </p>
                 <div class="control">
                   <input
-                    v-model="course.costs.others"
+                    v-model="course.costOthers"
                     class="input"
                     type="text"
                     placeholder="-"
@@ -292,7 +292,7 @@
                 </p>
                 <div class="control">
                   <input
-                    v-model="course.costs.total"
+                    v-model="course.costTotal"
                     class="input"
                     type="text"
                     placeholder="-"
@@ -371,16 +371,16 @@ export default {
         externalCost: "",
         venue: "",
         capacity: "",
-        dateStart: "",
-        dateEnd: "",
+        startDate: "",
+        endDate: "",
         speaker: "",
-        costs: {
-          fb: "",
-          instructor: "",
-          module: "",
-          others: "",
-          total: "",
-        },
+        costFB: "",
+
+        costInstructor: "",
+        costModule: "",
+        costOthers: "",
+        costTotal: "",
+
         //TODO: Files
         // for files, no need for bindings
         // just store in firebase storage
