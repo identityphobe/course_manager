@@ -93,6 +93,7 @@ export default {
         set(ref(database, "users/" + this.ID), {
           password: this.password,
           role: "User",
+          courses: 0,
         });
         localStorage.setItem("ID", this.ID);
         localStorage.setItem("role", "User");

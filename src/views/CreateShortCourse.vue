@@ -1,5 +1,6 @@
 <template>
   <h1 class="title is-3 has-text-centered">Create Short Course</h1>
+
   <div class="columns">
     <div class="column"></div>
     <div class="column is-three-fifths">
@@ -371,8 +372,8 @@ export default {
         externalCost: "",
         venue: "",
         capacity: "",
-        startDate: "",
-        endDate: "",
+        dateStart: "",
+        dateEnd: "",
         speaker: "",
         costFB: "",
 
