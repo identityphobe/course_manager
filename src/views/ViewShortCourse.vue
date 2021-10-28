@@ -154,9 +154,9 @@
                 class="button is-link"
                 @click="joinCourse"
               >
-                Join {{ hasJoinedCourse }}
+                Join
               </button>
-              <button class="button is-link" @click="test">Test</button>
+              <!-- <button class="button is-link" @click="test">Test</button> -->
             </div>
             <div class="column"></div>
           </div>
@@ -170,7 +170,7 @@
 <script>
 // import route from "../router/index";
 import database from "../database";
-import { child, get, ref } from "firebase/database";
+import { child, get, ref, set } from "firebase/database";
 // import { cloneDeep } from "lodash";
 
 export default {
@@ -186,18 +186,17 @@ export default {
     };
   },
   methods: {
-    test() {
-      console.log("HEYYA");
-      console.log(this.user.courses);
-      for (const course of this.user.courses) {
-        console.log(course);
-        console.log(this.user.courses);
-        if (course === this.courseID) {
-          return true;
-        }
-      }
-      return false;
-    },
+    // test() {
+    //   console.log(this.user.courses);
+    //   for (const course of this.user.courses) {
+    //     console.log(course);
+    //     console.log(this.user.courses);
+    //     if (course === this.courseID) {
+    //       return true;
+    //     }
+    //   }
+    //   return false;
+    // },
 
     joinCourse() {
       const dbRef = ref(database);
@@ -205,13 +204,18 @@ export default {
         .then((snapshot) => {
           if (snapshot.exists()) {
             this.user = snapshot.val();
-            console.log(this.user);
-            if (!this.user.courses) {
-              this.user.courses = [];
-              this.user.courses[0] = this.courseID;
+
+            if (this.user.courses === 0) {
+              console.log("AUK");
+              this.user.courses = [this.courseID];
+              console.log(this.user.courses);
+              // this.user.courses[0] = this.courseID;
+            } else {
+              // this.user.courses.push(this.courseID);
+              console.log("else");
+              console.log(this.user.courses);
             }
-            console.log(this.user);
-            console.log(this.user.courses);
+            set(child(dbRef, `users/${this.ID}`), this.user);
           } else {
             console.log("No data available");
           }
@@ -223,14 +227,10 @@ export default {
   },
   computed: {
     hasJoinedCourse() {
-      console.log("HEYYA");
-      console.log(this.user.courses);
       if (!this.user.courses) {
         return false;
       }
       for (const course of this.user.courses) {
-        console.log(course);
-        console.log(this.user.courses);
         if (course === this.courseID) {
           return true;
         }
@@ -266,7 +266,6 @@ export default {
         .then((snapshot) => {
           if (snapshot.exists()) {
             this.user = snapshot.val();
-            console.log(this.user);
           } else {
             console.log("No data available");
           }

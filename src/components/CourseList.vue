@@ -22,7 +22,6 @@
 <script>
 import database from "../database";
 import { ref, child, get } from "firebase/database";
-//let courses = {};
 
 Object.filter = (obj, predicate) =>
   Object.keys(obj)
