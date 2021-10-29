@@ -183,21 +183,10 @@ export default {
       user: {},
       course: "",
       courseID: this.$route.params.id,
+      hasJoinedCourse: true,
     };
   },
   methods: {
-    // test() {
-    //   console.log(this.user.courses);
-    //   for (const course of this.user.courses) {
-    //     console.log(course);
-    //     console.log(this.user.courses);
-    //     if (course === this.courseID) {
-    //       return true;
-    //     }
-    //   }
-    //   return false;
-    // },
-
     joinCourse() {
       const dbRef = ref(database);
       get(child(dbRef, `users/${this.ID}`))
@@ -211,9 +200,7 @@ export default {
               console.log(this.user.courses);
               // this.user.courses[0] = this.courseID;
             } else {
-              // this.user.courses.push(this.courseID);
-              console.log("else");
-              console.log(this.user.courses);
+              this.user.courses.push(this.courseID);
             }
             set(child(dbRef, `users/${this.ID}`), this.user);
           } else {
@@ -225,19 +212,7 @@ export default {
         });
     },
   },
-  computed: {
-    hasJoinedCourse() {
-      if (!this.user.courses) {
-        return false;
-      }
-      for (const course of this.user.courses) {
-        if (course === this.courseID) {
-          return true;
-        }
-      }
-      return false;
-    },
-  },
+  computed: {},
   created() {
     const courseID = this.$route.params.id;
 
@@ -266,6 +241,12 @@ export default {
         .then((snapshot) => {
           if (snapshot.exists()) {
             this.user = snapshot.val();
+            for (const idx in this.user.courses) {
+              console.log("WHAT!!" + idx);
+              if (this.user.courses[idx] === this.courseID) {
+                this.hasJoinedCourse = true;
+              }
+            }
           } else {
             console.log("No data available");
           }
@@ -276,6 +257,25 @@ export default {
     };
 
     fetchUser();
+
+    // const hasJoinedCourse = async () => {
+    //   console.log(this.user.courses);
+    //   if (!this.user.courses) {
+    //     console.log("WHAT!!");
+    //     return false;
+    //   }
+    //   for (const course of this.user.courses) {
+    //     console.log(course);
+    //     console.log(this.courseID);
+    //     if (course === this.courseID) {
+    //       return true;
+    //     }
+    //   }
+
+    //   return false;
+    // };
+
+    // console.log(hasJoinedCourse());
   },
 };
 </script>

@@ -70,7 +70,7 @@ const routes = [
     component: EvaluationReport,
   },
   {
-    path: "/courses/:user/joined",
+    path: "/:user/courses/joined",
     component: CoursesJoined
   }
 
