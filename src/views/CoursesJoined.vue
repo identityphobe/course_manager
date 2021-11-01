@@ -4,8 +4,8 @@
     {{ user }}
     {{ coursesJoined }}
     <ul>
-      <li v-for="course in user.courses" :key="course">
-        <router-link :to="course">{{ course }}</router-link>
+      <li v-for="course in coursesJoined" :key="course">
+        <router-link :to="course.link">{{ course.name }}</router-link>
       </li>
     </ul>
     <!-- TODO: Create a component out of this -->
@@ -32,67 +32,65 @@ Object.filter = (obj, predicate) =>
     .reduce((res, key) => ((res[key] = obj[key]), res), {});
 export default {
   name: "CoursesJoined",
-  computed: {
-    // coursesJoined() {
-    //   // const dbRef = ref(database);
-    //   // const fetchCourse = async (ref, courseID) => {
-    //   //   get(child(dbRef, `courses/${courseID}`))
-    //   //     .then((snapshot) => {
-    //   //       if (snapshot.exists()) {
-    //   //         this.course = snapshot.val();
-    //   //       } else {
-    //   //         console.log("No data available");
-    //   //       }
-    //   //     })
-    //   //     .catch((error) => {
-    //   //       console.error(error);
-    //   //     });
-    //   // };
-    //   // for (let index, courseID in this.user.courses) {
-    //   //   console.log(courseID);
-    //   // }
-    //   console.log(this.user.courses);
-    //   // this.user.courses.forEach(function (value) {
-    //   //   console.log(value);
-    //   // });
-    //   return "1";
-    // },
-  },
+  computed: {},
   data() {
     return {
       user: {},
-      coursesJoined: [],
+      coursesJoined: {},
     };
   },
   created() {
     let ID = localStorage.getItem("ID");
     const dbRef = ref(database);
-    const fetchUser = (ref, id) => {
+
+    // const coursesJoined = [];
+    const fetchUser = async (ref, id) => {
       get(child(ref, `users/${id}`))
         .then((snapshot) => {
           if (snapshot.exists()) {
+            console.log(this);
             this.user = snapshot.val();
+
             // let joinedCourses = [];
-            this.user.courses.forEach(function (val) {
-              // joinedCourses.push(val);
 
-              get(child(ref, `courses/${val}`))
-                .then((snapshot) => {
-                  if (snapshot.exists()) {
-                    console.log(snapshot.val());
-                  } else {
-                    console.log("No data available");
-                  }
-                })
-                .catch((error) => {
-                  console.error(error);
-                });
-            });
-
+            // console.log(coursesJoined);
             // console.log(joinedCourses);
           } else {
             console.log("No data available");
           }
+        })
+        .then(() => {
+          console.log(this.user);
+
+          for (let i = 0; i < this.user.courses.length; i++) {
+            const key = this.user.courses[i];
+            get(child(ref, `courses/${this.user.courses[i]}`))
+              .then((snapshot) => {
+                if (snapshot.exists()) {
+                  console.log(snapshot.val());
+
+                  // course = snapshot.val();
+                  // console.log(course);
+
+                  this.coursesJoined[key] = snapshot.val();
+                  this.coursesJoined[key].link = "/courses/" + key;
+                } else {
+                  console.log("No data available");
+                }
+              })
+              .catch((error) => {
+                console.error(error);
+              });
+          }
+
+          // console.log("Before");
+          console.log(this.coursesJoined);
+          // this.coursesJoined = fetchedCourses;
+          // this.user.coursesJoined = fetchedCourses;
+          // console.log(this.user.coursesJoined);
+
+          // console.log("Courses in user:");
+          // console.log(this.coursesJoined);
         })
         .catch((error) => {
           console.error(error);
@@ -100,26 +98,6 @@ export default {
     };
 
     fetchUser(dbRef, ID);
-
-    const fetchJoinedCourses = () => {
-      console.log(this.user);
-      // this.user.courses.forEach(function (value) {
-      //   console.log(value);
-      // });
-
-      // get(child(dbRef, `courses/${courseID}`))
-      //   .then((snapshot) => {
-      //     if (snapshot.exists()) {
-      //       console.log(snapshot.val());
-      //     } else {
-      //       console.log("No data available");
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     console.error(error);
-      //   });
-    };
-    fetchJoinedCourses();
   },
 };
 </script>
