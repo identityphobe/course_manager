@@ -1,11 +1,16 @@
 <template>
   <h1 class="title is-3 has-text-centered">Courses Joined</h1>
   <div class="section pt-0">
-    {{ user }}
-    {{ coursesJoined }}
     <ul>
       <li v-for="course in coursesJoined" :key="course">
+        <!-- TODO: process date -->
         <router-link :to="course.link">{{ course.name }}</router-link>
+        <span>{{
+          " " +
+          course.dateStart.replaceAll("-", "/") +
+          " - " +
+          course.dateEnd.replaceAll("-", "/")
+        }}</span>
       </li>
     </ul>
     <!-- TODO: Create a component out of this -->
@@ -48,14 +53,7 @@ export default {
       get(child(ref, `users/${id}`))
         .then((snapshot) => {
           if (snapshot.exists()) {
-            console.log(this);
             this.user = snapshot.val();
-
-            // let joinedCourses = [];
-
-            // console.log(coursesJoined);
-            // console.log(joinedCourses);
-          } else {
             console.log("No data available");
           }
         })
@@ -67,11 +65,6 @@ export default {
             get(child(ref, `courses/${this.user.courses[i]}`))
               .then((snapshot) => {
                 if (snapshot.exists()) {
-                  console.log(snapshot.val());
-
-                  // course = snapshot.val();
-                  // console.log(course);
-
                   this.coursesJoined[key] = snapshot.val();
                   this.coursesJoined[key].link = "/courses/" + key;
                 } else {
@@ -82,15 +75,6 @@ export default {
                 console.error(error);
               });
           }
-
-          // console.log("Before");
-          console.log(this.coursesJoined);
-          // this.coursesJoined = fetchedCourses;
-          // this.user.coursesJoined = fetchedCourses;
-          // console.log(this.user.coursesJoined);
-
-          // console.log("Courses in user:");
-          // console.log(this.coursesJoined);
         })
         .catch((error) => {
           console.error(error);

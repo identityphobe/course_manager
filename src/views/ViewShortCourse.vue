@@ -138,6 +138,7 @@
           </div>
           <label class="label">Poster</label>
           <a>View Poster</a>
+
           <div v-if="isAdmin" class="columns">
             <div class="column">
               <button class="button is-link">View Participants</button>
@@ -155,6 +156,9 @@
                 @click="joinCourse"
               >
                 Join
+              </button>
+              <button v-else class="button is-link" @click="dropCourse">
+                Drop
               </button>
               <!-- <button class="button is-link" @click="test">Test</button> -->
             </div>
@@ -183,7 +187,7 @@ export default {
       user: {},
       course: "",
       courseID: this.$route.params.id,
-      hasJoinedCourse: true,
+      hasJoinedCourse: false,
     };
   },
   methods: {
@@ -193,16 +197,19 @@ export default {
         .then((snapshot) => {
           if (snapshot.exists()) {
             this.user = snapshot.val();
-
+            // if exists, don't add
             if (this.user.courses === 0) {
               console.log("AUK");
               this.user.courses = [this.courseID];
               console.log(this.user.courses);
               // this.user.courses[0] = this.courseID;
             } else {
-              this.user.courses.push(this.courseID);
+              if (this.user.courses.indexOf(this.courseID) != -1) {
+                this.user.courses.push(this.courseID);
+              }
             }
             set(child(dbRef, `users/${this.ID}`), this.user);
+            this.hasJoinedCourse = true;
           } else {
             console.log("No data available");
           }
@@ -210,6 +217,19 @@ export default {
         .catch((error) => {
           console.error(error);
         });
+    },
+    dropCourse() {
+      const dbRef = ref(database);
+      let index = this.user.courses.indexOf(this.courseID);
+      console.log(index);
+      if (index > -1) {
+        this.user.courses.splice(index, 1);
+        console.log(this.user.courses.length);
+        if (this.user.courses.length === 0) {
+          this.user.courses = 0;
+        }
+        set(child(dbRef, `users/${this.ID}`), this.user);
+      }
     },
   },
   computed: {},
@@ -241,8 +261,8 @@ export default {
         .then((snapshot) => {
           if (snapshot.exists()) {
             this.user = snapshot.val();
+
             for (const idx in this.user.courses) {
-              console.log("WHAT!!" + idx);
               if (this.user.courses[idx] === this.courseID) {
                 this.hasJoinedCourse = true;
               }
