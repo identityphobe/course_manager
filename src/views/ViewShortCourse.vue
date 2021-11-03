@@ -5,7 +5,10 @@
     <div class="column"></div>
     <div class="column is-three-fifths">
       <div class="container">
-        <div class="box">
+        <div v-if="!doesCourseExists" class="has-text-centered">
+          The course you are looking for does not exist.
+        </div>
+        <div v-else class="box">
           <label class="label">Name</label>
           <p>{{ course.name }}</p>
           <label class="label">Objective</label>
@@ -140,11 +143,23 @@
           <a>View Poster</a>
 
           <div v-if="isAdmin" class="columns">
-            <div class="column">
-              <button class="button is-link">View Participants</button>
+            <div class="column has-text-centered">
+              <router-link to="/name"
+                ><button class="button is-link">
+                  View Participants
+                </button></router-link
+              >
             </div>
-            <div class="column">
+            <div class="column has-text-centered">
               <button class="button is-link">Edit</button>
+            </div>
+            <div class="column has-text-centered">
+              <button
+                class="button is-link has-text-centered"
+                @click="deleteCourse"
+              >
+                Delete
+              </button>
             </div>
           </div>
           <div v-else-if="isUser" class="columns">
@@ -160,9 +175,9 @@
               <button v-else class="button is-link" @click="dropCourse">
                 Drop
               </button>
+
               <!-- <button class="button is-link" @click="test">Test</button> -->
             </div>
-            <div class="column"></div>
           </div>
         </div>
       </div>
@@ -174,7 +189,7 @@
 <script>
 // import route from "../router/index";
 import database from "../database";
-import { child, get, ref, set } from "firebase/database";
+import { child, get, ref, remove, set } from "firebase/database";
 // import { cloneDeep } from "lodash";
 
 export default {
@@ -188,6 +203,7 @@ export default {
       course: "",
       courseID: this.$route.params.id,
       hasJoinedCourse: false,
+      doesCourseExists: false,
     };
   },
   methods: {
@@ -231,6 +247,15 @@ export default {
         set(child(dbRef, `users/${this.ID}`), this.user);
       }
     },
+    deleteCourse() {
+      // const dbRef = ref(database);
+      // const dbRef = ref(database);
+      // console.log("Deleting!");
+      let toRemoveRef = ref(database, `courses/${this.courseID}`);
+      console.log(toRemoveRef);
+      remove(toRemoveRef);
+      // remove(toRemoveRef);
+    },
   },
   computed: {},
   created() {
@@ -243,6 +268,7 @@ export default {
         .then((snapshot) => {
           if (snapshot.exists()) {
             this.course = snapshot.val();
+            this.doesCourseExists = true;
           } else {
             console.log("No data available");
           }

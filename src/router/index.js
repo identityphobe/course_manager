@@ -7,11 +7,13 @@ import Courses from "../views/Courses.vue"
 // import CourseList from "../components/CourseList.vue"
 import CreateShortCourse from "../views/CreateShortCourse.vue"
 import ViewShortCourse from "../views/ViewShortCourse.vue"
+import EditShortCourse from "../views/EditShortCourse.vue"
 import Search from "../views/Search.vue"
 import Participants from "../views/Participants.vue"
 import EvaluateShortCourse from "../views/EvaluateShortCourse.vue"
 import EvaluationReport from "../views/EvaluationReport.vue"
 import CoursesJoined from "../views/CoursesJoined"
+
 
 
 const routes = [
@@ -72,7 +74,11 @@ const routes = [
   {
     path: "/:user/courses/joined",
     component: CoursesJoined
-  }
+  },
+  {
+    path: "/courses/:id/edit",
+    component: EditShortCourse,
+  },
 
 ]
 
