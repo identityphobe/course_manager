@@ -1,4 +1,6 @@
+
 <template>
+  <!-- if logged in, don't show registration page...or... -->
   <Page title="Register" />
   <section class="container">
     <div class="columns">
