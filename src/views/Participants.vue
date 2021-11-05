@@ -3,12 +3,29 @@
     <h1 class="title is-3 has-text-centered">
       Participants for Short Course {{ $route.params.id }}
     </h1>
-    <ul>
-      <li v-for="(participant, index) in participants" :key="index">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Attendance</th>
+        </tr>
+      </thead>
+      <tr
+        v-for="(attendance, participant) in course.participants"
+        :key="participant"
+      >
         <!-- <router-link :to="course.link">{{ part }}</router-link> -->
-        {{ index }}
-      </li>
-    </ul>
+        <td>{{ participant }}</td>
+
+        <td class="has-text-centered">
+          <i
+            @click="toggleAttendance(participant)"
+            :class="{ fas: true, 'fa-check-circle': true, absent: !attendance }"
+          ></i>
+        </td>
+        <td></td>
+      </tr>
+    </table>
     <!-- {{ participants }} -->
     <!-- <div class="box">Juliana Ahmad</div>
     <div class="box">Anasurimbor Kellhus</div> -->
@@ -17,7 +34,7 @@
 
 <script>
 import database from "../database";
-import { child, get, ref } from "firebase/database";
+import { child, get, ref, set } from "firebase/database";
 Object.filter = (obj, predicate) =>
   Object.keys(obj)
     .filter((key) => predicate(obj[key]))
@@ -27,7 +44,18 @@ export default {
   data() {
     return {
       participants: {},
+      course: {},
     };
+  },
+  methods: {
+    toggleAttendance(participant) {
+      this.course.participants[participant] =
+        !this.course.participants[participant];
+      console.log(this.course);
+      const courseID = this.$route.params.id;
+      const courseRef = ref(database, `courses/${courseID}`);
+      set(courseRef, this.course);
+    },
   },
   created() {
     const courseID = this.$route.params.id;
@@ -53,12 +81,51 @@ export default {
             console.log("No data available");
           }
         })
+        .then(() => {
+          fetchCourse();
+        })
         .catch((error) => {
           console.error(error);
         });
     };
 
+    const fetchCourse = async () => {
+      get(child(dbRef, `courses/${courseID}`))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            this.course = snapshot.val();
+            console.log(this.course);
+            if (!this.course.participants) {
+              console.log("WEYYO");
+              console.log(this.participants);
+              this.course.participants = {};
+              for (let participant in this.participants) {
+                this.course.participants[participant] = false;
+              }
+            }
+          } else {
+            console.log("No data available");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+
+    fetchCourse();
+
     fetchUsers();
   },
 };
 </script>
+
+<style scoped>
+.fa-check-circle {
+  color: green;
+  cursor: pointer;
+}
+
+.fa-check-circle.absent {
+  color: gray;
+}
+</style>
