@@ -154,6 +154,9 @@
               <button class="button is-link">Edit</button>
             </div>
             <div class="column has-text-centered">
+              <button class="button is-link">Evaluations</button>
+            </div>
+            <div class="column has-text-centered">
               <button
                 class="button is-link has-text-centered"
                 @click="deleteCourse"
