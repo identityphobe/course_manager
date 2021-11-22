@@ -60,6 +60,7 @@ export default {
       ID: "",
       password: "",
       storedPassword: "",
+      role: "",
       doesCombinationExists: false,
       doesIDExists: false,
       isSubmitted: false,
@@ -77,10 +78,12 @@ export default {
             const userInfo = snapshot.val();
             this.storedPassword = userInfo.password;
             this.doesCombinationExists = this.password == this.storedPassword;
+
             // console.log("Combination:" + this.doesCombinationExists);
             // console.log(`Stored Password: ${this.storedPassword}`);
             if (this.doesCombinationExists) {
               localStorage.setItem("ID", this.ID);
+              localStorage.setItem("role", userInfo.role);
               router.push("/users/" + this.ID + "?loggedIn=true");
             }
           } else {

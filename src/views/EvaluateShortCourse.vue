@@ -2,6 +2,7 @@
   <h1 class="title is-3 has-text-centered">Create Short Course</h1>
   <div class="container">
     <div class="box">
+      <h2 class="title is-4 has-text-centered">Courses</h2>
       <label class="label">The venue for this programme is suitable</label>
       <div class="control">
         <div class="select">
@@ -55,7 +56,44 @@
           </select>
         </div>
       </div>
-      <div class="columns is-gapless">
+      <h2 class="title is-4 has-text-centered">Facilitator</h2>
+      <div class="control">
+        <label class="label">The speaker is effective</label>
+        <div class="select">
+          <select>
+            <option>Select rating</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+          </select>
+        </div>
+      </div>
+      <div class="control">
+        <label class="label">The speaker is engaging</label>
+        <div class="select">
+          <select>
+            <option>Select rating</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+          </select>
+        </div>
+      </div>
+      <div class="control">
+        <label class="label">The speaker understands my need</label>
+        <div class="select">
+          <select>
+            <option>Select rating</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+          </select>
+        </div>
+      </div>
+      <!-- <div class="columns is-gapless">
         <div class="column">
           <div class="box has-text-centered">Content</div>
         </div>
@@ -71,7 +109,7 @@
         <div class="column">
           <div class="box has-text-centered">Programme</div>
         </div>
-      </div>
+      </div> -->
       <button class="button is-link">Submit</button>
     </div>
   </div>

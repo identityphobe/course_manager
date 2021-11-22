@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h1 class="title is-3 has-text-centered">
-      Participants for Short Course {{ $route.params.id }}
+      Participants of {{ course.name }}
     </h1>
     <table class="table">
       <thead>

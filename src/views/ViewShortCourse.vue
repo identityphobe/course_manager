@@ -144,7 +144,7 @@
 
           <div v-if="isAdmin" class="columns">
             <div class="column has-text-centered">
-              <router-link to="/name"
+              <router-link :to="participantsLink"
                 ><button class="button is-link">
                   View Participants
                 </button></router-link
@@ -202,6 +202,7 @@ export default {
       user: {},
       course: "",
       courseID: this.$route.params.id,
+      participantsLink: `/courses/${this.$route.params.id}/participants`,
       hasJoinedCourse: false,
       doesCourseExists: false,
     };
