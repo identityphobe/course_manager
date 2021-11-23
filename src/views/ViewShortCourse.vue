@@ -154,7 +154,9 @@
               <button class="button is-link">Edit</button>
             </div>
             <div class="column has-text-centered">
-              <button class="button is-link">Evaluations</button>
+              <router-link class="button is-link" :to="reportLink">
+                Evaluations
+              </router-link>
             </div>
             <div class="column has-text-centered">
               <button
@@ -166,7 +168,6 @@
             </div>
           </div>
           <div v-else-if="isUser" class="columns">
-            <div class="column"></div>
             <div class="column has-text-centered">
               <button
                 v-if="!hasJoinedCourse"
@@ -175,11 +176,21 @@
               >
                 Join
               </button>
+
               <button v-else class="button is-link" @click="dropCourse">
                 Drop
               </button>
 
               <!-- <button class="button is-link" @click="test">Test</button> -->
+            </div>
+            <div class="column">
+              <router-link
+                v-if="hasJoinedCourse"
+                class="button is-link"
+                :to="evaluateLink"
+              >
+                Evaluate
+              </router-link>
             </div>
           </div>
         </div>
@@ -202,6 +213,8 @@ export default {
       isAdmin: localStorage.getItem("role") === "Admin",
       isUser: localStorage.getItem("role") === "User",
       ID: localStorage.getItem("ID"),
+      evaluateLink: "/courses/" + this.$route.params.id + "/evaluate",
+      reportLink: "/courses/" + this.$route.params.id + "/report",
       user: {},
       course: "",
       courseID: this.$route.params.id,

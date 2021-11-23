@@ -30,8 +30,7 @@
         </div>
       </div>
       <label class="label"
-        >The multimedia facilities (e.g. microphone, audio speaker, etc) meet my
-        expected quality standards</label
+        >The programme content provides new perspective/knowledge</label
       >
       <div class="control">
         <div class="select">
@@ -44,10 +43,7 @@
           </select>
         </div>
       </div>
-      <label class="label"
-        >The multimedia facilities (e.g. microphone, audio speaker, etc) meet my
-        expected quality standards</label
-      >
+      <label class="label">The content material provided are helpful</label>
       <div class="control">
         <div class="select">
           <select v-model="report.contentMaterialsHelpful">
