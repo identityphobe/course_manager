@@ -1,5 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, get, child } from "firebase/database";
+import { getStorage } from "firebase/storage";
+
 //TODO: Add SDKs for Firebase products that you want to use
 
 //https://firebase.google.com/docs/web/setup#available-libraries
@@ -44,6 +46,10 @@ export const fetchUserCourses = async (id) => {
         console.error(error);
     });
 }
+const storage = getStorage(app);
 
+export {
+    storage
+}
 
 export default database;

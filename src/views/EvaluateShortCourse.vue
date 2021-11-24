@@ -270,12 +270,11 @@ export default {
     //TODO: field validation
     //TODO: total costs calculation
     submitEvaluation() {
-      this.report.userID = localStorage.getItem("ID");
       console.log(this.report);
       // console.log(localStorage.getItem("ID"));
       const evaluationRef = ref(
         database,
-        "evaluations/" + this.$route.params.id
+        "evaluations/" + this.$route.params.id + "/" + this.report.userID
       );
       set(evaluationRef, this.report);
     },

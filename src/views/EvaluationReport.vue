@@ -128,25 +128,53 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
-          <td>1</td>
+        <tr v-for="(evaluation, index) in evaluations" :key="index">
+          <td class="has-text-centered">{{ index }}</td>
+          <td class="has-text-centered">
+            {{ evaluation["contentInteresting"] }}
+          </td>
+          <td class="has-text-centered">
+            {{ evaluation["contentProfessionalNeeds"] }}
+          </td>
+          <td class="has-text-centered">
+            {{ evaluation["contentNewPerspective"] }}
+          </td>
+          <td class="has-text-centered">
+            {{ evaluation["contentMaterialsHelpful"] }}
+          </td>
+          <td class="has-text-centered">
+            {{ evaluation["facilitatorEffective"] }}
+          </td>
+          <td class="has-text-centered">
+            {{ evaluation["facilitatorEngaging"] }}
+          </td>
+          <td class="has-text-centered">
+            {{ evaluation["facilitatorUnderstandsNeed"] }}
+          </td>
+          <td class="has-text-centered">{{ evaluation["venueSuitable"] }}</td>
+          <td class="has-text-centered">{{ evaluation["venueStrategic"] }}</td>
+          <td class="has-text-centered">
+            {{ evaluation["venueFacilitiesStandard"] }}
+          </td>
+          <td class="has-text-centered">
+            {{ evaluation["venueFacilitiesAdequate"] }}
+          </td>
+          <td class="has-text-centered">
+            {{ evaluation["committeeRefreshmentSatisfactory"] }}
+          </td>
+          <td class="has-text-centered">
+            {{ evaluation["committeeHelpful"] }}
+          </td>
+          <td class="has-text-centered">
+            {{ evaluation["committeeEfficient"] }}
+          </td>
+          <td class="has-text-centered">
+            {{ evaluation["tlcParticipateMore"] }}
+          </td>
+          <td class="has-text-centered">{{ evaluation["tlcRecommend"] }}</td>
+          <td class="has-text-centered">
+            {{ evaluation["tlcSeeImprovements"] }}
+          </td>
         </tr>
       </tbody>
     </table>
@@ -154,8 +182,36 @@
 </template>
 
 <script>
+import database from "../database";
+import { ref, get, child } from "firebase/database";
 export default {
   name: "EvaluationReport",
+  data() {
+    return {
+      evaluations: {},
+    };
+  },
+  created() {
+    const courseID = this.$route.params.id;
+
+    const dbRef = ref(database);
+    const fetchEvaluations = async () => {
+      get(child(dbRef, `evaluations/${courseID}`))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            // this.course = snapshot.val();
+            console.log(snapshot.val());
+            this.evaluations = snapshot.val();
+          } else {
+            console.log("No data available");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+    fetchEvaluations();
+  },
 };
 </script>
 

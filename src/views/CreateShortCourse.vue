@@ -180,7 +180,13 @@
             <div class="column">
               <div class="file mt-5">
                 <label class="file-label">
-                  <input class="file-input" type="file" name="resume" />
+                  <input
+                    class="file-input"
+                    type="file"
+                    name="resume"
+                    id="agenda"
+                    @change="uploadFile"
+                  />
                   <span class="file-cta">
                     <span class="file-icon">
                       <i class="fas fa-upload"></i>
@@ -195,7 +201,13 @@
             <div class="column">
               <div class="file mt-5">
                 <label class="file-label">
-                  <input class="file-input" type="file" name="resume" />
+                  <input
+                    class="file-input"
+                    type="file"
+                    name="resume"
+                    id="poster"
+                    @change="uploadFile"
+                  />
                   <span class="file-cta">
                     <span class="file-icon">
                       <i class="fas fa-upload"></i>
@@ -307,7 +319,13 @@
             <div class="column">
               <div class="file mt-5">
                 <label class="file-label">
-                  <input class="file-input" type="file" name="resume" />
+                  <input
+                    class="file-input"
+                    type="file"
+                    name="resume"
+                    id="approvalLetter"
+                    @change="uploadFile"
+                  />
                   <span class="file-cta">
                     <span class="file-icon">
                       <i class="fas fa-upload"></i>
@@ -322,7 +340,13 @@
             <div class="column">
               <div class="file mt-5">
                 <label class="file-label">
-                  <input class="file-input" type="file" name="resume" />
+                  <input
+                    class="file-input"
+                    type="file"
+                    name="resume"
+                    id="speakerLetter"
+                    @change="uploadFile"
+                  />
                   <span class="file-cta">
                     <span class="file-icon">
                       <i class="fas fa-upload"></i>
@@ -335,6 +359,7 @@
               </div>
             </div>
           </div>
+
           <div class="field">
             <div class="control">
               <button
@@ -355,13 +380,16 @@
 
 <script>
 import database from "../database";
+import { storage } from "../database";
+import { ref as storageRef, uploadBytes } from "firebase/storage";
+
 import { ref, push } from "firebase/database";
-//import router from "../router/index.js";
 
 export default {
   name: "CreateShortCourse",
   data() {
     return {
+      upload: {},
       course: {
         name: "",
         objective: "",
@@ -391,11 +419,21 @@ export default {
   methods: {
     //TODO: field validation
     //TODO: total costs calculation
+
+    uploadFile(event) {
+      this.upload[event.target.id] = event.target.files[0];
+    },
     createCourse() {
       console.log(this.course);
 
       const courseRef = ref(database, "courses/");
-      push(courseRef, this.course);
+      push(courseRef, this.course).then((ref) => {
+        const courseID = ref.key;
+        for (let index in this.upload) {
+          const fileRef = storageRef(storage, courseID + "/" + index);
+          uploadBytes(fileRef, this.upload[index]);
+        }
+      });
     },
   },
 };
