@@ -1,6 +1,6 @@
 <template>
   <h1 class="title is-5 mt-6 has-text-centered">
-    Welcome to UNITEN's TLC Short Courses Platform
+    Welcome to UNITEN's TLC Short Course Platform
   </h1>
   <CourseList />
   <div v-if="loggedOut" class="section">

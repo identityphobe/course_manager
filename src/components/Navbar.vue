@@ -23,9 +23,16 @@
       <div class="navbar-end">
         <div class="navbar-item">
           <div class="buttons">
+            <router-link
+              v-if="role === 'Admin'"
+              class="button is-link"
+              to="/users/admin"
+              ><strong>Admin Area</strong></router-link
+            >
             <button v-if="ID" class="button is-link" @click="logout">
               <strong>Log Out</strong>
             </button>
+
             <span v-else class="" to="/login">
               <router-link class="button is-link" to="/register">
                 <strong>Register</strong>
@@ -50,6 +57,7 @@ export default {
   data() {
     return {
       ID: localStorage.getItem("ID"),
+      role: localStorage.getItem("role"),
     };
   },
   methods: {

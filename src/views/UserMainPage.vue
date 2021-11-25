@@ -14,8 +14,9 @@
     </div>
   </div>
 
-  <h1 class="title is-4 has-text-centered">Your Upcoming Courses</h1>
-  <div class="section">
+  <div v-if="userRole === 'User'" class="section">
+    <h1 class="title is-4 has-text-centered">Your Upcoming Courses</h1>
+
     <p
       v-if="Object.keys(this.registeredCourses).length === 0"
       class="has-text-centered"
@@ -27,6 +28,14 @@
         <router-link :to="course.link">{{ course.name }}</router-link>
       </li>
     </ul>
+  </div>
+  <div v-else class="section">
+    <h1 class="title is-4 has-text-centered">Admin Area</h1>
+    <strong>Actions</strong>
+    <ol>
+      <li><router-link to="/courses">View courses</router-link></li>
+      <li><router-link to="/users">View users</router-link></li>
+    </ol>
   </div>
 </template>
 
@@ -54,6 +63,7 @@ export default {
       registered: this.$route.query.registered === "true",
       loggedIn: this.$route.query.loggedIn === "true",
       userID: this.$route.params.id,
+      userRole: localStorage.getItem("role"),
       userData: {},
       registeredCourses: {},
     };

@@ -13,8 +13,7 @@ import Participants from "../views/Participants.vue"
 import EvaluateShortCourse from "../views/EvaluateShortCourse.vue"
 import EvaluationReport from "../views/EvaluationReport.vue"
 import CoursesJoined from "../views/CoursesJoined"
-
-
+import Users from "../views/Users"
 
 const routes = [
   {
@@ -41,6 +40,10 @@ const routes = [
   {
     path: "/users/:id",
     component: UserMainPage,
+  },
+  {
+    path: "/users",
+    component: Users,
   },
   {
     path: "/courses",

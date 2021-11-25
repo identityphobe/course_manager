@@ -1,13 +1,13 @@
 <template>
   <div class="section pt-0">
     <!-- TODO: Create a component out of this -->
-    <p>College of Computing and Informatics</p>
+    <p><strong>College of Computing and Informatics</strong></p>
     <ul>
       <li v-for="course in CCICourses" :key="course.name">
         <router-link :to="course.link">{{ course.name }}</router-link>
       </li>
     </ul>
-    <p>College of Engineering</p>
+    <p><strong>College of Engineering</strong></p>
     <ul>
       <li v-for="course in COECourses" :key="course.name">
         <router-link :to="course.link">{{ course.name }}</router-link>
