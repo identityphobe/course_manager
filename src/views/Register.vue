@@ -6,60 +6,67 @@
     <div class="columns">
       <div class="column"></div>
       <div class="column mx-6">
-        <div class="field">
-          <label class="label">ID</label>
-          <div class="control">
-            <input
-              class="input"
-              type="text"
-              v-model="ID"
-              placeholder="ID"
-              required
-            />
+        <form>
+          <div class="field">
+            <label class="label">ID</label>
+            <div class="control">
+              <input
+                class="input"
+                type="text"
+                v-model="ID"
+                placeholder="ID"
+                required
+              />
+            </div>
+            <p class="help is-danger" v-if="isSubmitted && !ID">Required</p>
           </div>
-          <p class="help is-danger" v-if="isSubmitted && !ID">Required</p>
-        </div>
 
-        <div class="field">
-          <label class="label">Password</label>
-          <div class="control">
-            <input
-              class="input"
-              type="password"
-              v-model="password"
-              required
-              placeholder="Password"
-            />
+          <div class="field">
+            <label class="label">Password</label>
+            <div class="control">
+              <input
+                class="input"
+                type="password"
+                v-model="password"
+                required
+                placeholder="Password"
+              />
+            </div>
+            <p class="help is-danger" v-if="isSubmitted && !password">
+              Required
+            </p>
           </div>
-          <p class="help is-danger" v-if="isSubmitted && !password">Required</p>
-        </div>
 
-        <div class="field">
-          <label class="label">Confirm Password</label>
-          <div class="control">
-            <input
-              class="input"
-              type="password"
-              v-model="confirmPassword"
-              required
-              placeholder="Password"
-            />
+          <div class="field">
+            <label class="label">Confirm Password</label>
+            <div class="control">
+              <input
+                class="input"
+                type="password"
+                v-model="confirmPassword"
+                required
+                placeholder="Password"
+              />
+            </div>
+            <p class="help is-danger" v-if="isSubmitted && !confirmPassword">
+              Required
+            </p>
+            <p class="help is-danger" v-if="password != confirmPassword">
+              Both passwords do not match
+            </p>
           </div>
-          <p class="help is-danger" v-if="isSubmitted && !confirmPassword">
-            Required
-          </p>
-          <p class="help is-danger" v-if="password != confirmPassword">
-            Both passwords do not match
-          </p>
-        </div>
 
-        <div class="field is-grouped is-grouped-centered">
-          <div class="control">
-            <button @click="writeUserData" class="button is-link">
-              Submit
-            </button>
+          <div class="field is-grouped is-grouped-centered">
+            <div class="control">
+              <input
+                @click="writeUserData"
+                type="submit"
+                class="button is-link"
+                value="Submit"
+              />
+            </div>
           </div>
-        </div>
+        </form>
       </div>
 
       <div class="column"></div>

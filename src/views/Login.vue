@@ -36,7 +36,12 @@
 
       <div class="field is-grouped is-grouped-centered">
         <div class="control">
-          <button @click="authenticate" class="button is-link">Submit</button>
+          <input
+            @click="authenticate"
+            class="button is-link"
+            type="submit"
+            value="Submit"
+          />
         </div>
       </div>
     </div>

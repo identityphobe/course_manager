@@ -419,7 +419,22 @@ export default {
   methods: {
     //TODO: field validation
     //TODO: total costs calculation
-
+    updateTotal() {
+      let total = 0;
+      if (this.course.costFB) {
+        total += this.course.costFB;
+      }
+      if (this.course.costInstructor) {
+        total += this.course.costInstructor;
+      }
+      if (this.course.costModule) {
+        total += this.course.costModule;
+      }
+      if (this.course.costOthers) {
+        total += this.course.costOthers;
+      }
+      this.course.costTotal = total;
+    },
     uploadFile(event) {
       this.upload[event.target.id] = event.target.files[0];
     },

@@ -65,6 +65,7 @@ export default {
       if (localStorage.getItem("ID")) {
         localStorage.setItem("ID", null);
         this.ID = null;
+        this.role = null;
         router.push("/" + "?loggedOut=true");
       }
     },

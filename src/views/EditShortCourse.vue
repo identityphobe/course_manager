@@ -23,7 +23,7 @@
           <label class="label">Department</label>
           <div class="control">
             <div class="select">
-              <select v-model="course.department">
+              <select v-model="course.department" id="departmentSelect">
                 <option disabled value="">Department</option>
                 <option value="CCI">CCI</option>
                 <option value="COE">COE</option>
@@ -35,7 +35,7 @@
             <div class="column">
               <div class="control">
                 <div class="select">
-                  <select v-model="course.certificate">
+                  <select v-model="course.certificate" id="certificateSelect">
                     <option disabled value="">Certificate</option>
                     <option value="PEP3">PEP3</option>
                     <option value="None">None</option>
@@ -47,7 +47,7 @@
             <div class="column">
               <div class="control">
                 <div class="select">
-                  <select v-model="course.certificateModule">
+                  <select v-model="course.certificateModule" id="moduleSelect">
                     <option disabled value="">Module</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -180,7 +180,13 @@
             <div class="column">
               <div class="file mt-5">
                 <label class="file-label">
-                  <input class="file-input" type="file" name="resume" />
+                  <input
+                    class="file-input"
+                    type="file"
+                    name="resume"
+                    id="agenda"
+                    @change="uploadFile"
+                  />
                   <span class="file-cta">
                     <span class="file-icon">
                       <i class="fas fa-upload"></i>
@@ -195,7 +201,13 @@
             <div class="column">
               <div class="file mt-5">
                 <label class="file-label">
-                  <input class="file-input" type="file" name="resume" />
+                  <input
+                    class="file-input"
+                    type="file"
+                    name="resume"
+                    id="poster"
+                    @change="uploadFile"
+                  />
                   <span class="file-cta">
                     <span class="file-icon">
                       <i class="fas fa-upload"></i>
@@ -221,6 +233,7 @@
                     class="input"
                     type="text"
                     placeholder="-"
+                    @change="updateTotal"
                   />
                 </div>
               </div>
@@ -240,6 +253,7 @@
                     class="input"
                     type="text"
                     placeholder="-"
+                    @change="updateTotal"
                   />
                 </div>
               </div>
@@ -259,6 +273,7 @@
                     class="input"
                     type="text"
                     placeholder="-"
+                    @change="updateTotal"
                   />
                 </div>
               </div>
@@ -278,6 +293,7 @@
                     class="input"
                     type="text"
                     placeholder="-"
+                    @change="updateTotal"
                   />
                 </div>
               </div>
@@ -307,7 +323,13 @@
             <div class="column">
               <div class="file mt-5">
                 <label class="file-label">
-                  <input class="file-input" type="file" name="resume" />
+                  <input
+                    class="file-input"
+                    type="file"
+                    name="resume"
+                    id="approvalLetter"
+                    @change="uploadFile"
+                  />
                   <span class="file-cta">
                     <span class="file-icon">
                       <i class="fas fa-upload"></i>
@@ -322,7 +344,13 @@
             <div class="column">
               <div class="file mt-5">
                 <label class="file-label">
-                  <input class="file-input" type="file" name="resume" />
+                  <input
+                    class="file-input"
+                    type="file"
+                    name="resume"
+                    id="speakerLetter"
+                    @change="uploadFile"
+                  />
                   <span class="file-cta">
                     <span class="file-icon">
                       <i class="fas fa-upload"></i>
@@ -352,12 +380,15 @@
 <script>
 import database from "../database";
 import { ref, get, set, child } from "firebase/database";
+import { storage } from "../database";
+import { ref as storageRef, uploadBytes } from "firebase/storage";
 //import router from "../router/index.js";
 
 export default {
   name: "EditShortCourse",
   data() {
     return {
+      newUpload: {},
       course: {
         name: "",
         objective: "",
@@ -385,6 +416,23 @@ export default {
     };
   },
   methods: {
+    updateTotal() {
+      let total = 0;
+      if (this.course.costFB) {
+        total += Number(this.course.costFB);
+      }
+      if (this.course.costInstructor) {
+        total += Number(this.course.costInstructor);
+      }
+      if (this.course.costModule) {
+        total += Number(this.course.costModule);
+      }
+      if (this.course.costOthers) {
+        total += Number(this.course.costOthers);
+      }
+      console.log(total);
+      this.course.costTotal = total;
+    },
     //TODO: field validation
     //TODO: total costs calculation
     editCourse() {
@@ -392,6 +440,15 @@ export default {
       const courseID = this.$route.params.id;
       const courseRef = ref(database, `courses/${courseID}`);
       set(courseRef, this.course);
+      for (let index in this.newUpload) {
+        const fileRef = storageRef(storage, courseID + "/" + index);
+        uploadBytes(fileRef, this.newUpload[index]);
+      }
+    },
+
+    uploadFile(event) {
+      this.newUpload[event.target.id] = event.target.files[0];
+      console.log(this.newUpload);
     },
   },
   created() {
@@ -404,6 +461,10 @@ export default {
         .then((snapshot) => {
           if (snapshot.exists()) {
             this.course = snapshot.val();
+            if (this.course.targetAudience === false) {
+              this.course.targetAudience = [];
+              console.log(this.course);
+            }
           } else {
             console.log("No data available");
           }
@@ -417,3 +478,17 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+#moduleSelect:focus option:first-of-type {
+  display: none;
+}
+
+#departmentSelect:focus option:first-of-type {
+  display: none;
+}
+
+#certificateSelect:focus option:first-of-type {
+  display: none;
+}
+</style>

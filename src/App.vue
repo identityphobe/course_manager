@@ -1,6 +1,6 @@
 <template>
   <Navbar />
-  <router-view />
+  <router-view :key="$route.fullPath" />
 
   <!-- <HelloWorld msg="Welcome to Your Vue.js App" /> -->
 </template>

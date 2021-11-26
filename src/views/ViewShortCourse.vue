@@ -31,7 +31,13 @@
           <label class="label">End Date</label>
           <p>{{ course.dateEnd }}</p>
           <label class="label">Agenda</label>
-          <a>View Agenda</a>
+          <a
+            v-if="oldUploads['agenda']"
+            :href="oldUploads['agenda']"
+            target="_blank"
+            >View</a
+          >
+          <a v-else>Unavailable.</a>
           <div v-if="isAdmin">
             <label class="label mt-4">Costs</label>
             <div class="columns is-vcentered">
@@ -126,6 +132,7 @@
                       type="text"
                       disabled
                       placeholder="-"
+                      @change="updateTotal"
                       :value="course.costTotal"
                     />
                   </div>
@@ -134,13 +141,31 @@
             </div>
 
             <label class="label">Approval Letter</label>
-            <a>View Letter</a>
+            <a
+              v-if="oldUploads['approvalLetter']"
+              :href="oldUploads['approvalLetter']"
+              target="_blank"
+              >View Letter</a
+            >
+            <a v-else>Unavailable</a>
 
             <label class="label">Speaker Appointment Letter</label>
-            <a>View Letter</a>
+            <a
+              v-if="oldUploads['speakerLetter']"
+              :href="oldUploads['speakerLetter']"
+              target="_blank"
+              >View Letter</a
+            >
+            <a v-else>Unavailable</a>
           </div>
           <label class="label">Poster</label>
-          <a>View Poster</a>
+          <a
+            v-if="oldUploads['poster']"
+            :href="oldUploads['poster']"
+            target="_blank"
+            >View Letter</a
+          >
+          <a v-else>Unavailable.</a>
 
           <div v-if="isAdmin" class="columns">
             <div class="column has-text-centered">
@@ -151,7 +176,9 @@
               >
             </div>
             <div class="column has-text-centered">
-              <button class="button is-link">Edit</button>
+              <router-link class="button is-link" :to="editLink"
+                >Edit</router-link
+              >
             </div>
             <div class="column has-text-centered">
               <router-link class="button is-link" :to="reportLink">
@@ -204,17 +231,26 @@
 // import route from "../router/index";
 import database from "../database";
 import { child, get, ref, remove, set } from "firebase/database";
+import { storage } from "../database";
+import { ref as storageRef, getDownloadURL, listAll } from "firebase/storage";
 // import { cloneDeep } from "lodash";
 
 export default {
   name: "ViewShortCourse",
   data() {
     return {
+      oldUploads: {
+        speakerLetter: false,
+        approvalLetter: false,
+        agenda: false,
+        poster: false,
+      },
       isAdmin: localStorage.getItem("role") === "Admin",
       isUser: localStorage.getItem("role") === "User",
       ID: localStorage.getItem("ID"),
       evaluateLink: "/courses/" + this.$route.params.id + "/evaluate",
       reportLink: "/courses/" + this.$route.params.id + "/report",
+      editLink: "/courses/" + this.$route.params.id + "/edit",
       user: {},
       course: "",
       courseID: this.$route.params.id,
@@ -250,6 +286,22 @@ export default {
         .catch((error) => {
           console.error(error);
         });
+    },
+    updateTotal() {
+      let total = 0;
+      if (this.course.costFB) {
+        total += this.course.costFB;
+      }
+      if (this.course.costInstructor) {
+        total += this.course.costInstructor;
+      }
+      if (this.course.costModule) {
+        total += this.course.costModule;
+      }
+      if (this.course.costOthers) {
+        total += this.course.costOthers;
+      }
+      this.course.costTotal = total;
     },
     dropCourse() {
       const dbRef = ref(database);
@@ -320,6 +372,45 @@ export default {
     };
 
     fetchUser();
+
+    const fetchUploads = async () => {
+      let availableFiles = [];
+      listAll(storageRef(storage, courseID))
+        .then((res) => {
+          console.log(res);
+          // res.prefixes.forEach((folderRef) => {
+          //   console.log(folderRef);
+          //   // All the prefixes under listRef.
+          //   // You may call listAll() recursively on them.
+          // });
+          res.items.forEach((itemRef) => {
+            console.log(itemRef);
+            console.log(itemRef.fullPath);
+            const fileName = itemRef.fullPath.split("/").pop();
+            availableFiles.push(fileName);
+            // All the items under listRef.
+          });
+        })
+        .then(() => {
+          console.log(availableFiles);
+          availableFiles.forEach((fileName) => {
+            getDownloadURL(storageRef(storage, courseID + "/" + fileName))
+              .then((url) => {
+                console.log(url);
+                this.oldUploads[fileName] = url;
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          // Uh-oh, an error occurred!
+        });
+    };
+
+    fetchUploads();
 
     // const hasJoinedCourse = async () => {
     //   console.log(this.user.courses);
