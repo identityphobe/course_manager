@@ -95,7 +95,10 @@
               </label>
             </div>
           </div>
-          <div class="field has-addons">
+          <div
+            class="field has-addons"
+            v-if="course.targetAudience.includes('External')"
+          >
             <p class="control">
               <a class="button is-static">RM</a>
             </p>
@@ -104,9 +107,12 @@
                 v-model="course.externalCost"
                 class="input"
                 type="text"
-                placeholder="Cost per person
+                placeholder="Fee per person
                 "
               />
+              <p class="is-size-7">
+                *entry fee per external participant (optional)
+              </p>
             </div>
           </div>
 
@@ -178,7 +184,7 @@
 
           <div class="columns">
             <div class="column">
-              <div class="file mt-5">
+              <div class="file mt-5 has-name">
                 <label class="file-label">
                   <input
                     class="file-input"
@@ -195,11 +201,19 @@
                       Upload course agenda (optional)
                     </span>
                   </span>
+                  <span v-if="newUpload['agenda']" class="file-name">
+                    <a :href="fileTempURLs['agenda']" target="_blank">{{
+                      fileNames["agenda"]
+                    }}</a>
+                  </span>
+                  <span v-else class="file-name"
+                    >{{ fileNames["agenda"] }}
+                  </span>
                 </label>
               </div>
             </div>
             <div class="column">
-              <div class="file mt-5">
+              <div class="file mt-5 has-name">
                 <label class="file-label">
                   <input
                     class="file-input"
@@ -213,6 +227,14 @@
                       <i class="fas fa-upload"></i>
                     </span>
                     <span class="file-label"> Upload poster (optional) </span>
+                  </span>
+                  <span v-if="newUpload['poster']" class="file-name">
+                    <a :href="fileTempURLs['poster']" target="_blank">{{
+                      fileNames["poster"]
+                    }}</a>
+                  </span>
+                  <span v-else class="file-name"
+                    >{{ fileNames["poster"] }}
                   </span>
                 </label>
               </div>
@@ -338,6 +360,14 @@
                       Upload approval letter (optional)
                     </span>
                   </span>
+                  <span v-if="newUpload['approvalLetter']" class="file-name">
+                    <a :href="fileTempURLs['approvalLetter']" target="_blank">{{
+                      fileNames["approvalLetter"]
+                    }}</a>
+                  </span>
+                  <span v-else class="file-name"
+                    >{{ fileNames["approvalLetter"] }}
+                  </span>
                 </label>
               </div>
             </div>
@@ -358,6 +388,14 @@
                     <span class="file-label">
                       Upload speaker appointment letter (optional)
                     </span>
+                  </span>
+                  <span v-if="newUpload['speakerLetter']" class="file-name">
+                    <a :href="fileTempURLs['speakerLetter']" target="_blank">{{
+                      fileNames["speakerLetter"]
+                    }}</a>
+                  </span>
+                  <span v-else class="file-name"
+                    >{{ fileNames["speakerLetter"] }}
                   </span>
                 </label>
               </div>
@@ -399,7 +437,11 @@
 import database from "../database";
 import { ref, get, set, child } from "firebase/database";
 import { storage } from "../database";
-import { ref as storageRef, uploadBytes } from "firebase/storage";
+import {
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
 import router from "../router/index.js";
 //import router from "../router/index.js";
 
@@ -408,6 +450,18 @@ export default {
   data() {
     return {
       newUpload: {},
+      fileNames: {
+        agenda: "NA",
+        speakerLetter: "NA",
+        approvalLetter: "NA",
+        poster: "NA",
+      },
+      fileTempURLs: {
+        agenda: "",
+        speakerLetter: "",
+        approvalLetter: "",
+        poster: "",
+      },
       courseID: this.$route.params.id,
       course: {
         name: "",
@@ -472,6 +526,24 @@ export default {
 
     uploadFile(event) {
       this.newUpload[event.target.id] = event.target.files[0];
+      this.fileNames[event.target.id] = event.target.files[0].name;
+      const tempFilePath = "temp" + "/" + event.target.files[0].name;
+      const fileRef = storageRef(storage, tempFilePath);
+      uploadBytes(fileRef, this.newUpload[event.target.id])
+        .then(() => {
+          getDownloadURL(storageRef(storage, tempFilePath))
+            .then((url) => {
+              console.log(url);
+              this.fileTempURLs[event.target.id] = url;
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
       console.log(this.newUpload);
     },
   },

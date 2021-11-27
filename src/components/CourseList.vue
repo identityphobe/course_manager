@@ -1,21 +1,27 @@
 <template>
   <div class="section pt-0">
-    <!-- TODO: Create a component out of this -->
-    <p><strong>College of Computing and Informatics</strong></p>
-    <ul>
-      <li v-for="course in CCICourses" :key="course.name">
-        <router-link :to="course.link">{{ course.name }}</router-link>
-      </li>
-    </ul>
-    <p><strong>College of Engineering</strong></p>
-    <ul>
-      <li v-for="course in COECourses" :key="course.name">
-        <router-link :to="course.link">{{ course.name }}</router-link>
-      </li>
-    </ul>
+    <div class="columns">
+      <div class="column"></div>
 
-    <!--  use v-for with computed properties to list all courses -->
-    <!-- <li v-for="course in courses" :key="course.name"></li> -->
+      <div class="column is-three-fifths">
+        <!-- TODO: Create a component out of this -->
+        <p><strong>College of Computing and Informatics</strong></p>
+        <ul>
+          <li v-for="course in CCICourses" :key="course.name">
+            <router-link :to="course.link">{{ course.name }}</router-link>
+          </li>
+        </ul>
+        <p><strong>College of Engineering</strong></p>
+        <ul>
+          <li v-for="course in COECourses" :key="course.name">
+            <router-link :to="course.link">{{ course.name }}</router-link>
+          </li>
+        </ul>
+      </div>
+      <!--  use v-for with computed properties to list all courses -->
+      <!-- <li v-for="course in courses" :key="course.name"></li> -->
+      <div class="column"></div>
+    </div>
   </div>
 </template>
 

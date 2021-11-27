@@ -13,6 +13,8 @@
           <p>{{ course.name }}</p>
           <label class="label">Objective</label>
           <p>{{ course.objective }}</p>
+          <label class="label">Department</label>
+          <p>{{ course.department }}</p>
           <label class="label">Certificate</label>
           <p>{{ course.certificate }}: {{ course.certificateModule }}</p>
 
@@ -145,7 +147,7 @@
               v-if="oldUploads['approvalLetter']"
               :href="oldUploads['approvalLetter']"
               target="_blank"
-              >View Letter</a
+              >View</a
             >
             <a v-else>Unavailable</a>
 
@@ -154,7 +156,7 @@
               v-if="oldUploads['speakerLetter']"
               :href="oldUploads['speakerLetter']"
               target="_blank"
-              >View Letter</a
+              >View</a
             >
             <a v-else>Unavailable</a>
           </div>
@@ -163,7 +165,7 @@
             v-if="oldUploads['poster']"
             :href="oldUploads['poster']"
             target="_blank"
-            >View Letter</a
+            >View</a
           >
           <a v-else>Unavailable.</a>
 
@@ -171,7 +173,7 @@
             <div class="column has-text-centered">
               <router-link :to="participantsLink"
                 ><button class="button is-link">
-                  View Participants
+                  Participants
                 </button></router-link
               >
             </div>

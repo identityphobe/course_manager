@@ -1,5 +1,5 @@
 <template>
-  <h1 class="title is-5 mt-6 has-text-centered">
+  <h1 class="title is-3 mt-6 has-text-centered">
     Welcome to UNITEN's TLC Short Course Platform
   </h1>
   <CourseList />
