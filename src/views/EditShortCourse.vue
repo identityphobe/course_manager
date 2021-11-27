@@ -115,7 +115,7 @@
               <label class="label">Venue</label>
               <div class="control">
                 <div class="select">
-                  <select v-model="course.venue">
+                  <select v-model="course.venue" id="venueSelect">
                     <option value="" disabled>Venue</option>
                     <option value="Meeting Room A">Meeting room A</option>
                     <option value="Auditorium">Auditorium</option>
@@ -364,10 +364,28 @@
             </div>
           </div>
           <div class="field">
-            <div class="control">
-              <button @click="editCourse" type="submit" class="button is-link">
-                Edit
-              </button>
+            <div class="columns">
+              <div class="control column has-text-centered">
+                <button
+                  @click="editCourse"
+                  type="submit"
+                  class="button is-link"
+                >
+                  Save
+                </button>
+              </div>
+              <div class="column has-text-centered">
+                <button
+                  @click="cancelEdit"
+                  type="submit"
+                  class="button is-danger"
+                >
+                  Cancel
+                </button>
+              </div>
+              <!-- <div class="column has-text-centered">
+                <router-link class="button is-danger"> Cancel </router-link>
+              </div> -->
             </div>
           </div>
         </div>
@@ -382,6 +400,7 @@ import database from "../database";
 import { ref, get, set, child } from "firebase/database";
 import { storage } from "../database";
 import { ref as storageRef, uploadBytes } from "firebase/storage";
+import router from "../router/index.js";
 //import router from "../router/index.js";
 
 export default {
@@ -389,6 +408,7 @@ export default {
   data() {
     return {
       newUpload: {},
+      courseID: this.$route.params.id,
       course: {
         name: "",
         objective: "",
@@ -444,6 +464,10 @@ export default {
         const fileRef = storageRef(storage, courseID + "/" + index);
         uploadBytes(fileRef, this.newUpload[index]);
       }
+      router.push("/courses/" + this.courseID);
+    },
+    cancelEdit() {
+      router.push("/courses/" + this.courseID);
     },
 
     uploadFile(event) {
@@ -489,6 +513,10 @@ export default {
 }
 
 #certificateSelect:focus option:first-of-type {
+  display: none;
+}
+
+#venueSelect:focus option:first-of-type {
   display: none;
 }
 </style>

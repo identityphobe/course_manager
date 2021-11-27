@@ -2,6 +2,7 @@
   <h1 class="title is-3 has-text-centered">Log In</h1>
   <div class="columns">
     <div class="column"></div>
+
     <div class="column mx-6">
       <div class="field">
         <label class="label">ID</label>
@@ -70,6 +71,13 @@ export default {
       doesIDExists: false,
       isSubmitted: false,
     };
+  },
+  created() {
+    window.addEventListener("keydown", (e) => {
+      if (e.key == "Enter") {
+        this.authenticate();
+      }
+    });
   },
   methods: {
     authenticate() {

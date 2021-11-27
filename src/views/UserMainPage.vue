@@ -30,16 +30,26 @@
     </ul>
   </div>
   <div v-else class="section mx-6">
-    <h1 class="title is-4 has-text-centered">Admin Area</h1>
+    <h1 class="title is-2 has-text-centered">Admin Area</h1>
 
     <div class="columns">
       <div class="column" />
       <div class="column">
-        <strong>Actions</strong>
+        <strong class="is-size-4">Actions</strong>
         <ol>
-          <li><router-link to="/courses">View courses</router-link></li>
-          <li><router-link to="/courses/new">Create a course</router-link></li>
-          <li><router-link to="/users">View users</router-link></li>
+          <li>
+            <router-link class="is-size-4" to="/courses"
+              >View courses</router-link
+            >
+          </li>
+          <li>
+            <router-link class="is-size-4" to="/courses/new"
+              >Create a course</router-link
+            >
+          </li>
+          <li>
+            <router-link class="is-size-4" to="/users">View users</router-link>
+          </li>
         </ol>
       </div>
       <div class="column" />
@@ -111,6 +121,7 @@ export default {
         .then((snapshot) => {
           if (snapshot.exists()) {
             let courses = snapshot.val();
+
             this.userData.courses.forEach((course) => {
               this.registeredCourses[course] = {
                 name: courses[course].name,
