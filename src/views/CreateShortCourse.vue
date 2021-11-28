@@ -178,7 +178,7 @@
 
           <div class="columns">
             <div class="column">
-              <div class="file mt-5">
+              <div class="file mt-5 has-name">
                 <label class="file-label">
                   <input
                     class="file-input"
@@ -195,11 +195,19 @@
                       Upload course agenda (optional)
                     </span>
                   </span>
+                  <span v-if="newUpload['agenda']" class="file-name">
+                    <a :href="fileTempURLs['agenda']" target="_blank">{{
+                      fileNames["agenda"]
+                    }}</a>
+                  </span>
+                  <span v-else class="file-name"
+                    >{{ fileNames["agenda"] }}
+                  </span>
                 </label>
               </div>
             </div>
             <div class="column">
-              <div class="file mt-5">
+              <div class="file mt-5 has-name">
                 <label class="file-label">
                   <input
                     class="file-input"
@@ -213,6 +221,14 @@
                       <i class="fas fa-upload"></i>
                     </span>
                     <span class="file-label"> Upload poster (optional) </span>
+                  </span>
+                  <span v-if="newUpload['poster']" class="file-name">
+                    <a :href="fileTempURLs['poster']" target="_blank">{{
+                      fileNames["poster"]
+                    }}</a>
+                  </span>
+                  <span v-else class="file-name"
+                    >{{ fileNames["poster"] }}
                   </span>
                 </label>
               </div>
@@ -233,6 +249,7 @@
                     class="input"
                     type="text"
                     placeholder="-"
+                    @change="updateTotal"
                   />
                 </div>
               </div>
@@ -252,6 +269,7 @@
                     class="input"
                     type="text"
                     placeholder="-"
+                    @change="updateTotal"
                   />
                 </div>
               </div>
@@ -271,6 +289,7 @@
                     class="input"
                     type="text"
                     placeholder="-"
+                    @change="updateTotal"
                   />
                 </div>
               </div>
@@ -290,6 +309,7 @@
                     class="input"
                     type="text"
                     placeholder="-"
+                    @change="updateTotal"
                   />
                 </div>
               </div>
@@ -309,6 +329,7 @@
                     class="input"
                     type="text"
                     placeholder="-"
+                    @change="updateTotal"
                   />
                 </div>
               </div>
@@ -334,6 +355,14 @@
                       Upload approval letter (optional)
                     </span>
                   </span>
+                  <span v-if="newUpload['approvalLetter']" class="file-name">
+                    <a :href="fileTempURLs['approvalLetter']" target="_blank">{{
+                      fileNames["approvalLetter"]
+                    }}</a>
+                  </span>
+                  <span v-else class="file-name"
+                    >{{ fileNames["approvalLetter"] }}
+                  </span>
                 </label>
               </div>
             </div>
@@ -355,21 +384,32 @@
                       Upload speaker appointment letter (optional)
                     </span>
                   </span>
+                  <span v-if="newUpload['speakerLetter']" class="file-name">
+                    <a :href="fileTempURLs['speakerLetter']" target="_blank">{{
+                      fileNames["speakerLetter"]
+                    }}</a>
+                  </span>
+                  <span v-else class="file-name"
+                    >{{ fileNames["speakerLetter"] }}
+                  </span>
                 </label>
               </div>
             </div>
           </div>
-
-          <div class="field">
-            <div class="control">
-              <button
-                @click="createCourse"
-                type="submit"
-                class="button is-link"
-              >
-                Submit
-              </button>
+          <div class="columns">
+            <div class="column"></div>
+            <div class="field column">
+              <div class="control has-text-centered">
+                <button
+                  @click="createCourse"
+                  type="submit"
+                  class="button is-link"
+                >
+                  Create
+                </button>
+              </div>
             </div>
+            <div class="column"></div>
           </div>
         </div>
       </div>
@@ -381,7 +421,11 @@
 <script>
 import database from "../database";
 import { storage } from "../database";
-import { ref as storageRef, uploadBytes } from "firebase/storage";
+import {
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
 
 import { ref, push } from "firebase/database";
 
@@ -389,7 +433,19 @@ export default {
   name: "CreateShortCourse",
   data() {
     return {
-      upload: {},
+      newUpload: {},
+      fileNames: {
+        agenda: "NA",
+        speakerLetter: "NA",
+        approvalLetter: "NA",
+        poster: "NA",
+      },
+      fileTempURLs: {
+        agenda: "",
+        speakerLetter: "",
+        approvalLetter: "",
+        poster: "",
+      },
       course: {
         name: "",
         objective: "",
@@ -422,21 +478,41 @@ export default {
     updateTotal() {
       let total = 0;
       if (this.course.costFB) {
-        total += this.course.costFB;
+        total += Number(this.course.costFB);
       }
       if (this.course.costInstructor) {
-        total += this.course.costInstructor;
+        total += Number(this.course.costInstructor);
       }
       if (this.course.costModule) {
-        total += this.course.costModule;
+        total += Number(this.course.costModule);
       }
       if (this.course.costOthers) {
-        total += this.course.costOthers;
+        total += Number(this.course.costOthers);
       }
+      console.log(total);
       this.course.costTotal = total;
     },
     uploadFile(event) {
-      this.upload[event.target.id] = event.target.files[0];
+      this.newUpload[event.target.id] = event.target.files[0];
+      this.fileNames[event.target.id] = event.target.files[0].name;
+      const tempFilePath = "temp" + "/" + event.target.files[0].name;
+      const fileRef = storageRef(storage, tempFilePath);
+      uploadBytes(fileRef, this.newUpload[event.target.id])
+        .then(() => {
+          getDownloadURL(storageRef(storage, tempFilePath))
+            .then((url) => {
+              console.log(url);
+              this.fileTempURLs[event.target.id] = url;
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      console.log(this.newUpload);
     },
     createCourse() {
       console.log(this.course);
