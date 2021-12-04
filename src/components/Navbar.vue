@@ -29,6 +29,18 @@
               to="/users/admin"
               ><strong>Admin Area</strong></router-link
             >
+            <router-link
+              v-if="role === 'User'"
+              class="button is-link"
+              :to="'/users/' + ID + '/profile'"
+              ><strong>Profile</strong></router-link
+            >
+            <router-link
+              v-if="role === 'User'"
+              class="button is-link"
+              :to="'/courses'"
+              ><strong>Courses</strong></router-link
+            >
             <button v-if="ID" class="button is-link" @click="logout">
               <strong>Log Out</strong>
             </button>
@@ -64,6 +76,7 @@ export default {
     logout() {
       if (localStorage.getItem("ID")) {
         localStorage.setItem("ID", null);
+        localStorage.setItem("role", null);
         this.ID = null;
         this.role = null;
         router.push("/" + "?loggedOut=true");

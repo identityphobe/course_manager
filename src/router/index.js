@@ -14,6 +14,8 @@ import EvaluateShortCourse from "../views/EvaluateShortCourse.vue"
 import EvaluationReport from "../views/EvaluationReport.vue"
 import CoursesJoined from "../views/CoursesJoined"
 import Users from "../views/Users"
+import AddUser from "../views/AddUser"
+import UserProfile from "../views/UserProfile"
 
 const routes = [
   {
@@ -42,8 +44,16 @@ const routes = [
     component: UserMainPage,
   },
   {
+    path: "/users/:id/profile",
+    component: UserProfile
+  },
+  {
     path: "/users",
     component: Users,
+  },
+  {
+    path: "/users/new",
+    component: AddUser,
   },
   {
     path: "/courses",

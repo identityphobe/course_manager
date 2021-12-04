@@ -27,11 +27,16 @@
           <label class="label">Venue</label>
           <p>{{ course.venue }}</p>
           <label class="label">Capacity</label>
-          <p>{{ course.capacity }}</p>
+          <p>
+            {{ currentCapacity }}/{{ course.capacity
+            }}<span v-if="isCapacityFull"
+              >(<span id="capacityIndicator">Full</span>)</span
+            >
+          </p>
           <label class="label">Start Date</label>
-          <p>{{ course.dateStart }}</p>
+          <p>{{ formatDate(course.dateStart) }}</p>
           <label class="label">End Date</label>
-          <p>{{ course.dateEnd }}</p>
+          <p>{{ formatDate(course.dateEnd) }}</p>
           <label class="label">Agenda</label>
           <a
             v-if="oldUploads['agenda']"
@@ -189,7 +194,7 @@
             </div>
             <div class="column has-text-centered">
               <button
-                class="button is-link has-text-centered"
+                class="button is-danger has-text-centered"
                 @click="deleteCourse"
               >
                 Delete
@@ -199,20 +204,24 @@
           <div v-else-if="isUser" class="columns">
             <div class="column has-text-centered">
               <button
-                v-if="!hasJoinedCourse"
+                v-if="!hasJoinedCourse && !isCapacityFull"
                 class="button is-link"
                 @click="joinCourse"
               >
                 Join
               </button>
 
-              <button v-else class="button is-link" @click="dropCourse">
+              <button
+                v-else-if="hasJoinedCourse"
+                class="button is-danger"
+                @click="dropCourse"
+              >
                 Drop
               </button>
 
               <!-- <button class="button is-link" @click="test">Test</button> -->
             </div>
-            <div class="column">
+            <div class="column" v-if="hasJoinedCourse">
               <router-link
                 v-if="hasJoinedCourse"
                 class="button is-link"
@@ -235,12 +244,15 @@ import database from "../database";
 import { child, get, ref, remove, set } from "firebase/database";
 import { storage } from "../database";
 import { ref as storageRef, getDownloadURL, listAll } from "firebase/storage";
+import router from "../router/index.js";
 // import { cloneDeep } from "lodash";
 
 export default {
   name: "ViewShortCourse",
   data() {
     return {
+      isCapacityFull: false,
+      currentCapacity: 0,
       oldUploads: {
         speakerLetter: false,
         approvalLetter: false,
@@ -262,6 +274,10 @@ export default {
     };
   },
   methods: {
+    formatDate(date) {
+      const splitDate = date.split("-");
+      return `${splitDate[2]}/${splitDate[1]}/${splitDate[0]}`;
+    },
     joinCourse() {
       const dbRef = ref(database);
       get(child(dbRef, `users/${this.ID}`))
@@ -325,6 +341,7 @@ export default {
       let toRemoveRef = ref(database, `courses/${this.courseID}`);
       console.log(toRemoveRef);
       remove(toRemoveRef);
+      router.push("/courses?courseDeleted=true");
       // remove(toRemoveRef);
     },
   },
@@ -344,13 +361,50 @@ export default {
             console.log("No data available");
           }
         })
+        .then(() => {
+          getCapacity();
+        })
         .catch((error) => {
           console.error(error);
         });
     };
 
     fetchCourse();
+    //
 
+    const getCapacity = async () => {
+      get(child(dbRef, `users`))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            Object.filter = (obj, predicate) =>
+              Object.keys(obj)
+                .filter((key) => predicate(obj[key]))
+                .reduce((res, key) => ((res[key] = obj[key]), res), {});
+
+            let participants = {};
+            participants = Object.filter(snapshot.val(), (user) => {
+              if (user.courses === 0) {
+                return false;
+              } else if (user.courses.some((id) => id === courseID)) {
+                return true;
+              }
+            });
+            this.participants = participants;
+
+            if (Object.keys(participants).length >= this.course.capacity) {
+              this.isCapacityFull = true;
+              this.currentCapacity = Object.keys(participants).length;
+            }
+          } else {
+            console.log("No data available");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+
+    //
     let ID = localStorage.getItem("ID");
     const fetchUser = async () => {
       const dbRef = ref(database);
@@ -379,26 +433,21 @@ export default {
       let availableFiles = [];
       listAll(storageRef(storage, courseID))
         .then((res) => {
-          console.log(res);
           // res.prefixes.forEach((folderRef) => {
           //   console.log(folderRef);
           //   // All the prefixes under listRef.
           //   // You may call listAll() recursively on them.
           // });
           res.items.forEach((itemRef) => {
-            console.log(itemRef);
-            console.log(itemRef.fullPath);
             const fileName = itemRef.fullPath.split("/").pop();
             availableFiles.push(fileName);
             // All the items under listRef.
           });
         })
         .then(() => {
-          console.log(availableFiles);
           availableFiles.forEach((fileName) => {
             getDownloadURL(storageRef(storage, courseID + "/" + fileName))
               .then((url) => {
-                console.log(url);
                 this.oldUploads[fileName] = url;
               })
               .catch((error) => {
@@ -440,5 +489,8 @@ export default {
 :disabled {
   background-color: white;
   /* font: black; */
+}
+#capacityIndicator {
+  color: red;
 }
 </style>

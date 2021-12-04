@@ -4,6 +4,20 @@
       <div class="column"></div>
 
       <div class="column is-three-fifths">
+        <div v-if="createdCourse" class="section has-text-centered">
+          <div class="notification is-success has-text-centered">
+            <button class="delete" @click="deleteNotification"></button>
+            Course created. View <a :href="'/courses/' + newCourseID">here</a>.
+          </div>
+        </div>
+
+        <div v-if="courseDeleted" class="section has-text-centered">
+          <div class="notification is-success has-text-centered">
+            <button class="delete" @click="deleteNotification"></button>
+            Course deleted.
+          </div>
+        </div>
+
         <!-- TODO: Create a component out of this -->
         <p><strong>College of Computing and Informatics</strong></p>
         <ul>
@@ -40,7 +54,17 @@ export default {
   data() {
     return {
       courses: {},
+      createdCourse: this.$route.query.createdCourse,
+      courseDeleted: this.$route.query.courseDeleted,
+      newCourseID: this.$route.query.newCourseID,
     };
+  },
+  methods: {
+    deleteNotification() {
+      const notificationNode = document.querySelectorAll(".notification");
+      notificationNode.parentNode.remove();
+      console.log(notificationNode);
+    },
   },
   computed: {
     CCICourses() {

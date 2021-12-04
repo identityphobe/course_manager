@@ -48,6 +48,11 @@
             >
           </li>
           <li>
+            <router-link class="is-size-4" to="/users/new"
+              >Add a user</router-link
+            >
+          </li>
+          <li>
             <router-link class="is-size-4" to="/users">View users</router-link>
           </li>
         </ol>
@@ -61,23 +66,15 @@
 import database from "../database";
 import { child, get, ref } from "firebase/database";
 // import CourseCard from "../components/CourseCard.vue";
-document.addEventListener("DOMContentLoaded", () => {
-  (document.querySelectorAll(".notification .delete") || []).forEach(
-    ($delete) => {
-      const $notification = $delete.parentNode;
 
-      $delete.addEventListener("click", () => {
-        $notification.parentNode.removeChild($notification);
-      });
-    }
-  );
-});
 // console.log(this.$route.query.register);
 export default {
   name: "UserMainPage",
   // components: { CourseCard },
   data() {
     return {
+      createdCourse: this.$route.query.createdCourse,
+      newCourseID: this.$route.query.newCourseID,
       registered: this.$route.query.registered === "true",
       loggedIn: this.$route.query.loggedIn === "true",
       userID: this.$route.params.id,
@@ -86,7 +83,24 @@ export default {
       registeredCourses: {},
     };
   },
+  methods: {
+    deleteNotification() {
+      const notificationNode = document.querySelectorAll(".notification");
+      console.log(notificationNode);
+    },
+  },
   created() {
+    document.addEventListener("DOMContentLoaded", () => {
+      (document.querySelectorAll(".notification .delete") || []).forEach(
+        ($delete) => {
+          const $notification = $delete.parentNode;
+
+          $delete.addEventListener("click", () => {
+            $notification.parentNode.removeChild($notification);
+          });
+        }
+      );
+    });
     // const courseID = this.$route.params.id;
     const dbRef = ref(database);
     const fetchUser = async () => {
@@ -121,13 +135,15 @@ export default {
         .then((snapshot) => {
           if (snapshot.exists()) {
             let courses = snapshot.val();
+            if (this.userData.courses !== 0) {
+              this.userData.courses.forEach((course) => {
+                this.registeredCourses[course] = {
+                  name: courses[course].name,
+                  link: "/courses/" + course,
+                };
+              });
+            }
 
-            this.userData.courses.forEach((course) => {
-              this.registeredCourses[course] = {
-                name: courses[course].name,
-                link: "/courses/" + course,
-              };
-            });
             console.log(this.registeredCourses);
             // console.log(this.courses);
             // console.log(Object.keys(this.courses));

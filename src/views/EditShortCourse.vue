@@ -201,7 +201,12 @@
                       Upload course agenda (optional)
                     </span>
                   </span>
-                  <span v-if="newUpload['agenda']" class="file-name">
+                  <span v-if="oldUploads['agenda']" class="file-name">
+                    <a :href="fileTempURLs['agenda']" target="_blank">{{
+                      fileNames["agenda"]
+                    }}</a>
+                  </span>
+                  <span v-else-if="newUpload['agenda']" class="file-name">
                     <a :href="fileTempURLs['agenda']" target="_blank">{{
                       fileNames["agenda"]
                     }}</a>
@@ -228,7 +233,12 @@
                     </span>
                     <span class="file-label"> Upload poster (optional) </span>
                   </span>
-                  <span v-if="newUpload['poster']" class="file-name">
+                  <span v-if="oldUploads['poster']" class="file-name">
+                    <a :href="fileTempURLs['poster']" target="_blank">{{
+                      fileNames["poster"]
+                    }}</a>
+                  </span>
+                  <span v-else-if="newUpload['poster']" class="file-name">
                     <a :href="fileTempURLs['poster']" target="_blank">{{
                       fileNames["poster"]
                     }}</a>
@@ -360,7 +370,15 @@
                       Upload approval letter (optional)
                     </span>
                   </span>
-                  <span v-if="newUpload['approvalLetter']" class="file-name">
+                  <span v-if="oldUploads['approvalLetter']" class="file-name">
+                    <a :href="fileTempURLs['approvalLetter']" target="_blank">{{
+                      fileNames["approvalLetter"]
+                    }}</a>
+                  </span>
+                  <span
+                    v-else-if="newUpload['approvalLetter']"
+                    class="file-name"
+                  >
                     <a :href="fileTempURLs['approvalLetter']" target="_blank">{{
                       fileNames["approvalLetter"]
                     }}</a>
@@ -389,7 +407,16 @@
                       Upload speaker appointment letter (optional)
                     </span>
                   </span>
-                  <span v-if="newUpload['speakerLetter']" class="file-name">
+
+                  <span v-if="oldUploads['speakerLetter']" class="file-name">
+                    <a :href="fileTempURLs['speakerLetter']" target="_blank">{{
+                      fileNames["speakerLetter"]
+                    }}</a>
+                  </span>
+                  <span
+                    v-else-if="newUpload['speakerLetter']"
+                    class="file-name"
+                  >
                     <a :href="fileTempURLs['speakerLetter']" target="_blank">{{
                       fileNames["speakerLetter"]
                     }}</a>
@@ -441,15 +468,21 @@ import {
   ref as storageRef,
   uploadBytes,
   getDownloadURL,
+  listAll,
 } from "firebase/storage";
 import router from "../router/index.js";
-//import router from "../router/index.js";
 
 export default {
   name: "EditShortCourse",
   data() {
     return {
       newUpload: {},
+      oldUploads: {
+        speakerLetter: false,
+        approvalLetter: false,
+        agenda: false,
+        poster: false,
+      },
       fileNames: {
         agenda: "NA",
         speakerLetter: "NA",
@@ -571,6 +604,42 @@ export default {
     };
 
     fetchCourse();
+
+    const fetchUploads = async () => {
+      let availableFiles = [];
+      listAll(storageRef(storage, courseID))
+        .then((res) => {
+          // res.prefixes.forEach((folderRef) => {
+          //   console.log(folderRef);
+          //   // All the prefixes under listRef.
+          //   // You may call listAll() recursively on them.
+          // });
+          res.items.forEach((itemRef) => {
+            const fileName = itemRef.fullPath.split("/").pop();
+
+            availableFiles.push(fileName);
+            // All the items under listRef.
+          });
+        })
+        .then(() => {
+          availableFiles.forEach((fileName) => {
+            getDownloadURL(storageRef(storage, courseID + "/" + fileName))
+              .then((url) => {
+                this.oldUploads[fileName] = url;
+                this.fileNames[fileName] = fileName;
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          // Uh-oh, an error occurred!
+        });
+    };
+
+    fetchUploads();
   },
 };
 </script>

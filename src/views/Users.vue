@@ -10,13 +10,14 @@
       </thead>
       <tr v-for="(data, user) in users" :key="user">
         <!-- <router-link :to="course.link">{{ part }}</router-link> -->
-        <td>{{ user }}</td>
+        <td>
+          <router-link :to="'/users/' + user + '/profile'">{{
+            user
+          }}</router-link>
+        </td>
         <td>{{ data.role }}</td>
       </tr>
     </table>
-    <!-- {{ participants }} -->
-    <!-- <div class="box">Juliana Ahmad</div>
-    <div class="box">Anasurimbor Kellhus</div> -->
   </div>
 </template>
 

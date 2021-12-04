@@ -428,6 +428,7 @@ import {
 } from "firebase/storage";
 
 import { ref, push } from "firebase/database";
+import router from "../router/index.js";
 
 export default {
   name: "CreateShortCourse",
@@ -475,6 +476,7 @@ export default {
   methods: {
     //TODO: field validation
     //TODO: total costs calculation
+
     updateTotal() {
       let total = 0;
       if (this.course.costFB) {
@@ -516,15 +518,19 @@ export default {
     },
     createCourse() {
       console.log(this.course);
-
+      let courseID;
       const courseRef = ref(database, "courses/");
-      push(courseRef, this.course).then((ref) => {
-        const courseID = ref.key;
-        for (let index in this.upload) {
-          const fileRef = storageRef(storage, courseID + "/" + index);
-          uploadBytes(fileRef, this.upload[index]);
-        }
-      });
+      push(courseRef, this.course)
+        .then((ref) => {
+          courseID = ref.key;
+          for (let index in this.newUpload) {
+            const fileRef = storageRef(storage, courseID + "/" + index);
+            uploadBytes(fileRef, this.newUpload[index]);
+          }
+        })
+        .then(() => {
+          router.push("/courses?createdCourse=true&newCourseID=" + courseID);
+        });
     },
   },
 };
