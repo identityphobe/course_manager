@@ -41,7 +41,7 @@
               :to="'/courses'"
               ><strong>Courses</strong></router-link
             >
-            <button v-if="ID" class="button is-link" @click="logout">
+            <button v-if="ID != 'null'" class="button is-link" @click="logout">
               <strong>Log Out</strong>
             </button>
 

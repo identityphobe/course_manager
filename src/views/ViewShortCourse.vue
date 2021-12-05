@@ -261,6 +261,7 @@ export default {
       },
       isAdmin: localStorage.getItem("role") === "Admin",
       isUser: localStorage.getItem("role") === "User",
+
       ID: localStorage.getItem("ID"),
       evaluateLink: "/courses/" + this.$route.params.id + "/evaluate",
       reportLink: "/courses/" + this.$route.params.id + "/report",
@@ -286,17 +287,29 @@ export default {
             this.user = snapshot.val();
             // if exists, don't add
             if (this.user.courses === 0) {
-              console.log("AUK");
               this.user.courses = [this.courseID];
-              console.log(this.user.courses);
-              // this.user.courses[0] = this.courseID;
             } else {
               if (this.user.courses.indexOf(this.courseID) != -1) {
                 this.user.courses.push(this.courseID);
               }
             }
+            if (typeof this.course.participants == "undefined") {
+              this.course.participants = {};
+            }
+            this.course.participants[this.ID] = true;
+            this.participants[this.ID] = {};
+            this.currentCapacity += 1;
+
+            if (Object.keys(this.participants).length >= this.course.capacity) {
+              this.isCapacityFull = true;
+            }
+
             set(child(dbRef, `users/${this.ID}`), this.user);
+
             this.hasJoinedCourse = true;
+
+            const courseRef = ref(database, `courses/${this.courseID}`);
+            set(courseRef, this.course);
           } else {
             console.log("No data available");
           }
@@ -331,7 +344,15 @@ export default {
         if (this.user.courses.length === 0) {
           this.user.courses = 0;
         }
+        this.currentCapacity -= 1;
+        this.hasJoinedCourse = false;
+        delete this.course.participants[this.ID];
+        this.isCapacityFull = false;
         set(child(dbRef, `users/${this.ID}`), this.user);
+
+        delete this.course.participants[this.ID];
+        const courseRef = ref(database, `courses/${this.courseID}`);
+        set(courseRef, this.course);
       }
     },
     deleteCourse() {
@@ -357,6 +378,8 @@ export default {
           if (snapshot.exists()) {
             this.course = snapshot.val();
             this.doesCourseExists = true;
+            //DEBUG
+            console.log(this.course);
           } else {
             console.log("No data available");
           }
@@ -391,9 +414,9 @@ export default {
             });
             this.participants = participants;
 
+            this.currentCapacity = Object.keys(participants).length;
             if (Object.keys(participants).length >= this.course.capacity) {
               this.isCapacityFull = true;
-              this.currentCapacity = Object.keys(participants).length;
             }
           } else {
             console.log("No data available");
@@ -418,6 +441,7 @@ export default {
                 this.hasJoinedCourse = true;
               }
             }
+            console.log(this.user);
           } else {
             console.log("No data available");
           }
@@ -433,15 +457,9 @@ export default {
       let availableFiles = [];
       listAll(storageRef(storage, courseID))
         .then((res) => {
-          // res.prefixes.forEach((folderRef) => {
-          //   console.log(folderRef);
-          //   // All the prefixes under listRef.
-          //   // You may call listAll() recursively on them.
-          // });
           res.items.forEach((itemRef) => {
             const fileName = itemRef.fullPath.split("/").pop();
             availableFiles.push(fileName);
-            // All the items under listRef.
           });
         })
         .then(() => {
@@ -462,25 +480,6 @@ export default {
     };
 
     fetchUploads();
-
-    // const hasJoinedCourse = async () => {
-    //   console.log(this.user.courses);
-    //   if (!this.user.courses) {
-    //     console.log("WHAT!!");
-    //     return false;
-    //   }
-    //   for (const course of this.user.courses) {
-    //     console.log(course);
-    //     console.log(this.courseID);
-    //     if (course === this.courseID) {
-    //       return true;
-    //     }
-    //   }
-
-    //   return false;
-    // };
-
-    // console.log(hasJoinedCourse());
   },
 };
 </script>
