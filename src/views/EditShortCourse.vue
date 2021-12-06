@@ -590,7 +590,11 @@ export default {
         .then((snapshot) => {
           if (snapshot.exists()) {
             this.course = snapshot.val();
-            if (this.course.targetAudience === false) {
+
+            if (
+              this.course.targetAudience === false ||
+              this.course.targetAudience == undefined
+            ) {
               this.course.targetAudience = [];
               console.log(this.course);
             }

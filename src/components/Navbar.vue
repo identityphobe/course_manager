@@ -41,7 +41,7 @@
               :to="'/courses'"
               ><strong>Courses</strong></router-link
             >
-            <button v-if="ID != 'null'" class="button is-link" @click="logout">
+            <button v-if="ID" class="button is-link" @click="logout">
               <strong>Log Out</strong>
             </button>
 
@@ -75,8 +75,10 @@ export default {
   methods: {
     logout() {
       if (localStorage.getItem("ID")) {
-        localStorage.setItem("ID", null);
-        localStorage.setItem("role", null);
+        // localStorage.setItem("ID", null);
+        localStorage.removeItem("ID");
+        localStorage.removeItem("role");
+        // localStorage.setItem("role", null);
         this.ID = null;
         this.role = null;
         router.push("/" + "?loggedOut=true");

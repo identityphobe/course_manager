@@ -6,7 +6,7 @@
     <div class="columns">
       <div class="column"></div>
       <div class="column mx-6">
-        <form>
+        <form onsubmit="return false">
           <div class="field">
             <label class="label">ID</label>
             <div class="control">
@@ -19,6 +19,9 @@
               />
             </div>
             <p class="help is-danger" v-if="isSubmitted && !ID">Required</p>
+            <p class="help is-danger" v-if="usernameAlreadyExists">
+              Username already used
+            </p>
           </div>
 
           <div class="field">
@@ -77,7 +80,7 @@
 
 <script>
 import database from "../database";
-import { ref, set } from "firebase/database";
+import { child, get, ref, set } from "firebase/database";
 import router from "../router/index.js";
 import Page from "../components/Page.vue";
 export default {
@@ -87,18 +90,66 @@ export default {
   },
   data() {
     return {
+      currentUsers: "",
       ID: "",
       password: "",
+      usernameAlreadyExists: false,
       confirmPassword: "",
       isSubmitted: false,
+
       //TODO: Check if username is available
       //TODO: Check password length and complexity
     };
   },
+  created() {
+    const dbRef = ref(database);
+
+    const fetchUsers = async () => {
+      get(child(dbRef, `users`))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            console.log(snapshot.val());
+            this.currentUsers = snapshot.val();
+            // console.log(snapshot.val());
+            // let participants = {};
+            // participants = Object.filter(snapshot.val(), (user) => {
+            //   if (user.courses === 0) {
+            //     return false;
+            //   } else if (user.courses.some((id) => id === courseID)) {
+            //     return true;
+            //   }
+            // });
+            // this.participants = participants;
+            // console.log(participants);
+          } else {
+            console.log("No data available");
+          }
+        })
+
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+    fetchUsers();
+  },
   methods: {
+    testWrite() {
+      console.log(this.ID in this.currentUsers);
+      if (this.ID in this.currentUsers) {
+        console.log("he");
+      }
+    },
     writeUserData() {
       this.isSubmitted = true;
-      if (this.ID && this.password && this.password == this.confirmPassword) {
+      const userNameAlreadyExists = this.ID in this.currentUsers;
+      if (userNameAlreadyExists) {
+        this.usernameAlreadyExists = true;
+      } else if (
+        this.ID &&
+        this.password &&
+        this.password == this.confirmPassword &&
+        !userNameAlreadyExists
+      ) {
         set(ref(database, "users/" + this.ID), {
           password: this.password,
           role: "User",

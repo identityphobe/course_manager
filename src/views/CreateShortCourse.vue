@@ -11,6 +11,7 @@
             <div class="control">
               <input v-model="course.name" class="input" type="text" />
             </div>
+            <p class="help is-danger" v-if="!course.name">required</p>
           </div>
 
           <div class="field">
@@ -28,9 +29,10 @@
                 <option value="CCI">CCI</option>
                 <option value="COE">COE</option>
               </select>
+              <p class="help is-danger" v-if="!course.department">required</p>
             </div>
           </div>
-          <label class="label mt-3">Certificate</label>
+          <label class="label mt-5">Certificate</label>
           <div class="columns">
             <div class="column">
               <div class="control">
@@ -95,7 +97,10 @@
               </label>
             </div>
           </div>
-          <div class="field has-addons">
+          <div
+            class="field has-addons"
+            v-if="course.targetAudience.includes('External')"
+          >
             <p class="control">
               <a class="button is-static">RM</a>
             </p>
@@ -138,6 +143,7 @@
                     </div>
                   </div>
                 </div>
+                <p class="help is-danger" v-if="!course.capacity">required</p>
               </div>
             </div>
           </div>
@@ -520,17 +526,26 @@ export default {
       console.log(this.course);
       let courseID;
       const courseRef = ref(database, "courses/");
-      push(courseRef, this.course)
-        .then((ref) => {
-          courseID = ref.key;
-          for (let index in this.newUpload) {
-            const fileRef = storageRef(storage, courseID + "/" + index);
-            uploadBytes(fileRef, this.newUpload[index]);
-          }
-        })
-        .then(() => {
-          router.push("/courses?createdCourse=true&newCourseID=" + courseID);
-        });
+      // let mark = true;
+      if (
+        this.course.capacity == "" ||
+        this.course.name == "" ||
+        this.course.department == ""
+      ) {
+        return;
+      } else {
+        push(courseRef, this.course)
+          .then((ref) => {
+            courseID = ref.key;
+            for (let index in this.newUpload) {
+              const fileRef = storageRef(storage, courseID + "/" + index);
+              uploadBytes(fileRef, this.newUpload[index]);
+            }
+          })
+          .then(() => {
+            router.push("/courses?createdCourse=true&newCourseID=" + courseID);
+          });
+      }
     },
   },
 };

@@ -1,6 +1,6 @@
 <template>
   <h1 class="title is-3 has-text-centered">{{ course.name }}</h1>
-
+  <h2 v-if="isCapacityFull" class="title is-4 has-text-centered">(Full)</h2>
   <div class="columns">
     <div class="column"></div>
     <div class="column is-three-fifths">

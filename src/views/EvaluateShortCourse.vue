@@ -1,5 +1,5 @@
 <template>
-  <h1 class="title is-3 has-text-centered">Create Short Course</h1>
+  <h1 class="title is-3 has-text-centered">Evaluate {{ course.name }}</h1>
   <div class="container">
     <div class="box">
       <h2 class="title is-4 has-text-centered">Content</h2>
@@ -227,8 +227,16 @@
           </select>
         </div>
       </div>
+      <div class="columns">
+        <div class="column"></div>
+        <div class="column has-text-centered">
+          <button class="button is-link" @click="submitEvaluation">
+            Submit
+          </button>
+        </div>
 
-      <button class="button is-link" @click="submitEvaluation">Submit</button>
+        <div class="column"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -236,11 +244,14 @@
 <script>
 import database from "../database";
 import { ref, get, set, child } from "firebase/database";
+import router from "../router/index.js";
+
 export default {
   name: "EvaluateShortCourse",
   data() {
     return {
       course: {},
+      courseID: this.$route.params.id,
       report: {
         contentInteresting: "Select rating",
         contentProfessionalNeeds: "Select rating",
@@ -277,6 +288,7 @@ export default {
         "evaluations/" + this.$route.params.id + "/" + this.report.userID
       );
       set(evaluationRef, this.report);
+      router.push("/courses/" + this.courseID);
     },
   },
 
