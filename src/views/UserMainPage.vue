@@ -141,12 +141,17 @@ export default {
         .then((snapshot) => {
           if (snapshot.exists()) {
             let courses = snapshot.val();
+            console.log(courses);
             if (this.userData.courses !== 0) {
               this.userData.courses.forEach((course) => {
-                this.registeredCourses[course] = {
-                  name: courses[course].name,
-                  link: "/courses/" + course,
-                };
+                console.log(course);
+                console.log(courses);
+                if (courses[course]) {
+                  this.registeredCourses[course] = {
+                    name: courses[course].name,
+                    link: "/courses/" + course,
+                  };
+                }
               });
             }
 
