@@ -1,10 +1,13 @@
 <template>
-  <button @click="generateCertificate">Generate Certificate</button>
+  <iframe id="iframepdf" :src="certificateURL"></iframe>
+  <!-- <button @click="generateCertificate">Generate Certificate</button>
 
-  <a :href="certificateURL">Certificate</a>
+  <a :href="certificateURL">Certificate</a> -->
 </template>
 
 <script>
+import database from "../database";
+import { child, get, ref } from "firebase/database";
 import PDFDocument from "pdfkit";
 import blobStream from "blob-stream";
 import "../register-files";
@@ -14,6 +17,49 @@ export default {
   data() {
     return {
       certificateURL: "",
+      course: {},
+      user: {},
+    };
+  },
+  created() {
+    const courseID = this.$route.params.id;
+
+    const dbRef = ref(database);
+    const fetchCourse = async () => {
+      get(child(dbRef, `courses/${courseID}`))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            this.course = snapshot.val();
+          } else {
+            console.log("No data available");
+          }
+        })
+        .then(() => {
+          fetchUser();
+        })
+
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+
+    fetchCourse();
+
+    let ID = localStorage.getItem("ID");
+    const fetchUser = async () => {
+      const dbRef = ref(database);
+      get(child(dbRef, `users/${ID}`))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            this.user = snapshot.val();
+            this.generateCertificate();
+          } else {
+            console.log("No data available");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     };
   },
   methods: {
@@ -40,7 +86,7 @@ export default {
       doc.moveDown();
       doc.moveDown();
 
-      doc.fontSize(15).fill("#021c27").text("PARTICIPANT NAME", {
+      doc.fontSize(15).fill("#021c27").text(this.user.fullName, {
         align: "center",
       });
 
@@ -50,7 +96,7 @@ export default {
       doc
         .fontSize(10)
         .fill("#021c27")
-        .text("for successfully completing COURSE NAME", {
+        .text("for successfully completing " + this.course.name, {
           align: "center",
         });
 
@@ -70,3 +116,9 @@ export default {
   },
 };
 </script>
+<style scoped>
+iframe {
+  height: 100vh;
+  width: 100vw;
+}
+</style>

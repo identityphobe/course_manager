@@ -221,13 +221,14 @@
 
               <!-- <button class="button is-link" @click="test">Test</button> -->
             </div>
-            <div class="column" v-if="hasJoinedCourse">
-              <router-link
-                v-if="courseAttended"
-                class="button is-link"
-                :to="evaluateLink"
-              >
+            <div class="column has-text-centered" v-if="courseAttended">
+              <router-link class="button is-link" :to="evaluateLink">
                 Evaluate
+              </router-link>
+            </div>
+            <div class="column has-text-centered" v-if="courseAttended">
+              <router-link class="button is-link" :to="certificateURL">
+                Certificate
               </router-link>
             </div>
           </div>
@@ -245,12 +246,12 @@ import { child, get, ref, remove, set } from "firebase/database";
 import { storage } from "../database";
 import { ref as storageRef, getDownloadURL, listAll } from "firebase/storage";
 import router from "../router/index.js";
-// import { cloneDeep } from "lodash";
 
 export default {
   name: "ViewShortCourse",
   data() {
     return {
+      certificateURL: "/courses/" + this.$route.params.id + "/certificate",
       isCapacityFull: false,
       currentCapacity: 0,
       oldUploads: {
@@ -355,10 +356,65 @@ export default {
       router.push("/courses?courseDeleted=true");
       // remove(toRemoveRef);
     },
+
+    // generateCertificate() {
+    //   const doc = new PDFDocument({
+    //     layout: "landscape",
+    //     size: "A4",
+    //   });
+    //   const stream = doc.pipe(blobStream());
+
+    //   doc.moveDown();
+    //   doc.moveDown();
+    //   doc.moveDown();
+    //   doc.moveDown();
+    //   doc.moveDown();
+    //   doc.moveDown();
+
+    //   doc.rect(0, 0, doc.page.width, doc.page.height).fill("#fff");
+
+    //   doc.fontSize(20).fill("#021c27").text("CERTIFICATE OF COMPLETION", {
+    //     align: "center",
+    //   });
+
+    //   doc.moveDown();
+    //   doc.moveDown();
+
+    //   doc.fontSize(15).fill("#021c27").text(this.user.fullName, {
+    //     align: "center",
+    //   });
+
+    //   doc.moveDown();
+    //   doc.moveDown();
+
+    //   doc
+    //     .fontSize(10)
+    //     .fill("#021c27")
+    //     .text("for successfully completing " + this.course.name, {
+    //       align: "center",
+    //     });
+
+    //   doc.end();
+
+    //   stream.on("finish", () => {
+    //     console.log("Finish");
+    //     // get a blob you can do whatever you like with
+    //     // const blob = stream.toBlob("application/pdf");
+    //     // or get a blob URL for display in the browser
+    //     const url = stream.toBlobURL("application/pdf");
+    //     console.log(typeof url);
+
+    //     this.certificateURL = url;
+    //     console.log(this.certificateURL);
+
+    //     // router.push(url);
+    //   });
+    // },
   },
   computed: {},
   created() {
     const courseID = this.$route.params.id;
+    let ID = localStorage.getItem("ID");
 
     const dbRef = ref(database);
 
@@ -420,7 +476,6 @@ export default {
     };
 
     //
-    let ID = localStorage.getItem("ID");
     const fetchUser = async () => {
       const dbRef = ref(database);
       get(child(dbRef, `users/${ID}`))

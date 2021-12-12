@@ -86,7 +86,7 @@ const routes = [
     component: EvaluationReport,
   },
   {
-    path: "/courses/:courseID/certificate",
+    path: "/courses/:id/certificate",
     component: ViewCertificate
   },
   {
