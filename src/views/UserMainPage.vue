@@ -34,6 +34,8 @@
       </div>
       <div class="column"></div>
     </div>
+    <h1 class="title is-4 has-text-centered">Available Courses</h1>
+    <CourseList />
   </div>
   <div v-else class="section mx-6">
     <h1 class="title is-2 has-text-centered">Admin Area</h1>
@@ -65,18 +67,20 @@
       </div>
       <div class="column" />
     </div>
+    <hr />
   </div>
 </template>
 
 <script>
 import database from "../database";
 import { child, get, ref } from "firebase/database";
+import CourseList from "../components/CourseList.vue";
 // import CourseCard from "../components/CourseCard.vue";
 
 // console.log(this.$route.query.register);
 export default {
   name: "UserMainPage",
-  // components: { CourseCard },
+  components: { CourseList },
   data() {
     return {
       createdCourse: this.$route.query.createdCourse,

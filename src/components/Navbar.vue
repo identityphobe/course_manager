@@ -38,7 +38,7 @@
             <router-link
               v-if="role === 'User'"
               class="button is-link"
-              :to="'/courses'"
+              :to="'/users/' + ID"
               ><strong>Courses</strong></router-link
             >
             <button v-if="ID" class="button is-link" @click="logout">

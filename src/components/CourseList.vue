@@ -1,5 +1,5 @@
 <template>
-  <div class="section pt-0">
+  <div>
     <div class="columns">
       <div class="column"></div>
 

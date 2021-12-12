@@ -5,6 +5,8 @@
     <div class="column is-three-fifths">
       <div class="container">
         <div class="box">
+          <label class="label">Full Name</label>
+          <p>{{ user.fullName }}</p>
           <label class="label">Username</label>
           <p>{{ ID }}</p>
           <label class="label">Joined Courses</label>
