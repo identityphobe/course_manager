@@ -16,7 +16,7 @@
                 " " +
                 formatDate(course.dateStart) +
                 " - " +
-                course.dateEnd.replaceAll("-", "/")
+                formatDate(course.dateEnd)
               }}</span>
             </li>
           </ul>

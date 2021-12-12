@@ -154,6 +154,9 @@
                 <label class="label">Date Start</label>
                 <div class="control">
                   <input v-model="course.dateStart" class="input" type="date" />
+                  <p class="help is-danger" v-if="!course.dateStart">
+                    required
+                  </p>
                 </div>
               </div>
             </div>
@@ -163,6 +166,7 @@
                 <label class="label">Date End</label>
                 <div class="control">
                   <input v-model="course.dateEnd" class="input" type="date" />
+                  <p class="help is-danger" v-if="!course.dateEnd">required</p>
                 </div>
               </div>
             </div>
@@ -422,6 +426,31 @@
     </div>
     <div class="column"></div>
   </div>
+  <div :class="{ modal: true, 'is-active': isModalActive }">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">
+          Missing information in one or more fields
+        </p>
+        <button class="delete" @click="toggleModal" aria-label="close"></button>
+      </header>
+      <section class="modal-card-body">
+        <p>Please fill the following fields:</p>
+        <ol>
+          <li v-if="!course.name">Name</li>
+          <li v-if="!course.department">Department</li>
+          <li v-if="!course.capacity">Capacity</li>
+          <li v-if="!course.startDate">Start date</li>
+          <li v-if="!course.startEnd">End date</li>
+        </ol>
+      </section>
+      <!-- <footer class="modal-card-foot">
+        <button class="button is-success">Save changes</button>
+        <button class="button">Cancel</button>
+      </footer> -->
+    </div>
+  </div>
 </template>
 
 <script>
@@ -440,6 +469,7 @@ export default {
   name: "CreateShortCourse",
   data() {
     return {
+      isModalActive: false,
       newUpload: {},
       fileNames: {
         agenda: "NA",
@@ -482,7 +512,9 @@ export default {
   methods: {
     //TODO: field validation
     //TODO: total costs calculation
-
+    toggleModal() {
+      this.isModalActive = !this.isModalActive;
+    },
     updateTotal() {
       let total = 0;
       if (this.course.costFB) {
@@ -530,8 +562,11 @@ export default {
       if (
         this.course.capacity == "" ||
         this.course.name == "" ||
-        this.course.department == ""
+        this.course.department == "" ||
+        this.course.dateStart == "" ||
+        this.course.dateEnd == ""
       ) {
+        this.toggleModal();
         return;
       } else {
         push(courseRef, this.course)

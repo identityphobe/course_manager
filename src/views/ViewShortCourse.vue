@@ -1,6 +1,10 @@
 <template>
   <h1 class="title is-3 has-text-centered">{{ course.name }}</h1>
-  <h2 v-if="isCapacityFull" class="title is-4 has-text-centered">(Full)</h2>
+  <h2 v-if="isCapacityFull" class="title is-4 has-text-centered">
+    <span v-if="isCapacityFull"
+      >(<span id="capacityIndicator">Full</span>)</span
+    >
+  </h2>
   <div class="columns">
     <div class="column"></div>
     <div class="column is-three-fifths">
@@ -16,7 +20,12 @@
           <label class="label">Department</label>
           <p>{{ course.department }}</p>
           <label class="label">Certificate</label>
-          <p>{{ course.certificate }}: {{ course.certificateModule }}</p>
+          <p>
+            {{ course.certificate
+            }}<span v-if="course.certificateModule"
+              >: {{ course.certificateModule }}</span
+            >
+          </p>
 
           <div v-if="isAdmin">
             <label class="label">Target Audience</label>
@@ -35,6 +44,7 @@
           </p>
           <label class="label">Start Date</label>
           <p>{{ formatDate(course.dateStart) }}</p>
+
           <label class="label">End Date</label>
           <p>{{ formatDate(course.dateEnd) }}</p>
           <label class="label">Agenda</label>
@@ -173,6 +183,9 @@
             >View</a
           >
           <a v-else>Unavailable.</a>
+          <label class="label">Attended</label>
+          <p v-if="courseAttended">Yes</p>
+          <p v-else>No</p>
 
           <div v-if="isAdmin" class="columns">
             <div class="column has-text-centered">
@@ -294,7 +307,7 @@ export default {
       if (typeof this.course.participants == "undefined") {
         this.course.participants = {};
       }
-      this.course.participants[this.ID] = true;
+      this.course.participants[this.ID] = false;
       this.participants[this.ID] = {};
       this.currentCapacity += 1;
 

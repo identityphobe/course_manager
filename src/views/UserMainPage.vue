@@ -16,18 +16,24 @@
 
   <div v-if="userRole === 'User'" class="section">
     <h1 class="title is-4 has-text-centered">Your Upcoming Courses</h1>
-
-    <p
-      v-if="Object.keys(this.registeredCourses).length === 0"
-      class="has-text-centered"
-    >
-      Nothing for now. <router-link to="/courses">Join a course.</router-link>
-    </p>
-    <ul>
-      <li v-for="course in registeredCourses" :key="course.name">
-        <router-link :to="course.link">{{ course.name }}</router-link>
-      </li>
-    </ul>
+    <div class="columns">
+      <div class="column"></div>
+      <div class="column is-three-fifths">
+        <p
+          v-if="Object.keys(this.registeredCourses).length === 0"
+          class="has-text-centered"
+        >
+          Nothing for now.
+          <router-link to="/courses">Join a course.</router-link>
+        </p>
+        <ul>
+          <li v-for="course in registeredCourses" :key="course.name">
+            <router-link :to="course.link">{{ course.name }}</router-link>
+          </li>
+        </ul>
+      </div>
+      <div class="column"></div>
+    </div>
   </div>
   <div v-else class="section mx-6">
     <h1 class="title is-2 has-text-centered">Admin Area</h1>
