@@ -223,7 +223,7 @@
             </div>
             <div class="column" v-if="hasJoinedCourse">
               <router-link
-                v-if="hasJoinedCourse"
+                v-if="courseAttended"
                 class="button is-link"
                 :to="evaluateLink"
               >
@@ -264,6 +264,7 @@ export default {
 
       ID: localStorage.getItem("ID"),
       evaluateLink: "/courses/" + this.$route.params.id + "/evaluate",
+      courseAttended: false,
       reportLink: "/courses/" + this.$route.params.id + "/report",
       editLink: "/courses/" + this.$route.params.id + "/edit",
       user: {},
@@ -281,42 +282,31 @@ export default {
     },
     joinCourse() {
       const dbRef = ref(database);
-      get(child(dbRef, `users/${this.ID}`))
-        .then((snapshot) => {
-          if (snapshot.exists()) {
-            this.user = snapshot.val();
-            // if exists, don't add
-            if (this.user.courses === 0) {
-              this.user.courses = [this.courseID];
-            } else {
-              if (this.user.courses.indexOf(this.courseID) != -1) {
-                this.user.courses.push(this.courseID);
-              }
-            }
-            if (typeof this.course.participants == "undefined") {
-              this.course.participants = {};
-            }
-            this.course.participants[this.ID] = true;
-            this.participants[this.ID] = {};
-            this.currentCapacity += 1;
+      if (this.user.courses === 0) {
+        this.user.courses = [this.courseID];
+      } else {
+        if (this.user.courses.indexOf(this.courseID) === -1) {
+          this.user.courses.push(this.courseID);
+        }
+      }
+      console.log(this.user.courses.indexOf(this.courseID));
+      if (typeof this.course.participants == "undefined") {
+        this.course.participants = {};
+      }
+      this.course.participants[this.ID] = true;
+      this.participants[this.ID] = {};
+      this.currentCapacity += 1;
 
-            if (Object.keys(this.participants).length >= this.course.capacity) {
-              this.isCapacityFull = true;
-            }
+      if (Object.keys(this.participants).length >= this.course.capacity) {
+        this.isCapacityFull = true;
+      }
 
-            set(child(dbRef, `users/${this.ID}`), this.user);
+      set(child(dbRef, `users/${this.ID}`), this.user);
 
-            this.hasJoinedCourse = true;
+      this.hasJoinedCourse = true;
 
-            const courseRef = ref(database, `courses/${this.courseID}`);
-            set(courseRef, this.course);
-          } else {
-            console.log("No data available");
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      const courseRef = ref(database, `courses/${this.courseID}`);
+      set(courseRef, this.course);
     },
     updateTotal() {
       let total = 0;
@@ -378,14 +368,16 @@ export default {
           if (snapshot.exists()) {
             this.course = snapshot.val();
             this.doesCourseExists = true;
-            //DEBUG
-            console.log(this.course);
           } else {
             console.log("No data available");
           }
         })
         .then(() => {
           getCapacity();
+          fetchUser();
+          if (this.course.participants[this.ID]) {
+            this.courseAttended = true;
+          }
         })
         .catch((error) => {
           console.error(error);
@@ -441,7 +433,6 @@ export default {
                 this.hasJoinedCourse = true;
               }
             }
-            console.log(this.user);
           } else {
             console.log("No data available");
           }

@@ -8,6 +8,21 @@
       <div class="column mx-6">
         <form>
           <div class="field">
+            <label class="label">Full Name</label>
+            <div class="control">
+              <input
+                class="input"
+                type="text"
+                v-model="fullName"
+                placeholder="Your Full Name"
+                required
+              />
+            </div>
+            <p class="help is-danger" v-if="isSubmitted && !fullName">
+              Required
+            </p>
+          </div>
+          <div class="field">
             <label class="label">ID</label>
             <div class="control">
               <input
@@ -90,6 +105,7 @@ export default {
       ID: "",
       password: "",
       confirmPassword: "",
+      fullName: "",
       isSubmitted: false,
       //TODO: Check if username is available
       //TODO: Check password length and complexity
@@ -101,6 +117,7 @@ export default {
       if (this.ID && this.password && this.password == this.confirmPassword) {
         set(ref(database, "users/" + this.ID), {
           password: this.password,
+          fullName: this.fullName,
           role: "User",
           courses: 0,
         });

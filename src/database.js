@@ -28,14 +28,14 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
-console.log(database);
+
 const dbRef = ref(database);
 
 export const fetchUserCourses = async (id) => {
 
     get(child(dbRef, `users/${id}`)).then((snapshot) => {
         if (snapshot.exists()) {
-            console.log(snapshot.val());
+
             return snapshot.val();
         }
         else {

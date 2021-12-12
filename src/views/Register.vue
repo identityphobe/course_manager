@@ -8,6 +8,21 @@
       <div class="column mx-6">
         <form onsubmit="return false">
           <div class="field">
+            <label class="label">Full Name</label>
+            <div class="control">
+              <input
+                class="input"
+                type="text"
+                v-model="fullName"
+                placeholder="Your Full Name"
+                required
+              />
+            </div>
+            <p class="help is-danger" v-if="isSubmitted && !fullName">
+              Required
+            </p>
+          </div>
+          <div class="field">
             <label class="label">ID</label>
             <div class="control">
               <input
@@ -93,6 +108,7 @@ export default {
       currentUsers: "",
       ID: "",
       password: "",
+      fullName: "",
       usernameAlreadyExists: false,
       confirmPassword: "",
       isSubmitted: false,
@@ -152,6 +168,7 @@ export default {
       ) {
         set(ref(database, "users/" + this.ID), {
           password: this.password,
+          fullName: this.fullName,
           role: "User",
           courses: 0,
         });

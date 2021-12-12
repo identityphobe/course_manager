@@ -16,6 +16,7 @@ import CoursesJoined from "../views/CoursesJoined"
 import Users from "../views/Users"
 import AddUser from "../views/AddUser"
 import UserProfile from "../views/UserProfile"
+import ViewCertificate from "../views/ViewCertificate"
 
 const routes = [
   {
@@ -83,6 +84,10 @@ const routes = [
   {
     path: "/courses/:id/report",
     component: EvaluationReport,
+  },
+  {
+    path: "/courses/:courseID/certificate",
+    component: ViewCertificate
   },
   {
     path: "/:user/courses/joined",
