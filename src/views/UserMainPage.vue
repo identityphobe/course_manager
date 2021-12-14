@@ -28,7 +28,10 @@
         </p>
         <ul>
           <li v-for="course in registeredCourses" :key="course.name">
-            <router-link :to="course.link">{{ course.name }}</router-link>
+            <span v-if="!course.attended"
+              ><router-link :to="course.link">{{ course.name }}</router-link>
+              {{ course.dateStart }}-{{ course.dateEnd }}</span
+            >
           </li>
         </ul>
       </div>
@@ -73,6 +76,7 @@
 <script>
 import database from "../database";
 import { child, get, ref } from "firebase/database";
+import { formatDate } from "../utils";
 import CourseList from "../components/CourseList.vue";
 // import CourseCard from "../components/CourseCard.vue";
 
@@ -94,8 +98,8 @@ export default {
   },
   methods: {
     deleteNotification() {
-      const notificationNode = document.querySelectorAll(".notification");
-      console.log(notificationNode);
+      // const notificationNode =
+      document.querySelectorAll(".notification");
     },
   },
   created() {
@@ -116,7 +120,6 @@ export default {
       get(child(dbRef, `users/${this.userID}`))
         .then((snapshot) => {
           if (snapshot.exists()) {
-            console.log(snapshot.val());
             this.userData = snapshot.val();
             // let participants = {};
             // participants = Object.filter(snapshot.val(), (user) => {
@@ -144,23 +147,29 @@ export default {
         .then((snapshot) => {
           if (snapshot.exists()) {
             let courses = snapshot.val();
-            console.log(courses);
+
             if (this.userData.courses !== 0) {
               this.userData.courses.forEach((course) => {
-                console.log(course);
-                console.log(courses);
+                let attended = false;
+
+                if (courses[course] && courses[course].participants) {
+                  attended = courses[course].participants[this.userID];
+                }
+
+                if (attended) {
+                  return;
+                }
                 if (courses[course]) {
                   this.registeredCourses[course] = {
                     name: courses[course].name,
                     link: "/courses/" + course,
+                    dateStart: formatDate(courses[course].dateStart),
+                    dateEnd: formatDate(courses[course].dateEnd),
+                    attended: attended,
                   };
                 }
               });
             }
-
-            console.log(this.registeredCourses);
-            // console.log(this.courses);
-            // console.log(Object.keys(this.courses));
           } else {
             console.log("No data available");
           }

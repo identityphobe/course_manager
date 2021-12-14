@@ -444,7 +444,7 @@ export default {
         .then(() => {
           getCapacity();
           fetchUser();
-          if (this.course.participants[this.ID]) {
+          if (this.course.participants && this.course.participants[this.ID]) {
             this.courseAttended = true;
           }
         })

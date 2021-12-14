@@ -98,8 +98,6 @@ export default {
         .then((snapshot) => {
           if (snapshot.exists()) {
             this.courses = snapshot.val();
-            console.log(this.courses);
-            console.log(Object.keys(this.courses));
           } else {
             console.log("No data available");
           }

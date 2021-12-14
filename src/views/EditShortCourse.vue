@@ -139,7 +139,7 @@
                       <input
                         v-model="course.capacity"
                         class="input"
-                        type="text"
+                        type="number"
                       />
                     </div>
                   </div>
@@ -458,6 +458,27 @@
     </div>
     <div class="column"></div>
   </div>
+  <div :class="{ modal: true, 'is-active': isModalActive }">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">
+          Missing information in one or more fields
+        </p>
+        <button class="delete" @click="toggleModal" aria-label="close"></button>
+      </header>
+      <section class="modal-card-body">
+        <p>Please fill the following fields:</p>
+        <ol>
+          <li v-if="!course.name">Name</li>
+          <li v-if="!course.department">Department</li>
+          <li v-if="!course.capacity">Capacity</li>
+          <li v-if="!course.dateStart">Start date</li>
+          <li v-if="!course.dateEnd">End date</li>
+        </ol>
+      </section>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -546,6 +567,16 @@ export default {
       console.log(this.course);
       const courseID = this.$route.params.id;
       const courseRef = ref(database, `courses/${courseID}`);
+      if (
+        this.course.capacity == "" ||
+        this.course.name == "" ||
+        this.course.department == "" ||
+        this.course.dateStart == "" ||
+        this.course.dateEnd == ""
+      ) {
+        this.toggleModal();
+        return;
+      }
       set(courseRef, this.course);
       for (let index in this.newUpload) {
         const fileRef = storageRef(storage, courseID + "/" + index);

@@ -138,7 +138,7 @@
                       <input
                         v-model="course.capacity"
                         class="input"
-                        type="text"
+                        type="number"
                       />
                     </div>
                   </div>
@@ -441,14 +441,10 @@
           <li v-if="!course.name">Name</li>
           <li v-if="!course.department">Department</li>
           <li v-if="!course.capacity">Capacity</li>
-          <li v-if="!course.startDate">Start date</li>
-          <li v-if="!course.startEnd">End date</li>
+          <li v-if="!course.dateStart">Start date</li>
+          <li v-if="!course.dateEnd">End date</li>
         </ol>
       </section>
-      <!-- <footer class="modal-card-foot">
-        <button class="button is-success">Save changes</button>
-        <button class="button">Cancel</button>
-      </footer> -->
     </div>
   </div>
 </template>

@@ -10,7 +10,8 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Name</th>
+          <th>Username</th>
+          <th>Full Name</th>
           <th>Role</th>
         </tr>
       </thead>
@@ -20,6 +21,9 @@
           <router-link :to="'/users/' + user + '/profile'">{{
             user
           }}</router-link>
+        </td>
+        <td>
+          {{ data.fullName }}
         </td>
         <td>{{ data.role }}</td>
       </tr>
