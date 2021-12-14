@@ -20,15 +20,16 @@
             <li v-for="course in coursesJoined" :key="course">
               <!-- TODO: process date -->
               <router-link :to="course.link">{{ course.name }}</router-link>
-              <span>{{
+              <span v-if="!course.participants[ID]">{{
                 " " +
                 formatDate(course.dateStart) +
                 " - " +
                 formatDate(course.dateEnd)
               }}</span>
+              <span v-else> (Attended)</span>
             </li>
           </ul>
-          <p>None</p>
+          <p v-else>None</p>
           <div class="columns">
             <div class="column has-text-centered">
               <router-link class="button is-link" :to="editLink"
@@ -40,7 +41,6 @@
                 Delete
               </button>
             </div>
-            "
           </div>
         </div>
       </div>
