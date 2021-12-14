@@ -215,24 +215,17 @@
             </div>
           </div>
           <div v-else-if="isUser" class="columns">
-            <div class="column has-text-centered">
-              <button
-                v-if="!hasJoinedCourse && !isCapacityFull"
-                class="button is-link"
-                @click="joinCourse"
-              >
-                Join
-              </button>
-
-              <button
-                v-else-if="hasJoinedCourse"
-                class="button is-danger"
-                @click="dropCourse"
-              >
-                Drop
-              </button>
-
-              <!-- <button class="button is-link" @click="test">Test</button> -->
+            <div
+              class="column has-text-centered"
+              v-if="!hasJoinedCourse && !isCapacityFull"
+            >
+              <button class="button is-link" @click="joinCourse">Join</button>
+            </div>
+            <div
+              class="column has-text-centered"
+              v-else-if="hasJoinedCourse && !courseAttended"
+            >
+              <button class="button is-danger" @click="dropCourse">Drop</button>
             </div>
             <div class="column has-text-centered" v-if="courseAttended">
               <router-link class="button is-link" :to="evaluateLink">
