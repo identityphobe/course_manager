@@ -3,7 +3,7 @@
     <div class="columns">
       <div class="column"></div>
 
-      <div class="column is-three-fifths">
+      <div class="column is-half">
         <div v-if="createdCourse" class="section has-text-centered">
           <div class="notification is-success has-text-centered">
             <button class="delete" @click="deleteNotification"></button>

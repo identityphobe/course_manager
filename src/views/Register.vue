@@ -1,7 +1,7 @@
 
 <template>
   <!-- if logged in, don't show registration page...or... -->
-  <Page title="Register" />
+  <Page title="Register User" />
   <section class="container">
     <div class="columns">
       <div class="column"></div>

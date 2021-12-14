@@ -1,4 +1,5 @@
 <template>
+  <!-- {{ isAdmin }} -->
   <div v-if="this.$route.query.userEdited" class="section">
     <div class="notification is-success">
       <button class="delete"></button>
@@ -30,7 +31,7 @@
             </li>
           </ul>
           <p v-else>None</p>
-          <div class="columns">
+          <div v-if="isAdmin" class="columns">
             <div class="column has-text-centered">
               <router-link class="button is-link" :to="editLink"
                 >Edit</router-link
@@ -59,13 +60,15 @@ Object.filter = (obj, predicate) =>
     .reduce((res, key) => ((res[key] = obj[key]), res), {});
 export default {
   name: "CoursesJoined",
-  ID: "",
-  editLink: "",
+
   computed: {},
   data() {
     return {
       user: {},
       coursesJoined: {},
+      ID: "",
+      isAdmin: false,
+      editLink: "",
     };
   },
   methods: {
@@ -82,6 +85,8 @@ export default {
   created() {
     const dbRef = ref(database);
     this.ID = this.$route.params.id;
+    this.userRole = localStorage.getItem("role") === "Admin";
+    console.log(this.userRole);
     // const coursesJoined = [];
     const fetchUser = async (ref, id) => {
       get(child(ref, `users/${id}`))

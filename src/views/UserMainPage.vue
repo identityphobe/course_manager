@@ -59,12 +59,12 @@
             >
           </li>
           <li>
+            <router-link class="is-size-4" to="/users">View users</router-link>
+          </li>
+          <li>
             <router-link class="is-size-4" to="/users/new"
               >Add a user</router-link
             >
-          </li>
-          <li>
-            <router-link class="is-size-4" to="/users">View users</router-link>
           </li>
         </ol>
       </div>

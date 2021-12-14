@@ -202,7 +202,7 @@
                     </span>
                   </span>
                   <span v-if="oldUploads['agenda']" class="file-name">
-                    <a :href="fileTempURLs['agenda']" target="_blank">{{
+                    <a :href="oldUploads['agenda']" target="_blank">{{
                       fileNames["agenda"]
                     }}</a>
                   </span>
@@ -234,7 +234,7 @@
                     <span class="file-label"> Upload poster (optional) </span>
                   </span>
                   <span v-if="oldUploads['poster']" class="file-name">
-                    <a :href="fileTempURLs['poster']" target="_blank">{{
+                    <a :href="oldUploads['poster']" target="_blank">{{
                       fileNames["poster"]
                     }}</a>
                   </span>
@@ -371,7 +371,7 @@
                     </span>
                   </span>
                   <span v-if="oldUploads['approvalLetter']" class="file-name">
-                    <a :href="fileTempURLs['approvalLetter']" target="_blank">{{
+                    <a :href="oldUploads['approvalLetter']" target="_blank">{{
                       fileNames["approvalLetter"]
                     }}</a>
                   </span>
@@ -409,7 +409,7 @@
                   </span>
 
                   <span v-if="oldUploads['speakerLetter']" class="file-name">
-                    <a :href="fileTempURLs['speakerLetter']" target="_blank">{{
+                    <a :href="oldUploads['speakerLetter']" target="_blank">{{
                       fileNames["speakerLetter"]
                     }}</a>
                   </span>
@@ -497,6 +497,7 @@ export default {
   name: "EditShortCourse",
   data() {
     return {
+      isModalActive: false,
       newUpload: {},
       oldUploads: {
         speakerLetter: false,
