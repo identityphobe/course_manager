@@ -17,6 +17,7 @@ import Users from "../views/Users"
 import AddUser from "../views/AddUser"
 import UserProfile from "../views/UserProfile"
 import ViewCertificate from "../views/ViewCertificate"
+import EditUser from "../views/EditUser"
 
 const routes = [
   {
@@ -47,6 +48,10 @@ const routes = [
   {
     path: "/users/:id/profile",
     component: UserProfile
+  },
+  {
+    path: "/users/:id/edit",
+    component: EditUser
   },
   {
     path: "/users",

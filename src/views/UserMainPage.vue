@@ -67,7 +67,6 @@
       </div>
       <div class="column" />
     </div>
-    <hr />
   </div>
 </template>
 

@@ -1,4 +1,10 @@
 <template>
+  <div v-if="this.$route.query.userEdited" class="section">
+    <div class="notification is-success">
+      <button class="delete"></button>
+      User successfully edited
+    </div>
+  </div>
   <h1 class="title is-3 has-text-centered">Profile</h1>
   <div class="columns">
     <div class="column"></div>
@@ -10,7 +16,7 @@
           <label class="label">Username</label>
           <p>{{ ID }}</p>
           <label class="label">Joined Courses</label>
-          <ul>
+          <ul v-if="Object.keys(coursesJoined).length">
             <li v-for="course in coursesJoined" :key="course">
               <!-- TODO: process date -->
               <router-link :to="course.link">{{ course.name }}</router-link>
@@ -22,29 +28,31 @@
               }}</span>
             </li>
           </ul>
+          <p>None</p>
+          <div class="columns">
+            <div class="column has-text-centered">
+              <router-link class="button is-link" :to="editLink"
+                >Edit</router-link
+              >
+            </div>
+            <div class="column has-text-centered">
+              <button class="button is-danger" @click="deleteUser">
+                Delete
+              </button>
+            </div>
+            "
+          </div>
         </div>
       </div>
     </div>
     <div class="column"></div>
-
-    <!-- TODO: Create a component out of this -->
-    <!-- <p>College of Computing and Informatics</p>
-    
-    <p>College of Engineering</p>
-    <ul>
-      <li v-for="course in COECourses" :key="course.name">
-        <router-link :to="course.link">{{ course.name }}</router-link>
-      </li>
-    </ul> -->
-
-    <!--  use v-for with computed properties to list all courses -->
-    <!-- <li v-for="course in courses" :key="course.name"></li> -->
   </div>
 </template>
 
 <script>
 import database from "../database";
-import { ref, child, get } from "firebase/database";
+import { ref, child, get, remove } from "firebase/database";
+import router from "../router/index.js";
 Object.filter = (obj, predicate) =>
   Object.keys(obj)
     .filter((key) => predicate(obj[key]))
@@ -52,6 +60,7 @@ Object.filter = (obj, predicate) =>
 export default {
   name: "CoursesJoined",
   ID: "",
+  editLink: "",
   computed: {},
   data() {
     return {
@@ -63,6 +72,11 @@ export default {
     formatDate(date) {
       const splitDate = date.split("-");
       return `${splitDate[2]}/${splitDate[1]}/${splitDate[0]}`;
+    },
+    deleteUser() {
+      let toRemoveRef = ref(database, `users/${this.ID}`);
+      remove(toRemoveRef);
+      router.push("/users?userDeleted=true&ID=" + this.ID);
     },
   },
   created() {
@@ -102,6 +116,7 @@ export default {
     };
 
     fetchUser(dbRef, this.ID);
+    this.editLink = "/users/" + this.$route.params.id + "/edit";
   },
 };
 </script>

@@ -33,7 +33,7 @@
               v-if="role === 'User'"
               class="button is-link"
               :to="'/users/' + ID + '/profile'"
-              ><strong>Profile</strong></router-link
+              ><strong>{{ ID }}</strong></router-link
             >
             <router-link
               v-if="role === 'User'"

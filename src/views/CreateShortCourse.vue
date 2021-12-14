@@ -172,7 +172,7 @@
             </div>
           </div>
 
-          <label class="label">Venue</label>
+          <label class="label">Speaker</label>
           <div class="control">
             <div class="select">
               <select v-model="course.speaker">

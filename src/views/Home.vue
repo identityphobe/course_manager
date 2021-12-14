@@ -1,14 +1,14 @@
 <template>
-  <h1 class="title is-3 mt-6 has-text-centered">
-    Welcome to UNITEN's TLC Short Course Platform
-  </h1>
-  <CourseList />
   <div v-if="loggedOut" class="section">
     <div class="notification is-success">
       <button class="delete"></button>
       Logout successful
     </div>
   </div>
+  <h1 class="title is-3 mt-6 has-text-centered">
+    Welcome to UNITEN's TLC Short Course Platform
+  </h1>
+  <CourseList />
 </template>
 <script>
 import CourseList from "../components/CourseList.vue";

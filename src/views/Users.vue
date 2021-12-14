@@ -1,5 +1,11 @@
 <template>
   <div v-if="isAdmin" class="container">
+    <div v-if="this.$route.query.userDeleted" class="section">
+      <div class="notification is-success">
+        <button class="delete"></button>
+        User {{ $route.query.user }} deleted
+      </div>
+    </div>
     <h1 class="title is-3 has-text-centered">Users</h1>
     <table class="table">
       <thead>
