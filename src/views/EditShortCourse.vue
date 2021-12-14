@@ -153,7 +153,12 @@
               <div class="field">
                 <label class="label">Date Start</label>
                 <div class="control">
-                  <input v-model="course.dateStart" class="input" type="date" />
+                  <input
+                    v-model="course.dateStart"
+                    class="input"
+                    type="date"
+                    @change="changeDate"
+                  />
                 </div>
               </div>
             </div>
@@ -545,6 +550,9 @@ export default {
     };
   },
   methods: {
+    changeDate() {
+      console.log(this.course.dateStart);
+    },
     updateTotal() {
       let total = 0;
       if (this.course.costFB) {

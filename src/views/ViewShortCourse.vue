@@ -47,14 +47,10 @@
 
           <label class="label">End Date</label>
           <p>{{ formatDate(course.dateEnd) }}</p>
-          <label class="label">Agenda</label>
-          <a
-            v-if="oldUploads['agenda']"
-            :href="oldUploads['agenda']"
-            target="_blank"
-            >View</a
-          >
-          <a v-else>Unavailable.</a>
+
+          <label class="label">Speaker</label>
+          <p>{{ course.speaker }}</p>
+
           <div v-if="isAdmin">
             <label class="label mt-4">Costs</label>
             <div class="columns is-vcentered">
@@ -175,6 +171,14 @@
             >
             <a v-else>Unavailable</a>
           </div>
+          <label class="label">Agenda</label>
+          <a
+            v-if="oldUploads['agenda']"
+            :href="oldUploads['agenda']"
+            target="_blank"
+            >View</a
+          >
+          <a v-else>Unavailable.</a>
           <label class="label">Poster</label>
           <a
             v-if="oldUploads['poster']"
