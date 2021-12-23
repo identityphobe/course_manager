@@ -7,27 +7,27 @@
       <table class="table">
         <tr>
           <td>Content</td>
-          <td>0</td>
+          <td>{{ averageContentScore }}</td>
         </tr>
         <tr>
           <td>Facilitator</td>
-          <td>0</td>
+          <td>{{ averageFacilitatorScore }}</td>
         </tr>
         <tr>
           <td>Venue & Facilities</td>
-          <td>0</td>
+          <td>{{ averageVenueScore }}</td>
         </tr>
         <tr>
           <td>Organizing Committee</td>
-          <td>0</td>
+          <td>{{ averageCommitteeScore }}</td>
         </tr>
         <tr>
           <td>Programmes</td>
-          <td>0</td>
+          <td>{{ averageProgrammeScore }}</td>
         </tr>
         <tr>
           <td>Total</td>
-          <td>0</td>
+          <td>{{ totalScore }}</td>
         </tr>
       </table>
 
@@ -217,6 +217,12 @@ export default {
   data() {
     return {
       evaluations: {},
+      averageCommitteeScore: 0,
+      averageContentScore: 0,
+      averageFacilitatorScore: 0,
+      averageVenueScore: 0,
+      averageProgrammeScore: 0,
+      averageTotalScore: 0,
       course: {},
     };
   },
@@ -231,6 +237,62 @@ export default {
             // this.course = snapshot.val();
             console.log(snapshot.val());
             this.evaluations = snapshot.val();
+            let evaluationNum = 0;
+            let totalCommitteeScore = 0;
+            let totalContentScore = 0;
+            let totalFacilitatorScore = 0;
+            let totalTLCScore = 0;
+            let totalVenueScore = 0;
+
+            for (const evaluation in this.evaluations) {
+              evaluationNum += 1;
+              totalCommitteeScore +=
+                Number(this.evaluations[evaluation].committeeEfficient) +
+                Number(this.evaluations[evaluation].committeeHelpful) +
+                Number(
+                  this.evaluations[evaluation].committeeRefreshmentSatisfactory
+                );
+
+              totalContentScore +=
+                Number(this.evaluations[evaluation].contentInteresting) +
+                Number(this.evaluations[evaluation].contentMaterialsHelpful) +
+                Number(this.evaluations[evaluation].contentNewPerspective) +
+                Number(this.evaluations[evaluation].contentProfessionalNeeds);
+
+              totalFacilitatorScore +=
+                Number(this.evaluations[evaluation].facilitatorEffective) +
+                Number(this.evaluations[evaluation].facilitatorEngaging) +
+                Number(this.evaluations[evaluation].facilitatorUnderstandsNeed);
+
+              totalTLCScore +=
+                Number(this.evaluations[evaluation].tlcParticipateMore) +
+                Number(this.evaluations[evaluation].tlcRecommend) +
+                Number(this.evaluations[evaluation].tlcSeeImprovements);
+
+              totalVenueScore +=
+                Number(this.evaluations[evaluation].venueFacilitiesAdequate) +
+                Number(this.evaluations[evaluation].venueFacilitiesStandard) +
+                Number(this.evaluations[evaluation].venueStrategic) +
+                Number(this.evaluations[evaluation].venueSuitable);
+              // +
+              // evaluation["committeeHelpful"] +
+              // evaluation["committeeRefreshmentSatisfactory"];
+            }
+            console.log(totalCommitteeScore);
+            this.averageCommitteeScore =
+              totalCommitteeScore / 3 / evaluationNum;
+            this.averageContentScore = totalContentScore / 4 / evaluationNum;
+            this.averageFacilitatorScore =
+              totalFacilitatorScore / 3 / evaluationNum;
+            this.averageProgrammeScore = totalTLCScore / 3 / evaluationNum;
+            this.averageVenueScore = totalVenueScore / 4 / evaluationNum;
+            this.averageTotalScore =
+              (this.averageCommitteeScore +
+                this.averageContentScore +
+                this.averageFacilitatorScore +
+                this.averageProgrammeScore +
+                this.averageVenueScore) /
+              5;
           } else {
             console.log("No data available");
           }
