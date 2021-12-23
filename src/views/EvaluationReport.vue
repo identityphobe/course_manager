@@ -27,7 +27,7 @@
         </tr>
         <tr>
           <td>Total</td>
-          <td>{{ totalScore }}</td>
+          <td>{{ averageTotalScore }}</td>
         </tr>
       </table>
 
