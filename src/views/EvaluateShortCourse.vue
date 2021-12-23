@@ -282,11 +282,21 @@ export default {
     //TODO: total costs calculation
     submitEvaluation() {
       console.log(this.report);
-      // console.log(localStorage.getItem("ID"));
+      console.log(localStorage.getItem("ID"));
+      console.log(
+        "evaluations/" +
+          this.$route.params.id +
+          "/" +
+          localStorage.getItem("ID")
+      );
       const evaluationRef = ref(
         database,
-        "evaluations/" + this.$route.params.id + "/" + this.report.userID
+        "evaluations/" +
+          this.$route.params.id +
+          "/" +
+          localStorage.getItem("ID")
       );
+
       set(evaluationRef, this.report);
       router.push("/courses/" + this.courseID);
     },

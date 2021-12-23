@@ -2,14 +2,14 @@
   <!-- TODO: Add logout notification -->
   <div v-if="registered" class="section">
     <div class="notification is-success">
-      <button class="delete"></button>
+      <button class="delete" @click="deleteNotification"></button>
       Registration successful
     </div>
   </div>
 
   <div v-if="loggedIn" class="section">
     <div class="notification is-success">
-      <button class="delete"></button>
+      <button class="delete" @click="deleteNotification"></button>
       Login successful
     </div>
   </div>
@@ -98,8 +98,9 @@ export default {
   },
   methods: {
     deleteNotification() {
-      // const notificationNode =
-      document.querySelectorAll(".notification");
+      const notificationNode = document.querySelectorAll(".notification");
+      notificationNode.parentNode.remove();
+      console.log(notificationNode);
     },
   },
   created() {
