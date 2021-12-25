@@ -20,7 +20,7 @@
 
         <!-- TODO: Create a component out of this -->
         <p><strong>College of Computing and Informatics</strong></p>
-        <ul>
+        <ul v-if="role === 'User'">
           <li v-for="course in CCICourses" :key="course.name">
             <router-link :to="course.link">{{ course.name }}</router-link>
           </li>
@@ -54,6 +54,7 @@ export default {
   data() {
     return {
       courses: {},
+      role: "",
       createdCourse: this.$route.query.createdCourse,
       courseDeleted: this.$route.query.courseDeleted,
       newCourseID: this.$route.query.newCourseID,
@@ -65,6 +66,51 @@ export default {
       notificationNode.parentNode.remove();
       console.log(notificationNode);
     },
+    filterCourses(department) {
+      console.log("test");
+      let filtered_courses = Object.filter(
+        this.courses,
+        (course) => course.department === department
+      );
+
+      // add completed tag
+      for (const key in filtered_courses) {
+        let date = new Date(filtered_courses[key].dateEnd);
+
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        console.log(date);
+
+        let today = new Date();
+        today.setHours(0);
+        today.setMinutes(0);
+        today.setSeconds(0);
+        today.setMilliseconds(0);
+
+        if (today.getTime() > date.getTime()) {
+          filtered_courses[key].hasCompleted = true;
+        } else {
+          filtered_courses[key].hasCompleted = false;
+        }
+
+        console.log(filtered_courses[key]);
+      }
+
+      if (this.role === "User") {
+        filtered_courses = Object.filter(
+          filtered_courses,
+          (course) => !course.hasCompleted
+        );
+      }
+
+      for (let key in filtered_courses) {
+        filtered_courses[key].link = "/courses/" + key;
+      }
+
+      return filtered_courses;
+    },
   },
   computed: {
     CCICourses() {
@@ -73,25 +119,51 @@ export default {
         (course) => course.department === "CCI"
       );
 
+      // add completed tag
+      for (const key in filtered_courses) {
+        let date = new Date(filtered_courses[key].dateEnd);
+
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        console.log(date);
+
+        let today = new Date();
+        today.setHours(0);
+        today.setMinutes(0);
+        today.setSeconds(0);
+        today.setMilliseconds(0);
+
+        if (today.getTime() > date.getTime()) {
+          filtered_courses[key].hasCompleted = true;
+        } else {
+          filtered_courses[key].hasCompleted = false;
+        }
+
+        console.log(filtered_courses[key]);
+      }
+
+      if (this.role === "User") {
+        filtered_courses = Object.filter(
+          filtered_courses,
+          (course) => !course.hasCompleted
+        );
+      }
+
       for (let key in filtered_courses) {
         filtered_courses[key].link = "/courses/" + key;
       }
 
       return filtered_courses;
     },
-    COECourses() {
-      let filtered_courses = Object.filter(
-        this.courses,
-        (course) => course.department === "COE"
-      );
-      for (let key in filtered_courses) {
-        filtered_courses[key].link = "/courses/" + key;
-      }
 
-      return filtered_courses;
+    COECourses() {
+      return this.filterCourses("COE");
     },
   },
   created() {
+    this.role = localStorage.getItem("role");
     const dbRef = ref(database);
     const fetchCourses = async () => {
       get(child(dbRef, `courses/`))
