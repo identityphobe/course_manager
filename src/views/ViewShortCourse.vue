@@ -187,7 +187,7 @@
             >View</a
           >
           <a v-else>Unavailable.</a>
-          <label class="label">Attended</label>
+          <label class="label" v-if="isUser">Attended</label>
           <p v-if="courseAttended">Yes</p>
           <p v-else>No</p>
 

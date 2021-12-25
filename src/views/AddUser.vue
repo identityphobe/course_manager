@@ -71,12 +71,24 @@
             </p>
           </div>
 
+          <label class="label">Role</label>
+          <div class="control">
+            <div class="select">
+              <select v-model="role">
+                <option disabled value="">Role</option>
+                <option value="User">User</option>
+                <option value="Speaker">Speaker</option>
+              </select>
+            </div>
+            <p class="help is-danger" v-if="isSubmitted && !role">Required</p>
+          </div>
+
           <div class="field is-grouped is-grouped-centered">
             <div class="control">
               <input
                 @click="writeUserData"
                 type="submit"
-                class="button is-link"
+                class="button is-link mt-5"
                 value="Submit"
               />
             </div>
@@ -107,6 +119,7 @@ export default {
       confirmPassword: "",
       fullName: "",
       isSubmitted: false,
+      role: "",
       //TODO: Check if username is available
       //TODO: Check password length and complexity
     };
@@ -114,11 +127,16 @@ export default {
   methods: {
     writeUserData() {
       this.isSubmitted = true;
-      if (this.ID && this.password && this.password == this.confirmPassword) {
+      if (
+        this.ID &&
+        this.password &&
+        this.password == this.confirmPassword &&
+        this.role
+      ) {
         set(ref(database, "users/" + this.ID), {
           password: this.password,
           fullName: this.fullName,
-          role: "User",
+          role: this.role,
           courses: 0,
         });
 

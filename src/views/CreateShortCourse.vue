@@ -177,11 +177,9 @@
             <div class="select">
               <select v-model="course.speaker">
                 <option disabled value="">Speaker</option>
-                <option value="Mr. Ahmad Bin Dollah">
-                  Mr. Ahmad Bin Dollah
+                <option v-for="(speaker, index) in speakers" :key="index">
+                  {{ speaker.fullName }}
                 </option>
-                <option value="Mr. Zikry Bin Hamid">Mr. Zikry Bin Hamid</option>
-                <option value="Ertugrul Bey">Ertugrul Bey</option>
               </select>
             </div>
           </div>
@@ -458,13 +456,15 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 
-import { ref, push } from "firebase/database";
+import { ref, push, get, child } from "firebase/database";
 import router from "../router/index.js";
 
 export default {
   name: "CreateShortCourse",
   data() {
     return {
+      users: {},
+      speakers: {},
       isModalActive: false,
       newUpload: {},
       fileNames: {
@@ -578,6 +578,32 @@ export default {
           });
       }
     },
+  },
+  created() {
+    const dbRef = ref(database);
+
+    const fetchUsers = async () => {
+      get(child(dbRef, "users"))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            console.log(snapshot.val());
+            this.users = snapshot.val();
+            for (const id in this.users) {
+              if (this.users[id].role === "Speaker") {
+                this.speakers[id] = this.users[id];
+              }
+            }
+            console.log(this.speakers);
+          } else {
+            console.log("No data available");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+
+    fetchUsers();
   },
 };
 </script>
