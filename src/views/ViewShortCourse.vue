@@ -30,7 +30,12 @@
           <div v-if="isAdmin">
             <label class="label">Target Audience</label>
             <ul v-for="audience in course.targetAudience" :key="audience">
-              <li>{{ audience }}</li>
+              <li>
+                {{ audience }}
+                <span v-if="audience === 'External'"
+                  >(RM{{ course.externalCost }} per person)</span
+                >
+              </li>
             </ul>
           </div>
           <label class="label">Venue</label>
@@ -187,9 +192,11 @@
             >View</a
           >
           <a v-else>Unavailable.</a>
-          <label class="label" v-if="isUser">Attended</label>
-          <p v-if="courseAttended">Yes</p>
-          <p v-else>No</p>
+          <div v-if="isUser">
+            <label class="label">Attended</label>
+            <p v-if="courseAttended">Yes</p>
+            <p v-else>No</p>
+          </div>
 
           <div v-if="isAdmin" class="columns">
             <div class="column has-text-centered">

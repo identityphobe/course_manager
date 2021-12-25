@@ -144,6 +144,7 @@
                     </div>
                   </div>
                 </div>
+                <p class="help is-danger" v-if="!course.capacity">required</p>
               </div>
             </div>
           </div>
@@ -178,11 +179,9 @@
             <div class="select">
               <select v-model="course.speaker">
                 <option disabled value="">Speaker</option>
-                <option value="Mr. Ahmad Bin Dollah">
-                  Mr. Ahmad Bin Dollah
+                <option v-for="(speaker, index) in speakers" :key="index">
+                  {{ speaker.fullName }}
                 </option>
-                <option value="Mr. Zikry Bin Hamid">Mr. Zikry Bin Hamid</option>
-                <option value="Ertugrul Bey">Ertugrul Bey</option>
               </select>
             </div>
           </div>
@@ -364,43 +363,6 @@
                     class="file-input"
                     type="file"
                     name="resume"
-                    id="approvalLetter"
-                    @change="uploadFile"
-                  />
-                  <span class="file-cta">
-                    <span class="file-icon">
-                      <i class="fas fa-upload"></i>
-                    </span>
-                    <span class="file-label">
-                      Upload approval letter (optional)
-                    </span>
-                  </span>
-                  <span v-if="oldUploads['approvalLetter']" class="file-name">
-                    <a :href="oldUploads['approvalLetter']" target="_blank">{{
-                      fileNames["approvalLetter"]
-                    }}</a>
-                  </span>
-                  <span
-                    v-else-if="newUpload['approvalLetter']"
-                    class="file-name"
-                  >
-                    <a :href="fileTempURLs['approvalLetter']" target="_blank">{{
-                      fileNames["approvalLetter"]
-                    }}</a>
-                  </span>
-                  <span v-else class="file-name"
-                    >{{ fileNames["approvalLetter"] }}
-                  </span>
-                </label>
-              </div>
-            </div>
-            <div class="column">
-              <div class="file mt-5">
-                <label class="file-label">
-                  <input
-                    class="file-input"
-                    type="file"
-                    name="resume"
                     id="speakerLetter"
                     @change="uploadFile"
                   />
@@ -428,6 +390,43 @@
                   </span>
                   <span v-else class="file-name"
                     >{{ fileNames["speakerLetter"] }}
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div class="column">
+              <div class="file mt-5">
+                <label class="file-label">
+                  <input
+                    class="file-input"
+                    type="file"
+                    name="resume"
+                    id="approvalLetter"
+                    @change="uploadFile"
+                  />
+                  <span class="file-cta">
+                    <span class="file-icon">
+                      <i class="fas fa-upload"></i>
+                    </span>
+                    <span class="file-label">
+                      Upload approval letter (optional)
+                    </span>
+                  </span>
+                  <span v-if="oldUploads['approvalLetter']" class="file-name">
+                    <a :href="oldUploads['approvalLetter']" target="_blank">{{
+                      fileNames["approvalLetter"]
+                    }}</a>
+                  </span>
+                  <span
+                    v-else-if="newUpload['approvalLetter']"
+                    class="file-name"
+                  >
+                    <a :href="fileTempURLs['approvalLetter']" target="_blank">{{
+                      fileNames["approvalLetter"]
+                    }}</a>
+                  </span>
+                  <span v-else class="file-name"
+                    >{{ fileNames["approvalLetter"] }}
                   </span>
                 </label>
               </div>
@@ -502,6 +501,7 @@ export default {
   name: "EditShortCourse",
   data() {
     return {
+      speakers: {},
       isModalActive: false,
       newUpload: {},
       oldUploads: {
@@ -550,6 +550,9 @@ export default {
     };
   },
   methods: {
+    toggleModal() {
+      this.isModalActive = !this.isModalActive;
+    },
     changeDate() {
       console.log(this.course.dateStart);
     },
@@ -682,6 +685,27 @@ export default {
           // Uh-oh, an error occurred!
         });
     };
+
+    const fetchUsers = async () => {
+      get(child(dbRef, "users"))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            this.users = snapshot.val();
+            for (const id in this.users) {
+              if (this.users[id].role === "Speaker") {
+                this.speakers[id] = this.users[id];
+              }
+            }
+          } else {
+            console.log("No data available");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+
+    fetchUsers();
 
     fetchUploads();
   },

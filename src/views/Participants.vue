@@ -26,6 +26,12 @@
         <td></td>
       </tr>
     </table>
+    <button class="button is-link" @click="markAllAttend">
+      Mark All Attend
+    </button>
+    <button class="button is-danger ml-4" @click="markAllAbsent">
+      Mark All Absent
+    </button>
     <!-- {{ participants }} -->
     <!-- <div class="box">Juliana Ahmad</div>
     <div class="box">Anasurimbor Kellhus</div> -->
@@ -48,6 +54,22 @@ export default {
     };
   },
   methods: {
+    markAllAttend() {
+      for (const participant in this.course.participants) {
+        this.course.participants[participant] = true;
+      }
+      const courseID = this.$route.params.id;
+      const courseRef = ref(database, `courses/${courseID}`);
+      set(courseRef, this.course);
+    },
+    markAllAbsent() {
+      for (const participant in this.course.participants) {
+        this.course.participants[participant] = false;
+      }
+      const courseID = this.$route.params.id;
+      const courseRef = ref(database, `courses/${courseID}`);
+      set(courseRef, this.course);
+    },
     toggleAttendance(participant) {
       this.course.participants[participant] =
         !this.course.participants[participant];

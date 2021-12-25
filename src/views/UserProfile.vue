@@ -16,7 +16,11 @@
           <p>{{ user.fullName }}</p>
           <label class="label">Username</label>
           <p>{{ ID }}</p>
-          <label class="label">Joined Courses</label>
+          <label class="label" v-if="isAdmin">Role</label>
+          <p v-if="isAdmin">
+            {{ user.role }} <label class="label">Joined Courses</label>
+          </p>
+
           <ul v-if="Object.keys(coursesJoined).length">
             <li v-for="course in coursesJoined" :key="course">
               <!-- TODO: process date -->
@@ -85,7 +89,7 @@ export default {
   created() {
     const dbRef = ref(database);
     this.ID = this.$route.params.id;
-    this.userRole = localStorage.getItem("role") === "Admin";
+    this.isAdmin = localStorage.getItem("role") === "Admin";
     console.log(this.userRole);
     // const coursesJoined = [];
     const fetchUser = async (ref, id) => {

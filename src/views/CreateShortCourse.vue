@@ -352,35 +352,6 @@
                     class="file-input"
                     type="file"
                     name="resume"
-                    id="approvalLetter"
-                    @change="uploadFile"
-                  />
-                  <span class="file-cta">
-                    <span class="file-icon">
-                      <i class="fas fa-upload"></i>
-                    </span>
-                    <span class="file-label">
-                      Upload approval letter (optional)
-                    </span>
-                  </span>
-                  <span v-if="newUpload['approvalLetter']" class="file-name">
-                    <a :href="fileTempURLs['approvalLetter']" target="_blank">{{
-                      fileNames["approvalLetter"]
-                    }}</a>
-                  </span>
-                  <span v-else class="file-name"
-                    >{{ fileNames["approvalLetter"] }}
-                  </span>
-                </label>
-              </div>
-            </div>
-            <div class="column">
-              <div class="file mt-5">
-                <label class="file-label">
-                  <input
-                    class="file-input"
-                    type="file"
-                    name="resume"
                     id="speakerLetter"
                     @change="uploadFile"
                   />
@@ -404,6 +375,36 @@
               </div>
             </div>
           </div>
+          <div class="column">
+            <div class="file mt-5">
+              <label class="file-label">
+                <input
+                  class="file-input"
+                  type="file"
+                  name="resume"
+                  id="approvalLetter"
+                  @change="uploadFile"
+                />
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                  </span>
+                  <span class="file-label">
+                    Upload approval letter (optional)
+                  </span>
+                </span>
+                <span v-if="newUpload['approvalLetter']" class="file-name">
+                  <a :href="fileTempURLs['approvalLetter']" target="_blank">{{
+                    fileNames["approvalLetter"]
+                  }}</a>
+                </span>
+                <span v-else class="file-name"
+                  >{{ fileNames["approvalLetter"] }}
+                </span>
+              </label>
+            </div>
+          </div>
+
           <div class="columns">
             <div class="column"></div>
             <div class="field column">

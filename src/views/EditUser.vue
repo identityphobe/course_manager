@@ -35,6 +35,18 @@
               <p class="help is-danger" v-if="isSubmitted && !ID">Required</p>
             </div>
 
+            <label class="label">Role</label>
+            <div class="control">
+              <div class="select">
+                <select v-model="user.role">
+                  <option disabled value="">Role</option>
+                  <option value="User">User</option>
+                  <option value="Speaker">Speaker</option>
+                </select>
+              </div>
+              <p class="help is-danger" v-if="isSubmitted && !role">Required</p>
+            </div>
+
             <!-- <div class="field">
             <label class="label">Password</label>
             <div class="control">
@@ -75,7 +87,7 @@
                 <input
                   @click="editUserData"
                   type="submit"
-                  class="button is-link"
+                  class="button is-link mt-4"
                   value="Submit"
                 />
               </div>
