@@ -1,7 +1,7 @@
 <template>
   <div v-if="loggedOut" class="section">
     <div class="notification is-success">
-      <button class="delete"></button>
+      <button class="delete" @click="deleteNotification"></button>
       Logout successful
     </div>
   </div>
@@ -27,6 +27,13 @@ export default {
   name: "Home",
   components: {
     CourseList,
+  },
+  method: {
+    deleteNotification() {
+      const notificationNode = document.querySelectorAll(".notification");
+      notificationNode.parentNode.remove();
+      console.log(notificationNode);
+    },
   },
   data() {
     return {

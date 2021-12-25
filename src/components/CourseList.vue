@@ -25,6 +25,14 @@
             <router-link :to="course.link">{{ course.name }}</router-link>
           </li>
         </ul>
+        <ul v-else-if="'Admin'">
+          <li v-for="course in CCICourses" :key="course.name">
+            <router-link :to="course.link">{{ course.name }}</router-link>
+            <span v-if="course.hasCompleted" class="hasCompleted">
+              (Completed)</span
+            >
+          </li>
+        </ul>
         <p><strong>College of Engineering</strong></p>
         <ul>
           <li v-for="course in COECourses" :key="course.name">
@@ -187,5 +195,9 @@ export default {
 <style>
 li {
   list-style: inside;
+}
+
+.hasCompleted {
+  color: green;
 }
 </style>
