@@ -193,8 +193,14 @@
           >
           <a v-else>Unavailable.</a>
           <div v-if="isUser">
-            <label class="label">Attended</label>
+            <label class="label">Attended?</label>
             <p v-if="courseAttended">Yes</p>
+            <p v-else>No</p>
+          </div>
+          <div v-else-if="isAdmin">
+            <label class="label">Completed?</label>
+
+            <p v-if="courseCompleted">Yes</p>
             <p v-else>No</p>
           </div>
 
@@ -268,6 +274,7 @@ export default {
   name: "ViewShortCourse",
   data() {
     return {
+      courseCompleted: false,
       certificateURL: "/courses/" + this.$route.params.id + "/certificate",
       isCapacityFull: false,
       currentCapacity: 0,
@@ -294,6 +301,28 @@ export default {
     };
   },
   methods: {
+    checkCourseCompletion(date) {
+      date = new Date(date);
+
+      date.setHours(0);
+      date.setMinutes(0);
+      date.setSeconds(0);
+      date.setMilliseconds(0);
+      console.log(date);
+
+      let today = new Date();
+      today.setHours(0);
+      today.setMinutes(0);
+      today.setSeconds(0);
+      today.setMilliseconds(0);
+
+      if (today.getTime() > date.getTime()) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
     formatDate(date) {
       const splitDate = date.split("-");
       return `${splitDate[2]}/${splitDate[1]}/${splitDate[0]}`;
@@ -444,6 +473,11 @@ export default {
           } else {
             console.log("No data available");
           }
+
+          this.courseCompleted = this.checkCourseCompletion(
+            this.course.dateEnd
+          );
+          console.log(this.courseCompleted);
         })
         .then(() => {
           getCapacity();
