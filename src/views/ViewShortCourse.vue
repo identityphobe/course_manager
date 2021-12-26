@@ -245,8 +245,15 @@
               <button class="button is-danger" @click="dropCourse">Drop</button>
             </div>
             <div class="column has-text-centered" v-if="courseAttended">
-              <router-link class="button is-link" :to="evaluateLink">
+              <router-link
+                v-if="!report"
+                class="button is-link"
+                :to="evaluateLink"
+              >
                 Evaluate
+              </router-link>
+              <router-link v-else class="button is-link" :to="evaluationLink">
+                Evaluation
               </router-link>
             </div>
             <div class="column has-text-centered" v-if="courseAttended">
@@ -289,7 +296,10 @@ export default {
 
       ID: localStorage.getItem("ID"),
       evaluateLink: "/courses/" + this.$route.params.id + "/evaluate",
+      evaluationLink: "/courses/" + this.$route.params.id + "/evaluation",
+
       courseAttended: false,
+      report: "",
       reportLink: "/courses/" + this.$route.params.id + "/report",
       editLink: "/courses/" + this.$route.params.id + "/edit",
       user: {},
@@ -308,7 +318,6 @@ export default {
       date.setMinutes(0);
       date.setSeconds(0);
       date.setMilliseconds(0);
-      console.log(date);
 
       let today = new Date();
       today.setHours(0);
@@ -477,7 +486,6 @@ export default {
           this.courseCompleted = this.checkCourseCompletion(
             this.course.dateEnd
           );
-          console.log(this.courseCompleted);
         })
         .then(() => {
           getCapacity();
@@ -569,6 +577,7 @@ export default {
                 console.log(error);
               });
           });
+          fetchEvaluation();
         })
         .catch((error) => {
           console.log(error);
@@ -577,6 +586,22 @@ export default {
     };
 
     fetchUploads();
+
+    const fetchEvaluation = async () => {
+      get(child(dbRef, `evaluations/${courseID}/${ID}`))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            // this.course = snapshot.val();
+            this.report = snapshot.val();
+          } else {
+            console.log("No data available");
+          }
+        })
+
+        .catch((error) => {
+          console.error(error);
+        });
+    };
   },
 };
 </script>

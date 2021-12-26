@@ -11,6 +11,7 @@ import EditShortCourse from "../views/EditShortCourse.vue"
 import Search from "../views/Search.vue"
 import Participants from "../views/Participants.vue"
 import EvaluateShortCourse from "../views/EvaluateShortCourse.vue"
+import ViewShortCourseEvaluation from "../views/ViewShortCourseEvaluation.vue"
 import EvaluationReport from "../views/EvaluationReport.vue"
 import CoursesJoined from "../views/CoursesJoined"
 import Users from "../views/Users"
@@ -85,6 +86,10 @@ const routes = [
   {
     path: "/courses/:id/evaluate",
     component: EvaluateShortCourse,
+  },
+  {
+    path: "/courses/:id/evaluation",
+    component: ViewShortCourseEvaluation,
   },
   {
     path: "/courses/:id/report",
