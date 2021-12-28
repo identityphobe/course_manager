@@ -151,7 +151,7 @@
           <div class="columns">
             <div class="column is-one-third">
               <div class="field">
-                <label class="label">Date Start</label>
+                <label class="label">Start Date</label>
                 <div class="control">
                   <input v-model="course.dateStart" class="input" type="date" />
                   <p class="help is-danger" v-if="!course.dateStart">
@@ -163,7 +163,7 @@
 
             <div class="column is-one-third">
               <div class="field">
-                <label class="label">Date End</label>
+                <label class="label">End Date</label>
                 <div class="control">
                   <input v-model="course.dateEnd" class="input" type="date" />
                   <p class="help is-danger" v-if="!course.dateEnd">required</p>
@@ -184,8 +184,9 @@
             </div>
           </div>
 
-          <div class="columns">
+          <div class="columns mt-4">
             <div class="column">
+              <label class="label">Agenda</label>
               <div class="file mt-5 has-name">
                 <label class="file-label">
                   <input
@@ -199,9 +200,7 @@
                     <span class="file-icon">
                       <i class="fas fa-upload"></i>
                     </span>
-                    <span class="file-label">
-                      Upload course agenda (optional)
-                    </span>
+                    <span class="file-label"> Upload (optional) </span>
                   </span>
                   <span v-if="newUpload['agenda']" class="file-name">
                     <a :href="fileTempURLs['agenda']" target="_blank">{{
@@ -215,6 +214,7 @@
               </div>
             </div>
             <div class="column">
+              <label class="label">Poster</label>
               <div class="file mt-5 has-name">
                 <label class="file-label">
                   <input
@@ -228,7 +228,7 @@
                     <span class="file-icon">
                       <i class="fas fa-upload"></i>
                     </span>
-                    <span class="file-label"> Upload poster (optional) </span>
+                    <span class="file-label"> Upload (optional) </span>
                   </span>
                   <span v-if="newUpload['poster']" class="file-name">
                     <a :href="fileTempURLs['poster']" target="_blank">{{
@@ -346,6 +346,7 @@
 
           <div class="columns">
             <div class="column">
+              <label class="label">Speaker Appointment Letter</label>
               <div class="file mt-5">
                 <label class="file-label">
                   <input
@@ -359,9 +360,7 @@
                     <span class="file-icon">
                       <i class="fas fa-upload"></i>
                     </span>
-                    <span class="file-label">
-                      Upload speaker appointment letter (optional)
-                    </span>
+                    <span class="file-label"> Upload (optional) </span>
                   </span>
                   <span v-if="newUpload['speakerLetter']" class="file-name">
                     <a :href="fileTempURLs['speakerLetter']" target="_blank">{{
@@ -374,34 +373,33 @@
                 </label>
               </div>
             </div>
-          </div>
-          <div class="column">
-            <div class="file mt-5">
-              <label class="file-label">
-                <input
-                  class="file-input"
-                  type="file"
-                  name="resume"
-                  id="approvalLetter"
-                  @change="uploadFile"
-                />
-                <span class="file-cta">
-                  <span class="file-icon">
-                    <i class="fas fa-upload"></i>
+            <div class="column">
+              <label class="label">Approval Letter</label>
+              <div class="file mt-5">
+                <label class="file-label">
+                  <input
+                    class="file-input"
+                    type="file"
+                    name="resume"
+                    id="approvalLetter"
+                    @change="uploadFile"
+                  />
+                  <span class="file-cta">
+                    <span class="file-icon">
+                      <i class="fas fa-upload"></i>
+                    </span>
+                    <span class="file-label"> Upload (optional) </span>
                   </span>
-                  <span class="file-label">
-                    Upload approval letter (optional)
+                  <span v-if="newUpload['approvalLetter']" class="file-name">
+                    <a :href="fileTempURLs['approvalLetter']" target="_blank">{{
+                      fileNames["approvalLetter"]
+                    }}</a>
                   </span>
-                </span>
-                <span v-if="newUpload['approvalLetter']" class="file-name">
-                  <a :href="fileTempURLs['approvalLetter']" target="_blank">{{
-                    fileNames["approvalLetter"]
-                  }}</a>
-                </span>
-                <span v-else class="file-name"
-                  >{{ fileNames["approvalLetter"] }}
-                </span>
-              </label>
+                  <span v-else class="file-name"
+                    >{{ fileNames["approvalLetter"] }}
+                  </span>
+                </label>
+              </div>
             </div>
           </div>
 

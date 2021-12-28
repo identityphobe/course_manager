@@ -40,6 +40,10 @@
     <h1 class="title is-4 has-text-centered">Available Courses</h1>
     <CourseList />
   </div>
+  <div v-else-if="userRole === 'Speaker'" class="section">
+    <h1 class="title is-4 has-text-centered">Your Courses</h1>
+    <CourseList />
+  </div>
   <div v-else class="section mx-6">
     <h1 class="title is-2 has-text-centered">Admin Area</h1>
 

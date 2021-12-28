@@ -38,20 +38,31 @@
               </li>
             </ul>
           </div>
-          <label class="label">Venue</label>
-          <p>{{ course.venue }}</p>
-          <label class="label">Capacity</label>
-          <p>
-            {{ currentCapacity }}/{{ course.capacity
-            }}<span v-if="isCapacityFull"
-              >(<span id="capacityIndicator">Full</span>)</span
-            >
-          </p>
-          <label class="label">Start Date</label>
-          <p>{{ formatDate(course.dateStart) }}</p>
-
-          <label class="label">End Date</label>
-          <p>{{ formatDate(course.dateEnd) }}</p>
+          <div class="columns">
+            <div class="column">
+              <label class="label">Venue</label>
+              <p>{{ course.venue }}</p>
+            </div>
+            <div class="column">
+              <label class="label">Capacity</label>
+              <p>
+                {{ currentCapacity }}/{{ course.capacity
+                }}<span v-if="isCapacityFull"
+                  >(<span id="capacityIndicator">Full</span>)</span
+                >
+              </p>
+            </div>
+          </div>
+          <div class="columns">
+            <div class="column">
+              <label class="label">Start Date</label>
+              <p>{{ formatDate(course.dateStart) }}</p>
+            </div>
+            <div class="column">
+              <label class="label">End Date</label>
+              <p>{{ formatDate(course.dateEnd) }}</p>
+            </div>
+          </div>
 
           <label class="label">Speaker</label>
           <p>{{ course.speaker }}</p>
@@ -157,7 +168,24 @@
                 </div>
               </div>
             </div>
-
+          </div>
+          <label class="label">Agenda</label>
+          <a
+            v-if="oldUploads['agenda']"
+            :href="oldUploads['agenda']"
+            target="_blank"
+            >View</a
+          >
+          <a v-else>Unavailable.</a>
+          <label class="label">Poster</label>
+          <a
+            v-if="oldUploads['poster']"
+            :href="oldUploads['poster']"
+            target="_blank"
+            >View</a
+          >
+          <a v-else>Unavailable.</a>
+          <div v-if="isAdmin">
             <label class="label">Approval Letter</label>
             <a
               v-if="oldUploads['approvalLetter']"
@@ -176,22 +204,6 @@
             >
             <a v-else>Unavailable</a>
           </div>
-          <label class="label">Agenda</label>
-          <a
-            v-if="oldUploads['agenda']"
-            :href="oldUploads['agenda']"
-            target="_blank"
-            >View</a
-          >
-          <a v-else>Unavailable.</a>
-          <label class="label">Poster</label>
-          <a
-            v-if="oldUploads['poster']"
-            :href="oldUploads['poster']"
-            target="_blank"
-            >View</a
-          >
-          <a v-else>Unavailable.</a>
           <div v-if="isUser">
             <label class="label">Attended?</label>
             <p v-if="courseAttended">Yes</p>
@@ -204,7 +216,7 @@
             <p v-else>No</p>
           </div>
 
-          <div v-if="isAdmin" class="columns">
+          <div v-if="isAdmin || isSpeaker" class="columns">
             <div class="column has-text-centered">
               <router-link :to="participantsLink"
                 ><button class="button is-link">
@@ -212,17 +224,17 @@
                 </button></router-link
               >
             </div>
-            <div class="column has-text-centered">
+            <div class="column has-text-centered" v-if="isAdmin">
               <router-link class="button is-link" :to="editLink"
                 >Edit</router-link
               >
             </div>
-            <div class="column has-text-centered">
+            <div class="column has-text-centered" v-if="isAdmin">
               <router-link class="button is-link" :to="reportLink">
                 Evaluations
               </router-link>
             </div>
-            <div class="column has-text-centered">
+            <div class="column has-text-centered" v-if="isAdmin">
               <button
                 class="button is-danger has-text-centered"
                 @click="deleteCourse"
@@ -293,6 +305,7 @@ export default {
       },
       isAdmin: localStorage.getItem("role") === "Admin",
       isUser: localStorage.getItem("role") === "User",
+      isSpeaker: localStorage.getItem("role") === "Speaker",
 
       ID: localStorage.getItem("ID"),
       evaluateLink: "/courses/" + this.$route.params.id + "/evaluate",

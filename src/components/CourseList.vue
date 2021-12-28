@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="columns">
+    <div class="columns" v-if="role !== 'Speaker'">
       <div class="column"></div>
 
       <div class="column is-half">
@@ -22,7 +22,10 @@
         <p><strong>College of Computing and Informatics</strong></p>
         <ul v-if="role === 'User'">
           <li v-for="course in CCICourses" :key="course.name">
-            <router-link :to="course.link">{{ course.name }}</router-link>
+            <router-link :to="course.link">{{ course.name }} </router-link
+            ><span v-if="course.isFull">
+              (<span class="isFull">Full</span>)</span
+            >
           </li>
         </ul>
         <ul v-else-if="'Admin'">
@@ -36,12 +39,26 @@
         <p><strong>College of Engineering</strong></p>
         <ul>
           <li v-for="course in COECourses" :key="course.name">
-            <router-link :to="course.link">{{ course.name }}</router-link>
+            <router-link :to="course.link">{{ course.name }} </router-link>
+            <span v-if="course.isFull">
+              (<span class="isFull">Full</span>)</span
+            >
           </li>
         </ul>
       </div>
       <!--  use v-for with computed properties to list all courses -->
       <!-- <li v-for="course in courses" :key="course.name"></li> -->
+      <div class="column"></div>
+    </div>
+    <div v-else class="columns">
+      <div class="column"></div>
+      <div class="column is-half">
+        <ul>
+          <li v-for="course in speakerCourses" :key="course.name">
+            <router-link :to="course.link">{{ course.name }} </router-link>
+          </li>
+        </ul>
+      </div>
       <div class="column"></div>
     </div>
   </div>
@@ -63,6 +80,7 @@ export default {
     return {
       courses: {},
       role: "",
+      user: {},
       createdCourse: this.$route.query.createdCourse,
       courseDeleted: this.$route.query.courseDeleted,
       newCourseID: this.$route.query.newCourseID,
@@ -75,7 +93,6 @@ export default {
       console.log(notificationNode);
     },
     filterCourses(department) {
-      console.log("test");
       let filtered_courses = Object.filter(
         this.courses,
         (course) => course.department === department
@@ -83,13 +100,13 @@ export default {
 
       // add completed tag
       for (const key in filtered_courses) {
+        //set completion status
         let date = new Date(filtered_courses[key].dateEnd);
 
         date.setHours(0);
         date.setMinutes(0);
         date.setSeconds(0);
         date.setMilliseconds(0);
-        console.log(date);
 
         let today = new Date();
         today.setHours(0);
@@ -102,8 +119,23 @@ export default {
         } else {
           filtered_courses[key].hasCompleted = false;
         }
+        let participants = {};
+        //set capacity status
+        if (filtered_courses[key].participants) {
+          participants = filtered_courses[key].participants;
+          console.log(participants);
+        }
 
-        console.log(filtered_courses[key]);
+        const participantNum = Object.keys(participants).length;
+        const capacity = Number(filtered_courses[key].capacity);
+
+        console.log(participantNum === capacity);
+
+        if (participantNum === capacity) {
+          filtered_courses[key].isFull = true;
+        } else {
+          filtered_courses[key].isFull = false;
+        }
       }
 
       if (this.role === "User") {
@@ -116,68 +148,60 @@ export default {
       for (let key in filtered_courses) {
         filtered_courses[key].link = "/courses/" + key;
       }
+
+      console.log(filtered_courses);
 
       return filtered_courses;
     },
   },
   computed: {
     CCICourses() {
-      let filtered_courses = Object.filter(
-        this.courses,
-        (course) => course.department === "CCI"
-      );
-
-      // add completed tag
-      for (const key in filtered_courses) {
-        let date = new Date(filtered_courses[key].dateEnd);
-
-        date.setHours(0);
-        date.setMinutes(0);
-        date.setSeconds(0);
-        date.setMilliseconds(0);
-        console.log(date);
-
-        let today = new Date();
-        today.setHours(0);
-        today.setMinutes(0);
-        today.setSeconds(0);
-        today.setMilliseconds(0);
-
-        if (today.getTime() > date.getTime()) {
-          filtered_courses[key].hasCompleted = true;
-        } else {
-          filtered_courses[key].hasCompleted = false;
-        }
-
-        console.log(filtered_courses[key]);
-      }
-
-      if (this.role === "User") {
-        filtered_courses = Object.filter(
-          filtered_courses,
-          (course) => !course.hasCompleted
-        );
-      }
-
-      for (let key in filtered_courses) {
-        filtered_courses[key].link = "/courses/" + key;
-      }
-
-      return filtered_courses;
+      return this.filterCourses("CCI");
     },
 
     COECourses() {
       return this.filterCourses("COE");
     },
+    speakerCourses() {
+      // const id = localStorage.getItem("ID");
+      // const role = localStorage.getItem("role");
+      let filtered_courses = Object.filter(
+        this.courses,
+        (course) => this.user.fullName === course.speaker
+      );
+
+      for (let key in filtered_courses) {
+        filtered_courses[key].link = "/courses/" + key;
+      }
+      return filtered_courses;
+    },
   },
   created() {
     this.role = localStorage.getItem("role");
+    let ID = localStorage.getItem("ID");
+    console.log(ID);
     const dbRef = ref(database);
     const fetchCourses = async () => {
       get(child(dbRef, `courses/`))
         .then((snapshot) => {
           if (snapshot.exists()) {
             this.courses = snapshot.val();
+            fetchUser();
+          } else {
+            console.log("No data available");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+
+    const fetchUser = async () => {
+      get(child(dbRef, `users/${ID}`))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            this.user = snapshot.val();
+            console.log(this.user);
           } else {
             console.log("No data available");
           }
@@ -199,5 +223,9 @@ li {
 
 .hasCompleted {
   color: green;
+}
+
+.isFull {
+  color: red;
 }
 </style>

@@ -26,12 +26,14 @@
         <td></td>
       </tr>
     </table>
-    <button class="button is-link" @click="markAllAttend">
-      Mark All Attend
-    </button>
-    <button class="button is-danger ml-4" @click="markAllAbsent">
-      Mark All Absent
-    </button>
+    <div v-if="Object.keys(participants).length">
+      <button class="button is-link" @click="markAllAttend">
+        Mark All Attend
+      </button>
+      <button class="button is-danger ml-4" @click="markAllAbsent">
+        Mark All Absent
+      </button>
+    </div>
     <!-- {{ participants }} -->
     <!-- <div class="box">Juliana Ahmad</div>
     <div class="box">Anasurimbor Kellhus</div> -->
@@ -88,7 +90,6 @@ export default {
       get(child(dbRef, `users`))
         .then((snapshot) => {
           if (snapshot.exists()) {
-            console.log(snapshot.val());
             let participants = {};
             participants = Object.filter(snapshot.val(), (user) => {
               if (user.courses === 0) {
@@ -98,7 +99,6 @@ export default {
               }
             });
             this.participants = participants;
-            console.log(participants);
           } else {
             console.log("No data available");
           }
@@ -116,10 +116,8 @@ export default {
         .then((snapshot) => {
           if (snapshot.exists()) {
             this.course = snapshot.val();
-            console.log(this.course);
+
             if (!this.course.participants) {
-              console.log("WEYYO");
-              console.log(this.participants);
               this.course.participants = {};
               for (let participant in this.participants) {
                 this.course.participants[participant] = false;

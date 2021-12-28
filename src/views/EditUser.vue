@@ -105,12 +105,13 @@
 <script>
 import database from "../database";
 import router from "../router/index.js";
-import { child, get, ref, set } from "firebase/database";
+import { child, get, ref, set, remove } from "firebase/database";
 export default {
   name: "EditUser",
 
   data() {
     return {
+      currentID: "",
       ID: "",
 
       isSubmitted: false,
@@ -121,6 +122,7 @@ export default {
   },
   created() {
     this.ID = this.$route.params.id;
+    this.currentID = this.$route.params.id;
     const fetchUser = async () => {
       const dbRef = ref(database);
       get(child(dbRef, `users/${this.ID}`))
@@ -147,8 +149,11 @@ export default {
           fullName: this.user.fullName,
           username: this.ID,
         };
-        console.log(newUserData);
-        set(ref(database, "users/" + this.ID), newUserData);
+        let currentIDRef = ref(database, `users/${this.currentID}`);
+        remove(currentIDRef).then(() => {
+          set(ref(database, "users/" + this.ID), newUserData);
+        });
+
         router.push("/users/" + this.ID + "/profile?userEdited=true");
       }
     },
