@@ -94,7 +94,7 @@ export default {
       doc.moveDown();
 
       doc
-        .fontSize(10)
+        .fontSize(15)
         .fill("#021c27")
         .text("for successfully completing " + this.course.name, {
           align: "center",

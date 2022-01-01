@@ -30,7 +30,7 @@
               ><strong>Admin Area</strong></router-link
             >
             <router-link
-              v-if="role === 'User'"
+              v-if="role !== 'Admin'"
               class="button is-link"
               :to="'/users/' + ID + '/profile'"
               ><strong>{{ ID }}</strong></router-link
