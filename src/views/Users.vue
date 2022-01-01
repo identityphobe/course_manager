@@ -25,7 +25,8 @@
         <td>
           {{ data.fullName }}
         </td>
-        <td>{{ data.role }}</td>
+        <td v-if="data.role === 'User'">Participant</td>
+        <td v-else>{{ data.role }}</td>
       </tr>
     </table>
   </div>

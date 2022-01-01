@@ -7,7 +7,7 @@
       <thead>
         <tr>
           <th>Name</th>
-          <th>Attendance</th>
+          <th v-if="course.hasCompleted">Attendance</th>
         </tr>
       </thead>
       <tr
@@ -17,7 +17,7 @@
         <!-- <router-link :to="course.link">{{ part }}</router-link> -->
         <td>{{ participant }}</td>
 
-        <td class="has-text-centered">
+        <td v-if="course.hasCompleted" class="has-text-centered">
           <i
             @click="toggleAttendance(participant)"
             :class="{ fas: true, 'fa-check-circle': true, absent: !attendance }"
@@ -26,7 +26,7 @@
         <td></td>
       </tr>
     </table>
-    <div v-if="Object.keys(participants).length">
+    <div v-if="Object.keys(participants).length && course.hasCompleted">
       <button class="button is-link" @click="markAllAttend">
         Mark All Attend
       </button>
@@ -34,10 +34,18 @@
         Mark All Absent
       </button>
     </div>
-    <!-- {{ participants }} -->
-    <!-- <div class="box">Juliana Ahmad</div>
-    <div class="box">Anasurimbor Kellhus</div> -->
+    <div class="is-size-7">
+      <i
+        >*Attendance marking will be available once the course is complete ({{
+          formatDate(course.dateEnd)
+        }})</i
+      >
+    </div>
   </div>
+
+  <!-- {{ participants }} -->
+  <!-- <div class="box">Juliana Ahmad</div>
+    <div class="box">Anasurimbor Kellhus</div> -->
 </template>
 
 <script>
@@ -56,6 +64,13 @@ export default {
     };
   },
   methods: {
+    formatDate(date) {
+      if (!date) {
+        return;
+      }
+      const splitDate = date.split("-");
+      return `${splitDate[2]}/${splitDate[1]}/${splitDate[0]}`;
+    },
     markAllAttend() {
       for (const participant in this.course.participants) {
         this.course.participants[participant] = true;
@@ -79,6 +94,28 @@ export default {
       const courseID = this.$route.params.id;
       const courseRef = ref(database, `courses/${courseID}`);
       set(courseRef, this.course);
+    },
+    setCompletionStatus(dateEnd) {
+      dateEnd = new Date(dateEnd);
+      dateEnd.setHours(0);
+      dateEnd.setMinutes(0);
+      dateEnd.setSeconds(0);
+      dateEnd.setMilliseconds(0);
+
+      let today = new Date();
+      today.setHours(0);
+      today.setMinutes(0);
+      today.setSeconds(0);
+      today.setMilliseconds(0);
+
+      console.log(today.getTime());
+      console.log(dateEnd.getTime());
+      console.log(today.getTime() > dateEnd.getTime());
+      if (today.getTime() > dateEnd.getTime()) {
+        return true;
+      } else {
+        return false;
+      }
     },
   },
   created() {
@@ -116,7 +153,9 @@ export default {
         .then((snapshot) => {
           if (snapshot.exists()) {
             this.course = snapshot.val();
-
+            this.course.hasCompleted = this.setCompletionStatus(
+              this.course.dateEnd
+            );
             if (!this.course.participants) {
               this.course.participants = {};
               for (let participant in this.participants) {

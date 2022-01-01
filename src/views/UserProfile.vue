@@ -18,7 +18,8 @@
           <p>{{ ID }}</p>
           <div v-if="isAdmin">
             <label class="label" v-if="isAdmin">Role</label>
-            <p>
+            <p v-if="user.role === 'User'">Participant</p>
+            <p v-else>
               {{ user.role }}
             </p>
           </div>

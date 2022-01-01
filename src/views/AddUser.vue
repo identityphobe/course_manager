@@ -76,7 +76,7 @@
             <div class="select">
               <select v-model="role">
                 <option disabled value="">Role</option>
-                <option value="User">User</option>
+                <option value="User">Participant</option>
                 <option value="Speaker">Speaker</option>
               </select>
             </div>

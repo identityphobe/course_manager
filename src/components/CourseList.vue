@@ -28,7 +28,7 @@
             >
           </li>
         </ul>
-        <ul v-else-if="'Admin'">
+        <ul v-else-if="role === 'Admin'">
           <li v-for="course in CCICourses" :key="course.name">
             <router-link :to="course.link">{{ course.name }}</router-link>
             <span v-if="course.hasCompleted" class="hasCompleted">
@@ -37,11 +37,19 @@
           </li>
         </ul>
         <p><strong>College of Engineering</strong></p>
-        <ul>
+        <ul v-if="role === 'User'">
           <li v-for="course in COECourses" :key="course.name">
             <router-link :to="course.link">{{ course.name }} </router-link>
             <span v-if="course.isFull">
               (<span class="isFull">Full</span>)</span
+            >
+          </li>
+        </ul>
+        <ul v-else-if="role === 'Admin'">
+          <li v-for="course in COECourses" :key="course.name">
+            <router-link :to="course.link">{{ course.name }}</router-link>
+            <span v-if="course.hasCompleted" class="hasCompleted">
+              (Completed)</span
             >
           </li>
         </ul>
@@ -80,7 +88,7 @@ export default {
     return {
       courses: {},
       role: "",
-      user: {},
+      User: {},
       createdCourse: this.$route.query.createdCourse,
       courseDeleted: this.$route.query.courseDeleted,
       newCourseID: this.$route.query.newCourseID,
@@ -113,25 +121,26 @@ export default {
         today.setMinutes(0);
         today.setSeconds(0);
         today.setMilliseconds(0);
-
+        console.log(filtered_courses[key].name);
+        console.log(today.getTime());
+        console.log(date.getTime());
+        console.log(today.getTime() > date.getTime());
         if (today.getTime() > date.getTime()) {
           filtered_courses[key].hasCompleted = true;
         } else {
           filtered_courses[key].hasCompleted = false;
         }
-        let participants = {};
+        let Users = {};
         //set capacity status
-        if (filtered_courses[key].participants) {
-          participants = filtered_courses[key].participants;
-          console.log(participants);
+        if (filtered_courses[key].Users) {
+          Users = filtered_courses[key].Users;
+          console.log(Users);
         }
 
-        const participantNum = Object.keys(participants).length;
+        const UserNum = Object.keys(Users).length;
         const capacity = Number(filtered_courses[key].capacity);
 
-        console.log(participantNum === capacity);
-
-        if (participantNum === capacity) {
+        if (UserNum === capacity) {
           filtered_courses[key].isFull = true;
         } else {
           filtered_courses[key].isFull = false;
@@ -149,8 +158,6 @@ export default {
         filtered_courses[key].link = "/courses/" + key;
       }
 
-      console.log(filtered_courses);
-
       return filtered_courses;
     },
   },
@@ -167,7 +174,7 @@ export default {
       // const role = localStorage.getItem("role");
       let filtered_courses = Object.filter(
         this.courses,
-        (course) => this.user.fullName === course.speaker
+        (course) => this.User.fullName === course.speaker
       );
 
       for (let key in filtered_courses) {
@@ -179,7 +186,7 @@ export default {
   created() {
     this.role = localStorage.getItem("role");
     let ID = localStorage.getItem("ID");
-    console.log(ID);
+
     const dbRef = ref(database);
     const fetchCourses = async () => {
       get(child(dbRef, `courses/`))
@@ -197,11 +204,11 @@ export default {
     };
 
     const fetchUser = async () => {
-      get(child(dbRef, `users/${ID}`))
+      get(child(dbRef, `Users/${ID}`))
         .then((snapshot) => {
           if (snapshot.exists()) {
-            this.user = snapshot.val();
-            console.log(this.user);
+            this.User = snapshot.val();
+            console.log(this.User);
           } else {
             console.log("No data available");
           }
