@@ -21,7 +21,7 @@
         <!-- TODO: Create a component out of this -->
         <p><strong>College of Computing and Informatics</strong></p>
         <ul v-if="role === 'User'">
-          <p v-if="!Object.keys(CCICourses).length !== 0">
+          <p v-if="Object.keys(CCICourses).length === 0">
             No course available.
           </p>
           <li v-for="course in CCICourses" :key="course.name">
@@ -41,7 +41,7 @@
         </ul>
         <p><strong>College of Engineering</strong></p>
         <ul v-if="role === 'User'">
-          <p v-if="Object.keys(CCICourses).length !== 0">
+          <p v-if="Object.keys(CCICourses).length === 0">
             No course available.
           </p>
           <li v-for="course in COECourses" :key="course.name">
@@ -67,6 +67,9 @@
     <div v-else class="columns">
       <div class="column"></div>
       <div class="column is-half">
+        <p class="has-text-centered" v-if="!Object.keys(speakerCourses).length">
+          No courses assigned yet.
+        </p>
         <ul>
           <li v-for="course in speakerCourses" :key="course.name">
             <router-link :to="course.link">{{ course.name }} </router-link>

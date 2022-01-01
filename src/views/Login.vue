@@ -35,14 +35,30 @@
         </p>
       </div>
 
-      <div class="field is-grouped is-grouped-centered">
-        <div class="control">
-          <input
-            @click="authenticate"
-            class="button is-link"
-            type="submit"
-            value="Submit"
-          />
+      <div class="columns">
+        <div class="column">
+          <div class="field is-grouped is-grouped-centered">
+            <div class="control">
+              <input
+                @click="authenticate"
+                class="button is-link"
+                type="submit"
+                value="Submit"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="column">
+          <div class="field is-grouped is-grouped-centered">
+            <div class="control">
+              <input
+                @click="clearFields"
+                class="button is-light"
+                type="reset"
+                value="Clear"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -106,6 +122,10 @@ export default {
         .catch((error) => {
           console.error(error);
         });
+    },
+    clearFields() {
+      this.ID = "";
+      this.password = "";
     },
   },
 };

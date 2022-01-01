@@ -185,20 +185,21 @@
             >View</a
           >
           <a v-else>Unavailable.</a>
+          <div class="isAdmin || isSpeaker">
+            <label class="label">Speaker Appointment Letter</label>
+            <a
+              v-if="oldUploads['speakerLetter']"
+              :href="oldUploads['speakerLetter']"
+              target="_blank"
+              >View</a
+            >
+            <a v-else>Unavailable</a>
+          </div>
           <div v-if="isAdmin">
             <label class="label">Course Approval Letter</label>
             <a
               v-if="oldUploads['approvalLetter']"
               :href="oldUploads['approvalLetter']"
-              target="_blank"
-              >View</a
-            >
-            <a v-else>Unavailable</a>
-
-            <label class="label">Speaker Appointment Letter</label>
-            <a
-              v-if="oldUploads['speakerLetter']"
-              :href="oldUploads['speakerLetter']"
               target="_blank"
               >View</a
             >

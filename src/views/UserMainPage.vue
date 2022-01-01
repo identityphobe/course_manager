@@ -18,7 +18,7 @@
     <h1 class="title is-4 has-text-centered">Your Upcoming Courses</h1>
     <div class="columns">
       <div class="column"></div>
-      <div class="column is-three-fifths">
+      <div class="column is-half">
         <p
           v-if="Object.keys(this.registeredCourses).length === 0"
           class="has-text-centered"
