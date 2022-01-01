@@ -210,7 +210,7 @@ export default {
     };
 
     const fetchUser = async () => {
-      get(child(dbRef, `Users/${ID}`))
+      get(child(dbRef, `users/${ID}`))
         .then((snapshot) => {
           if (snapshot.exists()) {
             this.User = snapshot.val();

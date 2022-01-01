@@ -23,12 +23,12 @@
               {{ user.role }}
             </p>
           </div>
-          <div v-if="isAdmin && user.role !== 'Admin'">
+          <div v-if="user.role !== 'Admin'">
             <label class="label"
               ><span v-if="user.role === 'User'">Joined </span>Courses</label
             >
           </div>
-          <ul v-if="Object.keys(coursesJoined).length">
+          <ul v-if="user.role === 'User' && Object.keys(coursesJoined).length">
             <li v-for="course in coursesJoined" :key="course">
               <!-- TODO: process date -->
               <router-link :to="course.link">{{ course.name }}</router-link>
@@ -39,6 +39,21 @@
                 formatDate(course.dateEnd)
               }}</span>
               <span v-else> (Attended)</span>
+            </li>
+          </ul>
+          <ul
+            v-if="user.role === 'Speaker' && Object.keys(speakerCourses).length"
+          >
+            <li v-for="course in speakerCourses" :key="course">
+              <!-- TODO: process date -->
+              <router-link :to="course.link">{{ course.name }}</router-link>
+              <span>{{
+                " " +
+                formatDate(course.dateStart) +
+                " - " +
+                formatDate(course.dateEnd)
+              }}</span>
+              <!-- <span v-else> (Attended)</span> -->
             </li>
           </ul>
 
@@ -72,11 +87,12 @@ Object.filter = (obj, predicate) =>
 export default {
   name: "CoursesJoined",
 
-  computed: {},
   data() {
     return {
       user: {},
+      courses: {},
       coursesJoined: {},
+      coursesTaught: {},
       ID: "",
       isAdmin: false,
       editLink: "",
@@ -93,37 +109,37 @@ export default {
       router.push("/users?userDeleted=true&ID=" + this.ID);
     },
   },
+  computed: {
+    // speakerCourses() {
+    //   // const id = localStorage.getItem("ID");
+    //   // const role = localStorage.getItem("role");
+    //   let filtered_courses = Object.filter(
+    //     this.courses,
+    //     (course) => this.User.fullName === course.speaker
+    //   );
+    //   for (let key in filtered_courses) {
+    //     filtered_courses[key].link = "/courses/" + key;
+    //   }
+    //   return filtered_courses;
+    // },
+  },
   created() {
     const dbRef = ref(database);
     this.ID = this.$route.params.id;
     this.isAdmin = localStorage.getItem("role") === "Admin";
-    console.log(this.userRole);
-    // const coursesJoined = [];
+    //let role = localStorage.getItem("role");
+
     const fetchUser = async (ref, id) => {
       get(child(ref, `users/${id}`))
         .then((snapshot) => {
           if (snapshot.exists()) {
             this.user = snapshot.val();
-            console.log("No data available");
           }
         })
         .then(() => {
-          console.log(this.user);
-
-          for (let i = 0; i < this.user.courses.length; i++) {
-            const key = this.user.courses[i];
-            get(child(ref, `courses/${this.user.courses[i]}`))
-              .then((snapshot) => {
-                if (snapshot.exists()) {
-                  this.coursesJoined[key] = snapshot.val();
-                  this.coursesJoined[key].link = "/courses/" + key;
-                } else {
-                  console.log("No data available");
-                }
-              })
-              .catch((error) => {
-                console.error(error);
-              });
+          fetchCoursesJoined(dbRef);
+          if (this.user.role === "Speaker") {
+            fetchSpeakerCourses(dbRef);
           }
         })
         .catch((error) => {
@@ -131,7 +147,46 @@ export default {
         });
     };
 
+    const fetchCoursesJoined = async (ref) => {
+      for (let i = 0; i < this.user.courses.length; i++) {
+        const key = this.user.courses[i];
+        get(child(ref, `courses/${this.user.courses[i]}`))
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              this.coursesJoined[key] = snapshot.val();
+              this.coursesJoined[key].link = "/courses/" + key;
+            } else {
+              console.log("No data available");
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+    };
+
+    const fetchSpeakerCourses = async (ref) => {
+      get(child(ref, `courses`))
+        .then((snapshot) => {
+          this.courses = snapshot.val();
+          console.log(this.courses);
+          this.speakerCourses = Object.filter(
+            this.courses,
+            (course) => this.user.fullName === course.speaker
+          );
+
+          for (let key in this.speakerCourses) {
+            this.speakerCourses[key].link = "/courses/" + key;
+          }
+          console.log(this.speakerCourses);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+
     fetchUser(dbRef, this.ID);
+
     this.editLink = "/users/" + this.$route.params.id + "/edit";
   },
 };
