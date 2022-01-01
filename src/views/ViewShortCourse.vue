@@ -186,7 +186,7 @@
           >
           <a v-else>Unavailable.</a>
           <div v-if="isAdmin">
-            <label class="label">Approval Letter</label>
+            <label class="label">Course Approval Letter</label>
             <a
               v-if="oldUploads['approvalLetter']"
               :href="oldUploads['approvalLetter']"

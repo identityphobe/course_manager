@@ -16,11 +16,17 @@
           <p>{{ user.fullName }}</p>
           <label class="label">Username</label>
           <p>{{ ID }}</p>
-          <label class="label" v-if="isAdmin">Role</label>
-          <p v-if="isAdmin">
-            {{ user.role }} <label class="label">Joined Courses</label>
-          </p>
-
+          <div v-if="isAdmin">
+            <label class="label" v-if="isAdmin">Role</label>
+            <p>
+              {{ user.role }}
+            </p>
+          </div>
+          <div v-if="isAdmin && user.role !== 'Admin'">
+            <label class="label"
+              ><span v-if="user.role === 'User'">Joined </span>Courses</label
+            >
+          </div>
           <ul v-if="Object.keys(coursesJoined).length">
             <li v-for="course in coursesJoined" :key="course">
               <!-- TODO: process date -->
@@ -34,7 +40,7 @@
               <span v-else> (Attended)</span>
             </li>
           </ul>
-          <p v-else>None</p>
+
           <div v-if="isAdmin" class="columns">
             <div class="column has-text-centered">
               <router-link class="button is-link" :to="editLink"

@@ -394,7 +394,7 @@
               </div>
             </div>
             <div class="column">
-              <label class="label">Approval Letter</label>
+              <label class="label">Course Approval Letter</label>
 
               <div class="file mt-5">
                 <label class="file-label">

@@ -34,19 +34,21 @@
               </div>
               <p class="help is-danger" v-if="isSubmitted && !ID">Required</p>
             </div>
-
-            <label class="label">Role</label>
-            <div class="control">
-              <div class="select">
-                <select v-model="user.role">
-                  <option disabled value="">Role</option>
-                  <option value="User">User</option>
-                  <option value="Speaker">Speaker</option>
-                </select>
+            <div v-if="role !== 'Admin'">
+              <label class="label">Role</label>
+              <div class="control">
+                <div class="select">
+                  <select v-model="user.role">
+                    <option disabled value="">Role</option>
+                    <option value="User">User</option>
+                    <option value="Speaker">Speaker</option>
+                  </select>
+                </div>
+                <p class="help is-danger" v-if="isSubmitted && !role">
+                  Required
+                </p>
               </div>
-              <p class="help is-danger" v-if="isSubmitted && !role">Required</p>
             </div>
-
             <!-- <div class="field">
             <label class="label">Password</label>
             <div class="control">
@@ -116,6 +118,7 @@ export default {
 
       isSubmitted: false,
       user: {},
+      role: "",
       //TODO: Check if username is available
       //TODO: Check password length and complexity
     };
@@ -123,6 +126,7 @@ export default {
   created() {
     this.ID = this.$route.params.id;
     this.currentID = this.$route.params.id;
+    this.role = localStorage.getItem("role");
     const fetchUser = async () => {
       const dbRef = ref(database);
       get(child(dbRef, `users/${this.ID}`))
@@ -146,6 +150,7 @@ export default {
       if (this.ID && this.user.fullName) {
         let newUserData = {
           ...this.user,
+          role: this.role,
           fullName: this.user.fullName,
           username: this.ID,
         };
