@@ -23,8 +23,7 @@
           v-if="Object.keys(this.registeredCourses).length === 0"
           class="has-text-centered"
         >
-          Nothing for now.
-          <router-link to="/courses">Join a course.</router-link>
+          Nothing for now. Click a course below to join one.
         </p>
         <ul>
           <li v-for="course in registeredCourses" :key="course.name">

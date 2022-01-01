@@ -21,6 +21,9 @@
         <!-- TODO: Create a component out of this -->
         <p><strong>College of Computing and Informatics</strong></p>
         <ul v-if="role === 'User'">
+          <p v-if="!Object.keys(CCICourses).length !== 0">
+            No course available.
+          </p>
           <li v-for="course in CCICourses" :key="course.name">
             <router-link :to="course.link">{{ course.name }} </router-link
             ><span v-if="course.isFull">
@@ -38,6 +41,9 @@
         </ul>
         <p><strong>College of Engineering</strong></p>
         <ul v-if="role === 'User'">
+          <p v-if="Object.keys(CCICourses).length !== 0">
+            No course available.
+          </p>
           <li v-for="course in COECourses" :key="course.name">
             <router-link :to="course.link">{{ course.name }} </router-link>
             <span v-if="course.isFull">
