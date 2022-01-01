@@ -1,33 +1,33 @@
 <template>
   <h1 class="title is-3 has-text-centered">
-    Report for {{ this.course.name }}
+    Evaluation Report for {{ this.course.name }}
   </h1>
   <div class="container">
     <div class="box" v-if="Object.keys(evaluations).length">
       <table class="table">
         <tr>
           <td>Content</td>
-          <td>{{ averageContentScore }}</td>
+          <td>{{ averageContentScore.toFixed(2) }}</td>
         </tr>
         <tr>
           <td>Facilitator</td>
-          <td>{{ averageFacilitatorScore }}</td>
+          <td>{{ averageFacilitatorScore.toFixed(2) }}</td>
         </tr>
         <tr>
           <td>Venue & Facilities</td>
-          <td>{{ averageVenueScore }}</td>
+          <td>{{ averageVenueScore.toFixed(2) }}</td>
         </tr>
         <tr>
           <td>Organizing Committee</td>
-          <td>{{ averageCommitteeScore }}</td>
+          <td>{{ averageCommitteeScore.toFixed(2) }}</td>
         </tr>
         <tr>
           <td>Programmes</td>
-          <td>{{ averageProgrammeScore }}</td>
+          <td>{{ averageProgrammeScore.toFixed(2) }}</td>
         </tr>
         <tr>
           <td>Total</td>
-          <td>{{ averageTotalScore }}</td>
+          <td>{{ averageTotalScore.toFixed(2) }}</td>
         </tr>
       </table>
 
