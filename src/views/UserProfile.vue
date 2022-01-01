@@ -93,6 +93,7 @@ export default {
       courses: {},
       coursesJoined: {},
       coursesTaught: {},
+      speakerCourses: {},
       ID: "",
       isAdmin: false,
       editLink: "",
