@@ -329,6 +329,6 @@ export default {
 <style scoped>
 .question {
   color: blue;
-  cursor: pointer;
+  cursor: help;
 }
 </style>

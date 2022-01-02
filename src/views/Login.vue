@@ -28,7 +28,7 @@
           Password is required
         </p>
         <p
-          v-else-if="isSubmitted && doesIDExists && !doesCombinationExists"
+          v-else-if="isSubmitted && !doesCombinationExists"
           class="help is-danger"
         >
           ID/Password combination is either unavailable or wrong
@@ -106,7 +106,8 @@ export default {
             console.log(snapshot.val());
             const userInfo = snapshot.val();
             this.storedPassword = userInfo.password;
-            this.doesCombinationExists = this.password == this.storedPassword;
+            this.doesCombinationExists =
+              this.doesIDExists && this.password == this.storedPassword;
 
             // console.log("Combination:" + this.doesCombinationExists);
             // console.log(`Stored Password: ${this.storedPassword}`);
@@ -116,6 +117,7 @@ export default {
               router.push("/users/" + this.ID + "?loggedIn=true");
             }
           } else {
+            this.doesCombinationExists = false;
             console.log("Unavailable or mismatch");
           }
         })
