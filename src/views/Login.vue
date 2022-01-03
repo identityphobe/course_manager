@@ -5,7 +5,7 @@
 
     <div class="column mx-6">
       <div class="field">
-        <label class="label">ID</label>
+        <label class="label">Username</label>
         <div class="control">
           <input v-model="ID" class="input" type="text" placeholder="ID" />
         </div>
