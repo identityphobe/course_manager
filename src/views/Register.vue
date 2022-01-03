@@ -73,15 +73,30 @@
               Both passwords do not match
             </p>
           </div>
-
-          <div class="field is-grouped is-grouped-centered">
-            <div class="control">
-              <input
-                @click="writeUserData"
-                type="submit"
-                class="button is-link"
-                value="Submit"
-              />
+          <div class="columns">
+            <div class="column">
+              <div class="field is-grouped is-grouped-centered">
+                <div class="control">
+                  <input
+                    @click="writeUserData"
+                    type="submit"
+                    class="button is-link"
+                    value="Submit"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="column">
+              <div class="field is-grouped is-grouped-centered">
+                <div class="control">
+                  <input
+                    @click="clearFields"
+                    class="button is-light"
+                    type="reset"
+                    value="Clear"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </form>
@@ -149,11 +164,11 @@ export default {
     fetchUsers();
   },
   methods: {
-    testWrite() {
-      console.log(this.ID in this.currentUsers);
-      if (this.ID in this.currentUsers) {
-        console.log("he");
-      }
+    clearFields() {
+      this.fullName = "";
+      this.ID = "";
+      this.password = "";
+      this.confirmPassword = "";
     },
     writeUserData() {
       this.isSubmitted = true;

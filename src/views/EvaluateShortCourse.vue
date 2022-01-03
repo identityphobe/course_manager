@@ -487,7 +487,7 @@ export default {
         facilitatorUnderstandsNeed: this.questionList.facilitator[2].rating,
 
         venueSuitable: this.questionList.venue[0].rating,
-        venueSthategic: this.questionList.venue[1].rating,
+        venueStrategic: this.questionList.venue[1].rating,
         venueFacilitiesStandard: this.questionList.venue[2].rating,
         venueFacilitiesAdequate: this.questionList.venue[3].rating,
 
@@ -551,7 +551,7 @@ export default {
               report.facilitatorUnderstandsNeed;
 
             this.questionList.venue[0].rating = report.venueSuitable;
-            this.questionList.venue[0].rating = report.venueSthategic;
+            this.questionList.venue[1].rating = report.venueStrategic;
 
             this.questionList.venue[2].rating = report.venueFacilitiesStandard;
             this.questionList.venue[3].rating = report.venueFacilitiesAdequate;

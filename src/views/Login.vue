@@ -24,15 +24,13 @@
             placeholder="Password"
           />
         </div>
-        <p class="help is-danger" v-if="isSubmitted && !password">
-          Password is required
-        </p>
-        <p
-          v-else-if="isSubmitted && !doesCombinationExists"
-          class="help is-danger"
-        >
-          ID/Password combination is either unavailable or wrong
-        </p>
+        <div v-if="isSubmitted">
+          <p class="help is-danger" v-if="!password">Password is required</p>
+
+          <p v-else-if="!doesCombinationExists" class="help is-danger">
+            ID/Password combination is either unavailable or wrong
+          </p>
+        </div>
       </div>
 
       <div class="columns">
@@ -98,6 +96,7 @@ export default {
   methods: {
     authenticate() {
       this.isSubmitted = true;
+      this.doesCombinationExists = true;
       const dbRef = ref(database);
       get(child(dbRef, `users/${this.ID}`))
         .then((snapshot) => {
@@ -128,6 +127,7 @@ export default {
     clearFields() {
       this.ID = "";
       this.password = "";
+      // router.push("/users/" + this.ID + "?loggedIn=true");
     },
   },
 };
