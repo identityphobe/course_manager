@@ -22,7 +22,7 @@
               </p>
             </div>
             <div class="field">
-              <label class="label">ID</label>
+              <label class="label">Username</label>
               <div class="control">
                 <input
                   class="input"
@@ -34,7 +34,7 @@
               </div>
               <p class="help is-danger" v-if="isSubmitted && !ID">Required</p>
             </div>
-            <div v-if="role !== 'Admin'">
+            <div v-if="role === 'Admin'">
               <label class="label">Role</label>
               <div class="control">
                 <div class="select">
@@ -150,16 +150,16 @@ export default {
       if (this.ID && this.user.fullName) {
         let newUserData = {
           ...this.user,
-          role: this.role,
+          role: this.user.role,
           fullName: this.user.fullName,
           username: this.ID,
         };
         let currentIDRef = ref(database, `users/${this.currentID}`);
         remove(currentIDRef).then(() => {
-          set(ref(database, "users/" + this.ID), newUserData);
+          set(ref(database, "users/" + this.ID), newUserData).then(() => {
+            router.push("/users/" + this.ID + "/profile?userEdited=true");
+          });
         });
-
-        router.push("/users/" + this.ID + "/profile?userEdited=true");
       }
     },
   },

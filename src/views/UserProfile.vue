@@ -130,11 +130,12 @@ export default {
     this.isAdmin = localStorage.getItem("role") === "Admin";
     //let role = localStorage.getItem("role");
 
-    const fetchUser = async (ref, id) => {
+    const fetchUser = (ref, id) => {
       get(child(ref, `users/${id}`))
         .then((snapshot) => {
           if (snapshot.exists()) {
             this.user = snapshot.val();
+            console.log(this.user);
           }
         })
         .then(() => {
@@ -149,20 +150,22 @@ export default {
     };
 
     const fetchCoursesJoined = async (ref) => {
-      for (let i = 0; i < this.user.courses.length; i++) {
-        const key = this.user.courses[i];
-        get(child(ref, `courses/${this.user.courses[i]}`))
-          .then((snapshot) => {
-            if (snapshot.exists()) {
-              this.coursesJoined[key] = snapshot.val();
-              this.coursesJoined[key].link = "/courses/" + key;
-            } else {
-              console.log("No data available");
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-          });
+      if (this.user.courses) {
+        for (let i = 0; i < this.user.courses.length; i++) {
+          const key = this.user.courses[i];
+          get(child(ref, `courses/${this.user.courses[i]}`))
+            .then((snapshot) => {
+              if (snapshot.exists()) {
+                this.coursesJoined[key] = snapshot.val();
+                this.coursesJoined[key].link = "/courses/" + key;
+              } else {
+                console.log("No data available");
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        }
       }
     };
 

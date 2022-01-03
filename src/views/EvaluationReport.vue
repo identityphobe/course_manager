@@ -30,7 +30,9 @@
           <td>{{ averageTotalScore.toFixed(2) }}</td>
         </tr>
       </table>
-
+      <i class="is-size-6">
+        Hover over (?) to see the question the row is referring to.
+      </i>
       <table class="table">
         <thead>
           <tr>

@@ -1,5 +1,5 @@
 <template>
-  <h1 class="title is-3 has-text-centered">Edit Short Course</h1>
+  <h1 class="title is-3 has-text-centered">Edit {{ course.name }}</h1>
 
   <div class="columns">
     <div class="column"></div>
