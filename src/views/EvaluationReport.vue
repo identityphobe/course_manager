@@ -31,7 +31,7 @@
         </tr>
       </table>
       <i class="is-size-6">
-        Hover over (?) to see the question the row is referring to.
+        Hover over (?) to see the question the column is referring to.
       </i>
       <table class="table">
         <thead>
