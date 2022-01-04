@@ -27,7 +27,8 @@
         </p>
         <ul>
           <li v-for="course in registeredCourses" :key="course.name">
-            <span v-if="!course.attended || course.hasCompleted"
+            <!-- hasStarted actually -->
+            <span
               ><router-link :to="course.link">{{ course.name }}</router-link>
               {{ course.dateStart }}-{{ course.dateEnd }}</span
             >
@@ -180,23 +181,29 @@ export default {
                   attended = courses[course].participants[this.userID];
                 }
 
-                let hasCompleted = this.checkCompletion(
-                  courses[course].dateEnd
+                let hasStarted = this.checkCompletion(
+                  courses[course].dateStart
                 );
 
-                if (attended) {
-                  return;
-                }
-                if (courses[course]) {
+                if (attended || hasStarted) {
+                  delete this.registeredCourses[course];
+                  // this.registeredCourses[course] = {
+                  //   name: courses[course].name,
+                  //   link: "/courses/" + course,
+                  //   dateStart: formatDate(courses[course].dateStart),
+                  //   dateEnd: formatDate(courses[course].dateEnd),
+                  //   attended: attended,
+                  //   hasStarted: hasStarted,
+                  // };
+                } else {
                   this.registeredCourses[course] = {
                     name: courses[course].name,
                     link: "/courses/" + course,
                     dateStart: formatDate(courses[course].dateStart),
                     dateEnd: formatDate(courses[course].dateEnd),
-                    attended: attended,
-                    hasCompleted: hasCompleted,
                   };
                 }
+                console.log(this.registeredCourses);
               });
             }
           } else {

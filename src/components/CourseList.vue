@@ -110,7 +110,6 @@ export default {
       console.log(notificationNode);
     },
     filterCourses(department) {
-      console.log(department);
       let filtered_courses = Object.filter(
         this.courses,
         (course) => course.department === department
@@ -175,7 +174,7 @@ export default {
       for (let key in filtered_courses) {
         filtered_courses[key].link = "/courses/" + key;
       }
-      console.log(filtered_courses);
+
       return filtered_courses;
     },
   },
@@ -227,7 +226,6 @@ export default {
         .then((snapshot) => {
           if (snapshot.exists()) {
             this.User = snapshot.val();
-            console.log(this.User);
           } else {
             console.log("No data available");
           }
