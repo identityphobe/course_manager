@@ -27,7 +27,7 @@
         </p>
         <ul>
           <li v-for="course in registeredCourses" :key="course.name">
-            <span v-if="!course.attended"
+            <span v-if="!course.attended || course.hasCompleted"
               ><router-link :to="course.link">{{ course.name }}</router-link>
               {{ course.dateStart }}-{{ course.dateEnd }}</span
             >
@@ -100,6 +100,26 @@ export default {
     };
   },
   methods: {
+    checkCompletion(endDate) {
+      endDate = new Date(endDate);
+
+      endDate.setHours(0);
+      endDate.setMinutes(0);
+      endDate.setSeconds(0);
+      endDate.setMilliseconds(0);
+
+      let today = new Date();
+      today.setHours(0);
+      today.setMinutes(0);
+      today.setSeconds(0);
+      today.setMilliseconds(0);
+
+      if (today.getTime() > endDate.getTime()) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     deleteNotification() {
       const notificationNode = document.querySelectorAll(".notification");
       notificationNode.parentNode.remove();
@@ -160,6 +180,10 @@ export default {
                   attended = courses[course].participants[this.userID];
                 }
 
+                let hasCompleted = this.checkCompletion(
+                  courses[course].dateEnd
+                );
+
                 if (attended) {
                   return;
                 }
@@ -170,6 +194,7 @@ export default {
                     dateStart: formatDate(courses[course].dateStart),
                     dateEnd: formatDate(courses[course].dateEnd),
                     attended: attended,
+                    hasCompleted: hasCompleted,
                   };
                 }
               });

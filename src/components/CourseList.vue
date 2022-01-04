@@ -41,7 +41,7 @@
         </ul>
         <p><strong>College of Engineering</strong></p>
         <ul v-if="role === 'User' || !role">
-          <p v-if="Object.keys(CCICourses).length === 0">
+          <p v-if="Object.keys(COECourses).length === 0">
             No course available.
           </p>
           <li v-for="course in COECourses" :key="course.name">
@@ -110,6 +110,7 @@ export default {
       console.log(notificationNode);
     },
     filterCourses(department) {
+      console.log(department);
       let filtered_courses = Object.filter(
         this.courses,
         (course) => course.department === department
@@ -162,10 +163,9 @@ export default {
         } else {
           filtered_courses[key].isFull = false;
         }
-        console.log(filtered_courses);
       }
 
-      if (this.role === "User") {
+      if (this.role === "User" || !this.role) {
         filtered_courses = Object.filter(
           filtered_courses,
           (course) => !course.hasCompleted && !course.hasStarted
@@ -175,7 +175,7 @@ export default {
       for (let key in filtered_courses) {
         filtered_courses[key].link = "/courses/" + key;
       }
-
+      console.log(filtered_courses);
       return filtered_courses;
     },
   },
