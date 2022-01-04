@@ -1,12 +1,12 @@
 
 <template>
   <!-- if logged in, don't show registration page...or... -->
-  <Page title="Register User" />
+  <Page title="Add a User" />
   <section class="container">
     <div class="columns">
       <div class="column"></div>
       <div class="column mx-6">
-        <form onsubmit="return false">
+        <form>
           <div class="field">
             <label class="label">Full Name</label>
             <div class="control">
@@ -34,9 +34,6 @@
               />
             </div>
             <p class="help is-danger" v-if="isSubmitted && !ID">Required</p>
-            <p class="help is-danger" v-if="usernameAlreadyExists">
-              Username already used
-            </p>
           </div>
 
           <div class="field">
@@ -73,6 +70,7 @@
               Both passwords do not match
             </p>
           </div>
+
           <label class="label">Role</label>
           <div class="control">
             <div class="select">
@@ -84,30 +82,15 @@
             </div>
             <p class="help is-danger" v-if="isSubmitted && !role">Required</p>
           </div>
-          <div class="columns mt-4">
-            <div class="column">
-              <div class="field is-grouped is-grouped-centered">
-                <div class="control">
-                  <input
-                    @click="writeUserData"
-                    type="submit"
-                    class="button is-link"
-                    value="Submit"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="column">
-              <div class="field is-grouped is-grouped-centered">
-                <div class="control">
-                  <input
-                    @click="clearFields"
-                    class="button is-light"
-                    type="reset"
-                    value="Clear"
-                  />
-                </div>
-              </div>
+
+          <div class="field is-grouped is-grouped-centered">
+            <div class="control">
+              <input
+                @click="writeUserData"
+                type="submit"
+                class="button is-link mt-5"
+                value="Submit"
+              />
             </div>
           </div>
         </form>
@@ -121,7 +104,7 @@
 
 <script>
 import database from "../database";
-import { child, get, ref, set } from "firebase/database";
+import { ref, set } from "firebase/database";
 import router from "../router/index.js";
 import Page from "../components/Page.vue";
 export default {
@@ -131,68 +114,23 @@ export default {
   },
   data() {
     return {
-      currentUsers: "",
       ID: "",
       password: "",
-      fullName: "",
-      role: "",
-      usernameAlreadyExists: false,
       confirmPassword: "",
+      fullName: "",
       isSubmitted: false,
-
+      role: "",
       //TODO: Check if username is available
       //TODO: Check password length and complexity
     };
   },
-  created() {
-    const dbRef = ref(database);
-
-    const fetchUsers = async () => {
-      get(child(dbRef, `users`))
-        .then((snapshot) => {
-          if (snapshot.exists()) {
-            console.log(snapshot.val());
-            this.currentUsers = snapshot.val();
-            // console.log(snapshot.val());
-            // let participants = {};
-            // participants = Object.filter(snapshot.val(), (user) => {
-            //   if (user.courses === 0) {
-            //     return false;
-            //   } else if (user.courses.some((id) => id === courseID)) {
-            //     return true;
-            //   }
-            // });
-            // this.participants = participants;
-            // console.log(participants);
-          } else {
-            console.log("No data available");
-          }
-        })
-
-        .catch((error) => {
-          console.error(error);
-        });
-    };
-    fetchUsers();
-  },
   methods: {
-    clearFields() {
-      this.fullName = "";
-      this.ID = "";
-      this.password = "";
-      this.confirmPassword = "";
-      this.role = "User";
-    },
     writeUserData() {
       this.isSubmitted = true;
-      const userNameAlreadyExists = this.ID in this.currentUsers;
-      if (userNameAlreadyExists) {
-        this.usernameAlreadyExists = true;
-      } else if (
+      if (
         this.ID &&
         this.password &&
-        this.password === this.confirmPassword &&
-        !userNameAlreadyExists &&
+        this.password == this.confirmPassword &&
         this.role
       ) {
         set(ref(database, "users/" + this.ID), {
