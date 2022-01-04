@@ -159,6 +159,7 @@
                     class="input"
                     type="date"
                     @change="changeDate"
+                    :max="course.dateEnd"
                   />
                 </div>
               </div>
@@ -168,7 +169,12 @@
               <div class="field">
                 <label class="label">End Date</label>
                 <div class="control">
-                  <input v-model="course.dateEnd" class="input" type="date" />
+                  <input
+                    v-model="course.dateEnd"
+                    class="input"
+                    type="date"
+                    :min="course.dateStart"
+                  />
                 </div>
               </div>
             </div>
