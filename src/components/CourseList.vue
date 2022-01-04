@@ -20,7 +20,7 @@
 
         <!-- TODO: Create a component out of this -->
         <p><strong>College of Computing and Informatics</strong></p>
-        <ul v-if="role === 'User'">
+        <ul v-if="role === 'User' || !role">
           <p v-if="Object.keys(CCICourses).length === 0">
             No course available.
           </p>
@@ -40,7 +40,7 @@
           </li>
         </ul>
         <p><strong>College of Engineering</strong></p>
-        <ul v-if="role === 'User'">
+        <ul v-if="role === 'User' || !role">
           <p v-if="Object.keys(CCICourses).length === 0">
             No course available.
           </p>
@@ -125,25 +125,33 @@ export default {
         date.setSeconds(0);
         date.setMilliseconds(0);
 
+        let dateStart = new Date(filtered_courses[key].dateStart);
+        dateStart.setHours(0);
+        dateStart.setMinutes(0);
+        dateStart.setSeconds(0);
+        dateStart.setMilliseconds(0);
+
         let today = new Date();
         today.setHours(0);
         today.setMinutes(0);
         today.setSeconds(0);
         today.setMilliseconds(0);
-        console.log(filtered_courses[key].name);
-        console.log(today.getTime());
-        console.log(date.getTime());
-        console.log(today.getTime() > date.getTime());
+
         if (today.getTime() > date.getTime()) {
           filtered_courses[key].hasCompleted = true;
         } else {
           filtered_courses[key].hasCompleted = false;
         }
+
+        if (today.getTime() > dateStart.getTime()) {
+          filtered_courses[key].hasStarted = true;
+        } else {
+          filtered_courses[key].hasStarted = false;
+        }
         let Users = {};
         //set capacity status
-        if (filtered_courses[key].Users) {
-          Users = filtered_courses[key].Users;
-          console.log(Users);
+        if (filtered_courses[key].participants) {
+          Users = filtered_courses[key].participants;
         }
 
         const UserNum = Object.keys(Users).length;
@@ -154,12 +162,13 @@ export default {
         } else {
           filtered_courses[key].isFull = false;
         }
+        console.log(filtered_courses);
       }
 
       if (this.role === "User") {
         filtered_courses = Object.filter(
           filtered_courses,
-          (course) => !course.hasCompleted
+          (course) => !course.hasCompleted && !course.hasStarted
         );
       }
 
@@ -180,7 +189,7 @@ export default {
     },
     speakerCourses() {
       // const id = localStorage.getItem("ID");
-      // const role = localStorage.getItem("role");
+
       let filtered_courses = Object.filter(
         this.courses,
         (course) => this.User.fullName === course.speaker
@@ -194,6 +203,7 @@ export default {
   },
   created() {
     this.role = localStorage.getItem("role");
+
     let ID = localStorage.getItem("ID");
 
     const dbRef = ref(database);
