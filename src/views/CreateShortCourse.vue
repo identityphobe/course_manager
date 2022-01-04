@@ -153,7 +153,12 @@
               <div class="field">
                 <label class="label">Start Date</label>
                 <div class="control">
-                  <input v-model="course.dateStart" class="input" type="date" />
+                  <input
+                    v-model="course.dateStart"
+                    class="input"
+                    type="date"
+                    :max="course.dateEnd"
+                  />
                   <p class="help is-danger" v-if="!course.dateStart">
                     required
                   </p>
@@ -165,7 +170,12 @@
               <div class="field">
                 <label class="label">End Date</label>
                 <div class="control">
-                  <input v-model="course.dateEnd" class="input" type="date" />
+                  <input
+                    v-model="course.dateEnd"
+                    class="input"
+                    type="date"
+                    :min="course.dateEnd"
+                  />
                   <p class="help is-danger" v-if="!course.dateEnd">required</p>
                 </div>
               </div>
