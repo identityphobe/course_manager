@@ -174,7 +174,7 @@
                     v-model="course.dateEnd"
                     class="input"
                     type="date"
-                    :min="course.dateEnd"
+                    :min="course.dateStart"
                   />
                   <p class="help is-danger" v-if="!course.dateEnd">required</p>
                 </div>
